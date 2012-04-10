@@ -37,11 +37,8 @@ def is_file(path):
 def is_directory(path):
     return os.path.isdir(abs_path(path))
 
-def move(src, dst, recursive=False):
+def move(src, dst):
     try:
-        if recursive:
-            pass
-        else:
             shutil.move(abs_path(src), abs_path(dst))
     except:
         print "File DNE!"
@@ -49,7 +46,7 @@ def move(src, dst, recursive=False):
 def copy(src, dst, recursive=False):
     try:
         if recursive:
-            pass
+            shutil.copytree(abs_path(src), abs_path(dst))
         else:
             shutil.copy2(abs_path(src), abs_path(dst))
     except:
@@ -58,7 +55,7 @@ def copy(src, dst, recursive=False):
 def remove(path, recursive=False):
     try:
         if recursive:
-            pass
+            shutil.rmtree(abs_path(path))
         else:
             os.remove(abs_path(path))
     except:
@@ -81,7 +78,6 @@ def open_file(path, mode):
 
 def open_program(path):
     x = abs_path(path)
-    print x
     try:
         try:
             program = imp.load_source('program', x+'.py')

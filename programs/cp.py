@@ -14,11 +14,11 @@ def run(shell, args):
     if len(args.paths) >= 2:
         src = shell.iabs_path(args[0])
         dest = shell.iabs_path(args[1])
-        if kernel.filesystem.is_file(src):
+        if kernel.filesystem.is_file(src) or args.recursive:
             if kernel.filesystem.is_dir(dest):
                 if args.verbose:
                     shell.stdout.put("Copying %s to %s" %(src, dest))
-                kernel.filesystem.copy(src, dest)
+                kernel.filesystem.copy(src, dest, recursive=args.recursive)
             else:
                 shell.stderr.put(dest + " is not a directory")
         else:
