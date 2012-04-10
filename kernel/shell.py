@@ -9,8 +9,10 @@ class Shell(object):
         self.pid = pid
         if self.parent:
             self.vars = self.parent.vars.copy()
+            self.aliases = self.parent.aliases.copy()
         else:
             self.vars = {"PATH":"/programs"}
+            self.aliases = dict()
         self.stdin = stdin
         self.stdout = ''
         self.stderr = ''
@@ -51,6 +53,8 @@ class Shell(object):
         parts = [re.sub(r"\$\w*", self.get_var, x) for x in string.split()]
         if kernel.filesystem.is_directory(self.iabs_path(parts[0])):
             print "Is a directory"
+        if parts[0] in self.aliases:
+            parts[0] = self.aliases[parts[0]]
         return parts[0], parts[1:] #(program, [args])
 
     def run_program(self, name, args):
