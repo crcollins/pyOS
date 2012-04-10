@@ -1,5 +1,5 @@
 class Stream(object):
-    def __init__(self, value, listener=None, listening=None):
+    def __init__(self, value='', listener=None, listening=None):
         self.value = value
         self.listener = listener
         self.listening = listening
