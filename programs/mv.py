@@ -26,5 +26,5 @@ def run(shell, args):
     else:
         shell.stderr.put("missing file operand")
 
-def help(shell):
+def help():
     return "HELP"

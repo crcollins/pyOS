@@ -11,3 +11,6 @@ def run(shell, args):
                 shell.aliases[key] = value
             else:
                 print "error", item
+
+def help():
+    return "HELP"

@@ -10,5 +10,5 @@ def run(shell, args):
     else:
         shell.stdout.put(help())
 
-def help(shell):
+def help():
     return "HELP"
