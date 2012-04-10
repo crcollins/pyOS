@@ -17,7 +17,7 @@ def run(shell, args):
         if kernel.filesystem.is_file(src):
             if kernel.filesystem.is_dir(dest):
                 if args.verbose:
-                    shell.stdout.put("Copying %s to %s" %(src, dest)
+                    shell.stdout.put("Copying %s to %s" %(src, dest))
                 kernel.filesystem.copy(src, dest)
             else:
                 shell.stderr.put(dest + " is not a directory")
