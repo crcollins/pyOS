@@ -4,11 +4,11 @@ def run(shell, args):
     if len(args) >= 1:
         x = kernel.filesystem.open_program(args[0])
         if x:
-            x.help()
+            shell.stdout.put(x.help())
         else:
-            print "%s: command not found" %name
+            shell.stderr.put("%s: command not found" %name)
     else:
-        help()
+        shell.stdout.put(help())
 
 def help(shell):
-    print "HELP"
+    return "HELP"

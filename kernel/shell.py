@@ -1,6 +1,7 @@
 import re
 
 import kernel.filesystem
+import kernel.stream
 
 class Shell(object):
     def __init__(self, pid, parent=None, stdin='', currentpath="/"):
@@ -14,8 +15,8 @@ class Shell(object):
             self.vars = {"PATH":"/programs"}
             self.aliases = dict()
         self.stdin = stdin
-        self.stdout = ''
-        self.stderr = ''
+        self.stdout = kernel.stream.Stream()
+        self.stderr = kernel.stream.Stream()
         self.prevcommands = []
 
     def get_curpath(self):
