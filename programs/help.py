@@ -3,13 +3,7 @@ import kernel.filesystem
 def run(shell, args):
     if len(args) >= 1:
         name = args[0]
-        if name[0:2] == "./":
-            a = [shell.iabs_path(name)]
-        else:
-            paths = shell.get_var('PATH').split(':')
-            a = [kernel.filesystem.join_path(x, name) for x in paths]
-        program = False
-        for x in a:
+        for x in shell.program_paths(name):
             program = kernel.filesystem.open_program(x)
             if program:
                 shell.stdout.put(program.help())

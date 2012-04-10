@@ -58,15 +58,16 @@ class Shell(object):
             parts[0] = self.aliases[parts[0]]
         return parts[0], parts[1:] #(program, [args])
 
-    def run_program(self, name, args):
-        sf = kernel.filesystem
+    def program_paths(self, name):
         if name[0:2] == "./":
             a = [self.iabs_path(name)]
         else:
             paths = self.get_var('PATH').split(':')
-            a = [sf.join_path(x, name) for x in paths]
-        program = False
-        for x in a:
+            a = [kernel.filesystem.join_path(x, name) for x in paths]
+        return a
+
+    def run_program(self, name, args):
+        for x in self.program_paths(name):
             program = kernel.filesystem.open_program(x)
             if program:
                 program.run(self, args)
