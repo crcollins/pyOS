@@ -73,7 +73,7 @@ class Shell(object):
                 program.run(self, args)
                 break
         if not program:
-            print "%s: command not found" %name, a
+            print "%s: command not found" %name
 
     def run(self):
         running = True
