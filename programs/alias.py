@@ -13,4 +13,11 @@ def run(shell, args):
                 print "error", item
 
 def help():
-    return "HELP"
+    a = """
+    Alias
+
+    Aliases a key with a command.
+
+    usage: alias [key=command]
+    """
+    return a

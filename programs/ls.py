@@ -9,4 +9,11 @@ def run(shell, args):
     shell.stdout.put(a)
 
 def help():
-    return "HELP"
+    a = """
+    List Directory
+
+    Returns the contents of the directory.
+
+    usage: ls [path]
+    """
+    return a

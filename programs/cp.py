@@ -27,4 +27,11 @@ def run(shell, args):
         shell.stderr.put("missing file operand")
 
 def help(shell):
-    return "HELP"
+    a = """
+    Copy
+
+    Copies the given file/directory to the given location.
+
+    usage: cd [source] [dest]
+    """
+    return a

@@ -14,4 +14,11 @@ def run(shell, args):
         shell.stdout.put(help())
 
 def help():
-    return "HELP"
+    a = """
+    Help
+
+    Returns the help message of the given program.
+
+    usage: help [program]
+    """
+    return a
