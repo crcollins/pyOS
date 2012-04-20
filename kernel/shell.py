@@ -22,7 +22,11 @@ class Shell(object):
             self.vars = {"PATH":"/programs"}
             self.aliases = dict()
             self.prevcommands = []
-        self.stdin = stdin
+
+        if type(stdin) == str:
+            self.stdin = kernel.stream.Stream(value=stdin)
+        else:
+            self.stdin = stdin
         self.stdout = kernel.stream.Stream()
         self.stderr = kernel.stream.Stream()
 
