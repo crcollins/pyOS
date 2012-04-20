@@ -6,7 +6,7 @@ def help():
     a = """
     Change Directory
 
-    Changes the current the directory.
+    Changes the current directory.
 
     usage: cd [path]
     """
