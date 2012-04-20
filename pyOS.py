@@ -1,5 +1,4 @@
-from kernel.main import Main
+from kernel.system import System
 
 if __name__ == '__main__':
-    main = Main()
-    main.run()
+    System.run()

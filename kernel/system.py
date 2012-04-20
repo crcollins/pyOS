@@ -1,7 +1,7 @@
 from kernel import filesystem
 from kernel import shell
 
-class Main(object):
+class System(object):
     """
     Handles all of the low level stuff.
     PIDs, startup, shutdown, events
@@ -33,7 +33,7 @@ class Main(object):
             program.run()
         except:
             raise IOError
-
+            
     def new_shell(self):
         x = self.new_pid(shell.Shell(len(self.pids)))
         return self.pids[x]
@@ -62,3 +62,5 @@ class Main(object):
             return "all"
         else:
             return "some"
+
+System = System()
