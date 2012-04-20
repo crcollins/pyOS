@@ -4,7 +4,7 @@ class Stream(object):
         self.listener = listener
         self.listening = listening
 
-    def put(self, value):
+    def write(self, value):
         print value
         #self.value += value
         #self.broadcast()

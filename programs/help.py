@@ -6,12 +6,12 @@ def run(shell, args):
         for x in shell.program_paths(name):
             program = kernel.filesystem.open_program(x)
             if program:
-                shell.stdout.put(program.help())
+                shell.stdout.write(program.help())
                 break
         else:
-            shell.stderr.put("%s: command not found" %name)
+            shell.stderr.write("%s: command not found" %name)
     else:
-        shell.stdout.put(help())
+        shell.stdout.write(help())
 
 def help():
     a = """

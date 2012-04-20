@@ -6,7 +6,7 @@ def run(shell, args):
     else:
         path = shell.curpath
     a = '\n'.join(kernel.filesystem.list_dir(path))
-    shell.stdout.put(a)
+    shell.stdout.write(a)
 
 def help():
     a = """

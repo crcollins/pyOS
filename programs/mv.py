@@ -16,12 +16,12 @@ def run(shell, args):
         dest = shell.iabs_path(args[1])
         if kernel.filesystem.is_dir(dest):
             if args.verbose:
-                shell.stdout.put("Moving %s to %s" %(src, dest)
+                shell.stdout.write("Moving %s to %s" %(src, dest)
             kernel.filesystem.move(src, dest)
         else:
-            shell.stderr.put(dest + " is not a directory")
+            shell.stderr.write(dest + " is not a directory")
     else:
-        shell.stderr.put("missing file operand")
+        shell.stderr.write("missing file operand")
 
 def help():
     a = """
