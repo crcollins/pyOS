@@ -1,4 +1,5 @@
 import re
+import copy
 
 import kernel.filesystem
 import kernel.stream
@@ -16,13 +17,14 @@ class Shell(object):
         if self.parent:
             self.vars = self.parent.vars.copy()
             self.aliases = self.parent.aliases.copy()
+            self.prevcommands = copy.deepcopy(self.parent.prevcommands)
         else:
             self.vars = {"PATH":"/programs"}
             self.aliases = dict()
+            self.prevcommands = []
         self.stdin = stdin
         self.stdout = kernel.stream.Stream()
         self.stderr = kernel.stream.Stream()
-        self.prevcommands = []
 
     def run(self):
         self.run_program(self.program, self.args)
