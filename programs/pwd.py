@@ -1,2 +1,12 @@
 def run(shell, args):
-    return shell.curpath
+    shell.stdout.write(shell.curpath)
+
+def help():
+    a = """
+    Print Working Directory
+
+    Prints the path of the current directory.
+
+    usage: pwd
+    """
+    return a
