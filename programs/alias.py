@@ -1,4 +1,6 @@
 def run(shell, args):
+    #hack to fix encapsulation
+    shell = shell.parent
     if not args:
         for x in shell.aliases:
             print x, shell.aliases[x]
