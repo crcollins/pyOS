@@ -1,5 +1,4 @@
 import re
-import copy
 
 import kernel.filesystem
 import kernel.stream
@@ -17,7 +16,7 @@ class Shell(object):
         if self.parent:
             self.vars = self.parent.vars.copy()
             self.aliases = self.parent.aliases.copy()
-            self.prevcommands = copy.deepcopy(self.parent.prevcommands)
+            self.prevcommands = self.parent.prevcommands[:]
         else:
             self.vars = {"PATH":"/programs"}
             self.aliases = dict()
