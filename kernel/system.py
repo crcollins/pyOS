@@ -33,10 +33,12 @@ class System(object):
             program.run()
         except:
             raise IOError
-            
-    def new_shell(self):
-        x = self.new_pid(shell.Shell(len(self.pids)))
-        return self.pids[x]
+
+    def new_shell(self, parent=None, program="interpreter", args="",
+                 stdin='', currentpath="/"):
+        y = shell.Shell(len(self.pids), parent, program, args, stdin, currentpath)
+        self.new_pid(y)
+        return y
 
     def get_pid(self, item):
         try:
