@@ -68,7 +68,7 @@ def get_size(path):
     return os.path.getsize(abs_path(path))
 
 def list_dir(path):
-    return os.listdir(abs_path(path))
+    return sorted(os.listdir(abs_path(path)))
 
 def make_dir(path):
     return os.mkdir(abs_path(path))
