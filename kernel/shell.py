@@ -30,7 +30,11 @@ class Shell(object):
         self.stderr = kernel.stream.Stream()
 
     def run(self):
-        self.run_program(self.program, self.args)
+        try:
+            self.run_program(self.program, self.args)
+        except Exception, e:
+            self.stdout.write("We had an error Admiral.")
+            self.stdout.write(e)
 
     def get_curpath(self):
         return self.curpath
