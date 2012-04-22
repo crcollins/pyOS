@@ -86,3 +86,12 @@ def open_program(path):
     except IOError:
         return False
     return program
+
+def dir_name(path):
+    return os.path.dirname(abs_path(path))
+
+def base_name(path):
+    return os.path.basename(abs_path(path))
+
+def split(path):
+    return dir_name(path), base_name(path)
