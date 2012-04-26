@@ -7,9 +7,8 @@ varparse = re.compile(r"\$\w*")
 pipeparse = re.compile(r"(\>+\d?|\<+|\|)")
 
 def run(shell, args):
-    running = True
-    while running:
-        data = raw_input("root@pyOS:%s$ "%shell.curpath)
+    while System.state >= 1:
+        data = raw_input("root@pyOS:%s$ "%shell.path)
         try:
             programs, relations = eval_input(shell, data)
             listing = start_shells(shell, programs)

@@ -5,6 +5,14 @@ class System(object):
     """
     Handles all of the low level stuff.
     PIDs, startup, shutdown, events
+
+    System States:
+    -2: reboot
+    -1: shutting down
+    0:  idle
+    1:  running shell
+
+
     """
     def __init__(self):
         #self.fs = FileSystem.FileSystem()
@@ -15,10 +23,14 @@ class System(object):
 
     def run(self):
         self.startup()
+        self.state = 0
         while self.state >= 0:
             current = self.new_shell()
             current.run()
-        self.shutdown()
+        if self.state <= -1:
+            self.shutdown()
+            if self.state == -2:
+                self.run()
 
     def startup(self):
         try:
@@ -38,6 +50,7 @@ class System(object):
                  stdin='', currentpath="/"):
         y = shell.Shell(len(self.pids), parent, program, args, stdin, currentpath)
         self.new_pid(y)
+        self.state = 1
         return y
 
     def get_pid(self, item):
