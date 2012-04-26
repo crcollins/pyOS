@@ -40,11 +40,11 @@ def eval_input(shell, string):
 
 def start_shells(shell, programs):
     parent = shell
-    currentpath = shell.path
+    path = shell.path
 
     listing = []
     for (program, args) in programs:
-        x = System.new_shell(parent=parent, currentpath=currentpath,
+        x = System.new_shell(parent=parent, path=path,
                          program=program, args=args)
         listing.append(x)
     return listing
