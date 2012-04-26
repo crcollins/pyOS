@@ -3,7 +3,7 @@ import pprint
 
 def run(shell, args):
     if args:
-        path = args[0]
+        path = shell.iabs_path(args[0])
     else:
         path = shell.path
     tree = tree_gen(path)

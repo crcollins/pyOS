@@ -12,7 +12,7 @@ pa('-v', action="store_true", dest="verbose", default=False)
 def run(shell, args):
     args = parser.parse_args(args)
     if len(args.paths) >= 1:
-        path = args.paths
+        path = shell.iabs_path(paths)
         if fs.is_file(path) or (fs.is_dir(path) and args.recursive):
             if args.verbose:
                 shell.stdout.write("Removing %s" %(path))

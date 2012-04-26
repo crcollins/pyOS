@@ -2,7 +2,7 @@ import kernel.filesystem
 
 def run(shell, args):
     if args:
-        path = args[0]
+        path = shell.iabs_path(args[0])
     else:
         path = shell.path
     a = '\n'.join(kernel.filesystem.list_dir(path))
