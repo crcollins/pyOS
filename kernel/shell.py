@@ -23,11 +23,11 @@ class Shell(object):
             self.prevcommands = []
 
         if type(stdin) == str:
-            self.stdin = kernel.stream.Stream(value=stdin)
+            self.stdin = kernel.stream.Stream(value=stdin, kind="in")
         else:
             self.stdin = stdin
-        self.stdout = kernel.stream.Stream()
-        self.stderr = kernel.stream.Stream()
+        self.stdout = kernel.stream.Stream(kind="out")
+        self.stderr = kernel.stream.Stream(kind="err")
 
     def run(self):
         try:
