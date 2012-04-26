@@ -5,11 +5,11 @@ import kernel.stream
 
 class Shell(object):
     def __init__(self, pid, parent=None, program="interpreter", args="",
-                 stdin='', currentpath="/"):
+                 stdin='', path="/"):
         self.program = program
         self.args = args
 
-        self.curpath = currentpath
+        self.path = path
         self.parent = parent
         self.pid = pid
 
@@ -36,22 +36,22 @@ class Shell(object):
             self.stdout.write("We had an error Admiral.")
             self.stdout.write(e)
 
-    def get_curpath(self):
-        return self.curpath
+    def get_path(self):
+        return self.path
 
-    def set_curpath(self, path):
-        self.curpath = self.iabs_path(path)
+    def set_path(self, path):
+        self.path = self.iabs_path(path)
 
     def iabs_path(self, path):
         if path[0] != '/':
             if path[0:2] == "./":
                 path = path[2:]
-            path = kernel.filesystem.join_path(self.curpath, path)
+            path = kernel.filesystem.join_path(self.path, path)
         return '/' + kernel.filesystem.eval_path(path)
 
     def irel_path(self, path, base=None):
         if base is None:
-            base = self.curpath
+            base = self.path
         return kernel.filesystem.rel_path(self.iabs_path(path), self.iabs_path(base))
 
     def program_paths(self, name):

@@ -41,7 +41,7 @@ def eval_input(shell, string):
 
 def start_shells(shell, programs):
     parent = shell
-    currentpath = shell.curpath
+    currentpath = shell.path
 
     listing = []
     for (program, args) in programs:

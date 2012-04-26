@@ -5,7 +5,7 @@ def run(shell, args):
     if args:
         path = args[0]
     else:
-        path = shell.curpath
+        path = shell.path
     tree = tree_gen(path)
     shell.stdout.write(tree_print(tree))
 

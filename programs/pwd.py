@@ -1,5 +1,5 @@
 def run(shell, args):
-    shell.stdout.write(shell.curpath)
+    shell.stdout.write(shell.path)
 
 def help():
     a = """

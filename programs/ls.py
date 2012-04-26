@@ -4,7 +4,7 @@ def run(shell, args):
     if args:
         path = args[0]
     else:
-        path = shell.curpath
+        path = shell.path
     a = '\n'.join(kernel.filesystem.list_dir(path))
     shell.stdout.write(a)
 
