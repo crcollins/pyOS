@@ -12,6 +12,7 @@ def run(shell, args):
         try:
             programs, relations = eval_input(shell, data)
             listing = start_shells(shell, programs)
+            connect_shells(listing, relations)
             for x in listing:
                 x.run()
         except IndexError:
@@ -50,7 +51,14 @@ def start_shells(shell, programs):
     return listing
 
 def connect_shells(programs, relations):
-    pass
+    for (idx0, op, idx1) in relations:
+        p0, p1 = programs[idx0], programs[idx1]
+        if op == ">":
+            p0.stdout.add(p1.stdin.write)
+        elif op == "<":
+            p1.stdout.add(p0.stdin.write)
+        else:
+            continue
 
 def help():
     return "HELP"

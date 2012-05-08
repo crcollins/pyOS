@@ -22,19 +22,16 @@ class Shell(object):
             self.aliases = dict()
             self.prevcommands = []
 
-        if type(stdin) == str:
-            self.stdin = kernel.stream.Stream(value=stdin, name="in")
-        else:
-            self.stdin = stdin
+        self.stdin = kernel.stream.Stream(value=stdin, name="in", listening=self.callback)
         self.stdout = kernel.stream.Stream(name="out")
         self.stderr = kernel.stream.Stream(name="err")
 
+    def callback(self, value):
+        pass
+
     def run(self):
-        try:
-            self.run_program(self.program, self.args)
-        except Exception, e:
-            self.stdout.write("We had an error Admiral.")
-            self.stdout.write(e)
+        self.run_program(self.program, self.args)
+
 
     def get_path(self):
         return self.path
