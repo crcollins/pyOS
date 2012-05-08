@@ -14,8 +14,9 @@ class System(object):
 
 
     """
+    _state = {}
     def __init__(self):
-        #self.fs = FileSystem.FileSystem()
+        self.__dict__ = self._state
         self.display = None#Display()
         self.output = None
         self.pids = []
