@@ -1,12 +1,12 @@
 class Stream(object):
-    def __init__(self, kind='', value='', listener=None, listening=None):
+    def __init__(self, name='', value='', listener=None, listening=None):
         self.value = value
         self.listener = listener
         self.listening = listening
-        self.kind = kind
+        self.name = name
 
     def write(self, value):
-        print "<%s> %s" %(self.kind, value)
+        print "<%s> %s" %(self.name, value)
         #self.value += value
         #self.broadcast()
 
