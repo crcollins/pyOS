@@ -22,7 +22,7 @@ class Shell(object):
             self.aliases = dict()
             self.prevcommands = []
 
-        self.stdin = kernel.stream.Stream(value=stdin, name="in", listening=self.callback)
+        self.stdin = kernel.stream.Stream(value=stdin, name="in", listener=self.callback)
         self.stdout = kernel.stream.Stream(name="out")
         self.stderr = kernel.stream.Stream(name="err")
 

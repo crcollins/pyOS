@@ -1,14 +1,14 @@
 class Stream(object):
-    def __init__(self, callback=None, name='', value='', listening=None):
+    def __init__(self, callback=None, name='', value='', listeners=None):
         self.value = value
-        if listening is not None:
-            self.listening = [listening]
+        if listeners is not None:
+            self.listeners = [listeners]
         else:
-            self.listening = []
+            self.listeners = []
         self.name = name
 
     def add(self, callback):
-        self.listening.append(callback)
+        self.listeners.append(callback)
 
     def write(self, value):
         print "<%s> %s" %(self.name, value)
@@ -28,5 +28,5 @@ class Stream(object):
         return x
 
     def broadcast(self):
-        for f in self.listening:
+        for f in self.listeners:
             f(self.value)
