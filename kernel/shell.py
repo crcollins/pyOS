@@ -22,7 +22,7 @@ class Shell(object):
             self.aliases = dict()
             self.prevcommands = []
 
-        self.stdin = kernel.stream.Stream(value=stdin, name="in", listener=self.callback)
+        self.stdin = kernel.stream.Stream(value=stdin, name="in", listeners=self.callback)
         self.stdout = kernel.stream.Stream(name="out")
         self.stderr = kernel.stream.Stream(name="err")
 
@@ -31,7 +31,6 @@ class Shell(object):
 
     def run(self):
         self.run_program(self.program, self.args)
-
 
     def get_path(self):
         return self.path
@@ -78,5 +77,4 @@ class Shell(object):
                 program.run(self, args)
                 break
         if not program:
-            #self.stderr.put("%s: command not found" %name)
-            print "%s: command not found" %name
+            self.stderr.write("%s: command not found" %name)
