@@ -54,9 +54,9 @@ def connect_shells(programs, relations):
     for (idx0, op, idx1) in relations:
         p0, p1 = programs[idx0], programs[idx1]
         if op == ">":
-            p0.stdout.add(p1.stdin.write)
+            p0.stdout.add(p1.stdin, stream=True)
         elif op == "<":
-            p1.stdout.add(p0.stdin.write)
+            p1.stdout.add(p0.stdin, stream=True)
         else:
             continue
 

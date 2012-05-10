@@ -6,9 +6,17 @@ class Stream(object):
         else:
             self.listeners = []
         self.name = name
+        self.listening = []
 
-    def add(self, callback):
-        self.listeners.append(callback)
+    def __nonzero__(self):
+        return bool(self.listening)
+
+    def add(self, callback, stream=False):
+        if stream:
+            self.listeners.append(callback.write)
+            callback.listening.append(self)
+        else:
+            self.listeners.append(callback)
 
     def write(self, value):
         print "<%s> %s" %(self.name, value)
