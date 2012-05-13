@@ -26,5 +26,8 @@ class Stream(object):
         return self.value
 
     def broadcast(self):
-        for f in self.listeners:
-            f(self.value)
+        if self.listeners:
+            for f in self.listeners:
+                f(self.value)
+        else:
+            print "<%s> %s" %(self.name, self.value),
