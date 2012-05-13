@@ -26,15 +26,6 @@ class Stream(object):
     def get_value(self):
         return self.value
 
-    def set_value(self, value):
-        self.value = value
-        self.broadcast()
-
-    def digest_value(self):
-        x = self.value
-        self.set_value('')
-        return x
-
     def broadcast(self):
         for f in self.listeners:
             f(self.value)
