@@ -19,8 +19,7 @@ class Stream(object):
             self.listeners.append(callback)
 
     def write(self, value):
-        print "<%s> %s" %(self.name, value)
-        self.value += value
+        self.value = value
         self.broadcast()
 
     def get_value(self):
