@@ -29,14 +29,23 @@ class Shell(object):
         self.program = self.find_program(self.programname)
         self.file = None
 
+        if not self.program:
+            self.file = kernel.filesystem.open_file(self.programname, "w")
+
     def callback(self, value):
-        pass
+        if self.file:
+            self.file.write(value)
+        else:
+            pass
 
     def run(self):
         if self.program:
             self.program.run(self, self.args)
-        elif not self.program:
+        elif not self.program and not self.stdin:
             self.stderr.write("%s: command not found" %self.programname)
+
+        if self.file:
+            self.file.close()
 
     def get_path(self):
         return self.path
