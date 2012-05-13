@@ -6,7 +6,7 @@ import kernel.stream
 class Shell(object):
     def __init__(self, pid, parent=None, program="interpreter", args="",
                  stdin='', path="/"):
-        self.program = program
+        self.programname = program
         self.args = args
 
         self.path = path
@@ -25,6 +25,9 @@ class Shell(object):
         self.stdin = kernel.stream.Stream(value=stdin, name="in", listeners=self.callback)
         self.stdout = kernel.stream.Stream(name="out")
         self.stderr = kernel.stream.Stream(name="err")
+
+        self.program = None
+        self.file = None
 
     def callback(self, value):
         pass
