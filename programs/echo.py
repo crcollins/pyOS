@@ -7,7 +7,7 @@ def help():
     a = """
     Echo
 
-    Prints the arguments into the terminal.
+    Writes the arguments into the stdout.
 
     usage: echo [args]
     """
