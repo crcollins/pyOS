@@ -26,14 +26,17 @@ class Shell(object):
         self.stdout = kernel.stream.Stream(name="out")
         self.stderr = kernel.stream.Stream(name="err")
 
-        self.program = None
+        self.program = self.find_program(self.programname)
         self.file = None
 
     def callback(self, value):
         pass
 
     def run(self):
-        self.run_program(self.program, self.args)
+        if self.program:
+            self.program.run(self, self.args)
+        elif not self.program:
+            self.stderr.write("%s: command not found" %self.programname)
 
     def get_path(self):
         return self.path
@@ -73,11 +76,9 @@ class Shell(object):
     def set_var(self, name, value):
         self.vars[name] = value
 
-    def run_program(self, name, args):
+    def find_program(self, name):
         for x in self.program_paths(name):
             program = kernel.filesystem.open_program(x)
             if program:
-                program.run(self, args)
                 break
-        if not program:
-            self.stderr.write("%s: command not found" %name)
+        return program
