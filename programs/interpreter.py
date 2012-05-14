@@ -4,7 +4,7 @@ from kernel.system import System
 import re
 
 varparse = re.compile(r"\$\w*")
-pipeparse = re.compile(r"(\>+\d?|\<+|\|)")
+stdioparse = re.compile(r"([<>]+\s*\w+)")
 
 def run(shell, args):
     while System.state >= 1:
@@ -21,23 +21,34 @@ def run(shell, args):
 def eval_input(shell, string):
     #replace $vars
     string = re.sub(varparse, shell.get_var, string)
-    split = re.split(pipeparse, string)
 
-    programs = []
-    for x in split[::2]:
-        parts = x.strip().split(' ')
-        if kernel.filesystem.is_directory(shell.iabs_path(parts[0])):
-            print "Is a directory"
-        if parts[0] in shell.aliases:
-            parts[0] = shell.aliases[parts[0]]
-        programs.append((parts[0], parts[1:])) #(program, [args])
+    #split pipes/stdio
+    split = string.split("|")
+    programsplit = (re.split(stdioparse, x) for x in split)
+    cleaned = [[y.strip() for y in x if y.strip()] for x in programsplit]
 
-    relations = []
-    #hack to split commands into (commandidx, op, command2idx) groups
-    for num in xrange(len(split)/2 - (not len(split)%2)):
-        relations.append((num*2, split[num*2+1], num*2+1))
+    fs = kernel.filesystem
 
-    return programs, relations
+    #format them things
+    final = []
+    for pipeset in cleaned:
+        program = pipeset[0]
+        if program in shell.aliases:
+            program = shell.aliases[program]
+        args, cin, cout = [], [], []
+        for part in pipeset[1:]:
+            p2 = part.lstrip("<>")
+            if ">" in part:
+                cout.append(fs.open_file(p2, "w"))
+            elif ">>" in part:
+                cout.append(fs.open_file(p2, "a"))
+            elif "<" in part:
+                cin.append(p2)
+            else:
+                args.extend(part.split())
+        final.append((program, args, cin, cout))
+    #((program, [arg0, arg1, ...], [Fcin0, Fcin1, ...], [Fcout0, Fcout1, ...]), ...)
+    return final
 
 def start_shells(shell, programs):
     parent = shell
