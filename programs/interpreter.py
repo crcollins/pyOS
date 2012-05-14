@@ -11,8 +11,8 @@ def run(shell, args):
         data = raw_input("root@pyOS:%s$ "%shell.path)
         try:
             programs, relations = eval_input(shell, data)
-            listing = start_shells(shell, programs)
-            connect_shells(listing, relations)
+            shells, programs = start_shells(shell, programs)
+            connect_shells(shells, programs)
             for x in listing:
                 x.run()
         except IndexError:
@@ -55,11 +55,16 @@ def start_shells(shell, programs):
     path = shell.path
 
     listing = []
-    for (program, args) in programs:
-        x = System.new_shell(parent=parent, path=path,
+    newprograms = []
+    for (program, args, cin, cout) in programs:
+        newshell = System.new_shell(parent=parent, path=path,
                          program=program, args=args)
-        listing.append(x)
-    return listing
+        #hack to convert the cin into streams from cat.
+        newcin = [System.new_shell(parent=parent, path=path,
+                         program="cat", args=[x]) for x in cin]
+        listing.append(newshell)
+        newprograms.append((program, args, newcin, cout))
+    return listing, newprograms
 
 def connect_shells(programs, relations):
     for (idx0, op, idx1) in relations:
