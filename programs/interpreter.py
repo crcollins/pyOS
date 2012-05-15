@@ -32,7 +32,10 @@ def eval_input(shell, string):
     #format them things
     final = []
     for pipeset in cleaned:
-        program = pipeset[0]
+        #hack to extract the program name
+        program = pipeset[0].split()[0]
+        pipeset = pipeset[0].split()[1:] + pipeset[1:]
+
         if program in shell.aliases:
             program = shell.aliases[program]
         args, cin, cout = [], [], []
