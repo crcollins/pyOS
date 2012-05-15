@@ -40,7 +40,7 @@ def eval_input(shell, string):
             program = shell.aliases[program]
         args, cin, cout = [], [], []
         for part in pipeset:
-            p2 = part.lstrip("<>")
+            p2 = part.lstrip("<> ")
             if ">" in part:
                 cout.append(fs.open_file(p2, "w"))
             elif ">>" in part:
