@@ -13,7 +13,7 @@ def run(shell, args):
             programs = eval_input(shell, data)
             shells, programs = start_shells(shell, programs)
             connect_shells(shells, programs)
-            for x in listing:
+            for x in shells:
                 x.run()
         except IndexError:
             pass
