@@ -15,6 +15,9 @@ def run(shell, args):
             connect_shells(shells, programs)
             for x in shells:
                 x.run()
+            for (program, args, cin, cout) in programs:
+                for x in cout:
+                    x.close()
         except IndexError:
             pass
 
