@@ -10,7 +10,7 @@ def run(shell, args):
     while System.state >= 1:
         data = raw_input("root@pyOS:%s$ "%shell.path)
         try:
-            programs, relations = eval_input(shell, data)
+            programs = eval_input(shell, data)
             shells, programs = start_shells(shell, programs)
             connect_shells(shells, programs)
             for x in listing:
@@ -66,15 +66,16 @@ def start_shells(shell, programs):
         newprograms.append((program, args, newcin, cout))
     return listing, newprograms
 
-def connect_shells(programs, relations):
-    for (idx0, op, idx1) in relations:
-        p0, p1 = programs[idx0], programs[idx1]
-        if op == ">":
-            p0.stdout.add(p1.stdin, stream=True)
-        elif op == "<":
-            p1.stdout.add(p0.stdin, stream=True)
-        else:
-            continue
+def connect_shells(shells, programs):
+    #connect all of the cins and couts
+    for i, (program, args, cins, couts) in enumerate(programs):
+        program = shells[i]
+        list((x.stdout.add(program.stdin, stream=True) for x in cins))
+        list((program.stdout.add(x.write, stream=False) for x in couts))
+    #connect the seperate programs
+    for i, p1 in enumerate(shells[1:]):
+        p0 = shells[i]
+        p0.stdout.add(p1.stdin, stream=True)
 
 def help():
     return "HELP"
