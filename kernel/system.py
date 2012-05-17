@@ -78,4 +78,7 @@ class System(object):
         else:
             return "some"
 
+    def kill(self, shell):
+        self.pids.remove(shell)
+
 System = System()

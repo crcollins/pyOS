@@ -2,6 +2,7 @@ import re
 
 import kernel.filesystem
 import kernel.stream
+import kernel.system
 
 class Shell(object):
     def __init__(self, pid, parent=None, program="interpreter", args="",
@@ -32,8 +33,11 @@ class Shell(object):
             self.program.run(self, self.args)
         elif not self.program and not self.stdin:
             self.stderr.write("%s: command not found" %self.programname)
+
+        #cleanup
         self.stdout.close()
         self.stderr.close()
+        kernel.system.System.kill(self)
 
     def get_path(self):
         return self.path
