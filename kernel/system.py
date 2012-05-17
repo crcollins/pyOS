@@ -47,9 +47,8 @@ class System(object):
         except:
             raise IOError
 
-    def new_shell(self, parent=None, program="interpreter", args="",
-                 stdin='', path="/"):
-        y = shell.Shell(len(self.pids), parent, program, args, stdin, path)
+    def new_shell(self, *args, **kwargs):
+        y = shell.Shell(len(self.pids), *args, **kwargs)
         self.new_pid(y)
         self.state = 1
         return y
