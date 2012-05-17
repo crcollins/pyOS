@@ -26,9 +26,8 @@ class Shell(object):
         self.stdout = kernel.stream.Pipe(name="out", writer=self)
         self.stderr = kernel.stream.Pipe(name="err", writer=self)
 
-        self.program = self.find_program(self.programname)
-
     def run(self):
+        self.program = self.find_program(self.programname)
         if self.program:
             self.program.run(self, self.args)
         elif not self.program and not self.stdin:
