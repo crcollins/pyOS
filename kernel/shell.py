@@ -5,7 +5,7 @@ import kernel.stream
 
 class Shell(object):
     def __init__(self, pid, parent=None, program="interpreter", args="",
-                 stdin='', path="/"):
+                 stdin=None, path="/"):
         self.programname = program
         self.args = args
 
@@ -22,30 +22,16 @@ class Shell(object):
             self.aliases = dict()
             self.prevcommands = []
 
-        self.stdin = kernel.stream.Stream(value=stdin, name="in", listeners=self.callback)
-        self.stdout = kernel.stream.Stream(name="out")
-        self.stderr = kernel.stream.Stream(name="err")
-
-        self.program = self.find_program(self.programname)
-        self.file = None
-
-        if not self.program:
-            self.file = kernel.filesystem.open_file(self.programname, "w")
-
-    def callback(self, value):
-        if self.file:
-            self.file.write(value)
-        else:
-            pass
+        self.stdin = stdin
+        self.stdout = kernel.stream.Pipe(name="out", writer=self)
+        self.stderr = kernel.stream.Pipe(name="err", writer=self)
 
     def run(self):
+        self.program = self.find_program(self.programname)
         if self.program:
             self.program.run(self, self.args)
         elif not self.program and not self.stdin:
             self.stderr.write("%s: command not found" %self.programname)
-
-        if self.file:
-            self.file.close()
 
     def get_path(self):
         return self.path
