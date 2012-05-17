@@ -43,4 +43,5 @@ class Pipe(object):
         if not (self.reader is None):
             pass#self.reader()
         else:
-            print "<%s> %s" %(self.name, '\n'.join(self.value)),
+            if any(self.value):
+                print "<%s> %s" %(self.name, '\n'.join(self.value)),
