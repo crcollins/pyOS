@@ -31,8 +31,8 @@ class Shell(object):
         self.program = self.find_program(self.programname)
         if self.program:
             self.program.run(self, self.args)
-        elif not self.program and not self.stdin:
-            self.stderr.write("%s: command not found" %self.programname)
+        else:
+            self.stderr.write("%s: command not found\n" %self.programname)
 
         #cleanup
         self.stdout.close()
