@@ -32,6 +32,8 @@ class Shell(object):
             self.program.run(self, self.args)
         elif not self.program and not self.stdin:
             self.stderr.write("%s: command not found" %self.programname)
+        self.stdout.close()
+        self.stderr.close()
 
     def get_path(self):
         return self.path
