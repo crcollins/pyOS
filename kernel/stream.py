@@ -36,6 +36,10 @@ class Pipe(object):
         self.closed = True
         self.broadcast()
 
+    def clear(self):
+        self.value = []
+        self._line = 0
+
     def get_value(self):
         return self.value
 
