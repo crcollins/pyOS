@@ -38,28 +38,19 @@ def is_directory(path):
     return os.path.isdir(abs_path(path))
 
 def move(src, dst):
-    try:
-            shutil.move(abs_path(src), abs_path(dst))
-    except:
-        print "File DNE!"
+    shutil.move(abs_path(src), abs_path(dst))
 
 def copy(src, dst, recursive=False):
-    try:
-        if recursive:
-            shutil.copytree(abs_path(src), abs_path(dst))
-        else:
-            shutil.copy2(abs_path(src), abs_path(dst))
-    except:
-        print "File DNE!"
+    if recursive:
+        shutil.copytree(abs_path(src), abs_path(dst))
+    else:
+        shutil.copy2(abs_path(src), abs_path(dst))
 
 def remove(path, recursive=False):
-    try:
-        if recursive:
-            shutil.rmtree(abs_path(path))
-        else:
-            os.remove(abs_path(path))
-    except:
-        print "File DNE!"
+    if recursive:
+        shutil.rmtree(abs_path(path))
+    else:
+        os.remove(abs_path(path))
 
 def join_path(*args):
     return os.path.join(*args)
