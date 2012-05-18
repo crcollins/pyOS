@@ -85,4 +85,11 @@ def connect_shells(shells):
         p0.stdout.set_reader(p1)
 
 def help():
-    return "HELP"
+    a = """
+    Interpreter
+
+    The main interface for the computer.
+
+    usage: interpreter
+    """
+    return a
