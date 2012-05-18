@@ -2,12 +2,12 @@ import kernel.filesystem
 
 def run(shell, args):
     if args:
-        path = shell.iabs_path(args[0])
-        if not kernel.filesystem.exists(path):
-            f = kernel.filesystem.open_file(path,'w')
-            f.close()
-        else:
-            shell.stderr.write("%s already exists" %(path))
+        for x in args:
+            path = shell.iabs_path(x)
+            if not kernel.filesystem.exists(path):
+                kernel.filesystem.open_file(path,'w').close()
+            else:
+                shell.stderr.write("%s already exists" %(path))
     else:
         shell.stderr.write("missing file operand")
 
