@@ -83,3 +83,9 @@ class Shell(object):
             if program:
                 break
         return program
+
+    def __repr__(self):
+        return "<Shell(pid=%d, program=%s, args=%s, path=%s)>" %(self.pid, self.programname, self.args, self.path)
+
+    def __str__(self):
+        return "<%s %d>" %(self.programname, self.pid)
