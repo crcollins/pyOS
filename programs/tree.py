@@ -1,5 +1,4 @@
 import kernel.filesystem as fs
-import pprint
 
 def run(shell, args):
     if args:
