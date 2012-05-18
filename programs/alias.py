@@ -3,7 +3,7 @@ def run(shell, args):
     shell = shell.parent
     if not args:
         for x in shell.aliases:
-            print x, shell.aliases[x]
+            shell.stdout.write("%s %s" %(x, shell.aliases[x]))
     else:
         for item in args:
             if "=" in item:
@@ -12,7 +12,7 @@ def run(shell, args):
                 value = item[x+1:]
                 shell.aliases[key] = value
             else:
-                print "error", item
+                shell.stderr.write("")
 
 def help():
     a = """
