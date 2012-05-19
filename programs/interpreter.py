@@ -9,6 +9,7 @@ stdioparse = re.compile(r"([<>]+\s*\w+)")
 def run(shell, args):
     while System.state >= 1:
         data = raw_input("root@pyOS:%s$ "%shell.path)
+        shell.prevcommands.append(data)
         try:
             programs = eval_input(shell, data)
             shells = start_shells(shell, programs)
