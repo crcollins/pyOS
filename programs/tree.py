@@ -41,7 +41,7 @@ def help():
     a = """
     Tree
 
-    Returns the file/direactory tree of the given directory.
+    Returns the file/directory tree of the given directory.
 
     usage: tree [directory]
     """
