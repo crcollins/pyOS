@@ -11,15 +11,15 @@ def run(shell, args):
 def sorter(x):
     return ("f" if fs.is_file(x) else "d") + x.lower()
 
-
 def tree_gen(path):
-    l = [path]
+    pathtree = [path]
     if fs.is_directory(path):
         listing = sorted([fs.join_path(path,x) for x in fs.list_dir(path)], key=sorter)
         for x in listing:
-                if ".git" not in x and x[-4:] != ".pyc":
-                    l.append(tree_gen(fs.join_path(path,x)))
-    return l
+            #remove this filter later
+            if ".git" not in x and x[-4:] != ".pyc":
+                pathtree.append(tree_gen(fs.join_path(path,x)))
+    return pathtree
 
 def tree_print(tree, level=0, extra="", idx=None):
         string = ''
@@ -36,7 +36,6 @@ def tree_print(tree, level=0, extra="", idx=None):
                 else:
                     string += added[:-1] + "'" + char * (level > 0) + x + "\n"
         return string
-
 
 def help():
     a = """
