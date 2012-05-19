@@ -1,5 +1,5 @@
 from kernel.system import System
-from kernel.constants import SHUTDOWN
+from kernel.constants import RESTART
 
 def run(shell, args):
     System.state = RESTART
