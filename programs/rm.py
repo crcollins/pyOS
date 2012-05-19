@@ -13,12 +13,13 @@ def run(shell, args):
     args = parser.parse_args(args)
     if len(args.paths) >= 1:
         for path in args.paths:
+            path = shell.iabs_path(path)
             if fs.is_file(path) or (fs.is_directory(path) and args.recursive):
                 if args.verbose:
                     shell.stdout.write("Removing %s" %(path))
                 fs.remove(path, recursive=args.recursive)
             else:
-                if not args.recursive and fs.is_dir(path):
+                if not args.recursive and fs.is_directory(path):
                     shell.stderr.write("%s is a directory" %(path))
                 elif not fs.is_file(path):
                     shell.stderr.write("%s is not a file" %(path))     
