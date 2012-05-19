@@ -1,5 +1,6 @@
-from kernel import filesystem
-from kernel import shell
+import kernel.filesystem
+import kernel.shell
+from kernel.constants import KERNELDIR, IDLE, REBOOT, RUNNING
 
 class System(object):
     """
@@ -18,29 +19,30 @@ class System(object):
         self.display = None#Display()
         self.output = None
         self.pids = []
-        self.state = 0
+        self.state = IDLE
 
     def run(self):
         self.startup()
-        self.state = 0
-        while self.state >= 0:
+        self.state = IDLE
+        while self.state >= IDLE:
             current = self.new_shell()
             current.run()
-        if self.state <= -1:
-            self.shutdown()
-            if self.state == -2:
-                self.run()
+        self.shutdown()
+        if self.state == REBOOT:
+            self.run()
 
     def startup(self):
+        path = kernel.filesystem.join_path(KERNELDIR, "startup")
         try:
-            program = kernel.filesystem.open_program('kernel/startup')
+            program = kernel.filesystem.open_program(path)
             program.run()
         except:
             raise IOError
 
     def shutdown(self):
+        path = kernel.filesystem.join_path(KERNELDIR, "shutdown")
         try:
-            program = kernel.filesystem.open_program('kernel/shutdown')
+            program = kernel.filesystem.open_program(path)
             program.run()
         except:
             raise IOError
@@ -48,7 +50,7 @@ class System(object):
     def new_shell(self, *args, **kwargs):
         y = kernel.shell.Shell(len(self.pids), *args, **kwargs)
         self.new_pid(y)
-        self.state = 1
+        self.state = RUNNING
         return y
 
     def get_pid(self, item):

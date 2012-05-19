@@ -2,11 +2,10 @@ import os
 import shutil
 import imp
 
-BASEDIR = os.getcwd()
-
+from kernel.constants import BASEPATH
 
 def abs_path(path):
-    return os.path.join(BASEDIR, path.lstrip('/'))
+    return os.path.join(BASEPATH, path.lstrip('/'))
 
 def rel_path(path, base):
     return os.path.relpath(path, base)
@@ -14,16 +13,16 @@ def rel_path(path, base):
 def eval_path( path):
     #returns relative path
     path = path.strip('/') if path != '/' else '.'
-    b = os.path.relpath(path, BASEDIR)
+    b = os.path.relpath(path, BASEPATH)
     if b in ('..', '.'):
         b = ''
     return b.replace('../','')
 
 def convert(path):
     #returns relative path
-    a = os.path.commonprefix([BASEDIR, os.path.abspath(path)])
-    b = os.path.relpath(path, BASEDIR)
-    if len(a) < len(BASEDIR) or b == '.':
+    a = os.path.commonprefix([BASEPATH, os.path.abspath(path)])
+    b = os.path.relpath(path, BASEPATH)
+    if len(a) < len(BASEPATH) or b == '.':
         return '/'
     else:
         return '/' + b

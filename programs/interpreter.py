@@ -1,14 +1,15 @@
 import kernel.filesystem
 from kernel.system import System
+from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, INCHAR, OUTCHAR, APPENDCHAR
 
 import re
 
-varparse = re.compile(r"\$\w*")
-stdioparse = re.compile(r"([<>]+\s*\w+)")
+varparse = re.compile(r"\%s\w*" %(VARCHAR))
+stdioparse = re.compile(r"([%s%s]+\s*\w+)" %(OUTCHAR, INCHAR))
 
 def run(shell, args):
-    while System.state >= 1:
-        data = raw_input("root@pyOS:%s$ "%shell.path)
+    while System.state >= RUNNING:
+        data = raw_input("root@%s:%s$ "%(OSNAME, shell.path))
         shell.prevcommands.append(data)
         try:
             programs = eval_input(shell, data)
@@ -24,7 +25,7 @@ def eval_input(shell, string):
     string = re.sub(varparse, shell.get_var, string)
 
     #split pipes/stdio
-    split = string.split("|")
+    split = string.split(PIPECHAR)
     programsplit = (re.split(stdioparse, x) for x in split)
     cleaned = [[y.strip() for y in x if y.strip()] for x in programsplit]
 
@@ -42,12 +43,12 @@ def eval_input(shell, string):
         args, cin, cout = [], None, None
         #reversed so that the operators near the command take precedence
         for part in pipeset[::-1]:
-            p2 = part.lstrip("<> ")
-            if ">>" in part:
+            p2 = part.lstrip("%s%s " %(OUTCHAR, INCHAR))
+            if APPENDCHAR in part:
                 cout = ((p2, "a"))
-            elif ">" in part:
+            elif OUTCHAR in part:
                 cout = ((p2, "w"))
-            elif "<" in part:
+            elif INCHAR in part:
                 cin = p2
             else:
                 args.extend(part.split())

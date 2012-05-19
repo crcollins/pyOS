@@ -3,10 +3,11 @@ import re
 import kernel.filesystem
 import kernel.stream
 import kernel.system
+from kernel.constants import PROGRAMSDIR, VARCHAR, BASEDIR
 
 class Shell(object):
     def __init__(self, pid, parent=None, program="interpreter", args="",
-                 stdin=None, path="/"):
+                 stdin=None, path=BASEDIR):
         self.programname = program
         self.args = args
 
@@ -19,7 +20,7 @@ class Shell(object):
             self.aliases = self.parent.aliases.copy()
             self.prevcommands = self.parent.prevcommands[:]
         else:
-            self.vars = {"PATH":"/programs"}
+            self.vars = {"PATH":PROGRAMSDIR}
             self.aliases = dict()
             self.prevcommands = []
 
@@ -67,9 +68,9 @@ class Shell(object):
 
     def get_var(self, name):
         try:
-            x = self.vars[name.group(0).lstrip("$")]
+            x = self.vars[name.group(0).lstrip(VARCHAR)]
         except AttributeError:
-            x = self.vars[name.lstrip("$")]
+            x = self.vars[name.lstrip(VARCHAR)]
         except:
             x = ''
         return x
