@@ -3,13 +3,11 @@ def run(shell, args):
     shell = shell.parent
     if not args:
         for x in shell.aliases:
-            shell.stdout.write("%s %s" %(x, shell.aliases[x]))
+            shell.stdout.write("alias %s=%s" %(x, shell.aliases[x]))
     else:
         for item in args:
             if "=" in item:
-                x = item.index("=")
-                key = item[:x]
-                value = item[x+1:]
+                (key, value) = [x.strip() for x in item.split("=",1)]
                 shell.aliases[key] = value
             else:
                 shell.stderr.write("")
