@@ -11,8 +11,6 @@ class System(object):
     -1: shutting down
     0:  idle
     1:  running shell
-
-
     """
     _state = {}
     def __init__(self):
@@ -35,20 +33,20 @@ class System(object):
 
     def startup(self):
         try:
-            program = filesystem.open_program('kernel/startup')
+            program = kernel.filesystem.open_program('kernel/startup')
             program.run()
         except:
             raise IOError
 
     def shutdown(self):
         try:
-            program = filesystem.open_program('kernel/shutdown')
+            program = kernel.filesystem.open_program('kernel/shutdown')
             program.run()
         except:
             raise IOError
 
     def new_shell(self, *args, **kwargs):
-        y = shell.Shell(len(self.pids), *args, **kwargs)
+        y = kernel.shell.Shell(len(self.pids), *args, **kwargs)
         self.new_pid(y)
         self.state = 1
         return y
