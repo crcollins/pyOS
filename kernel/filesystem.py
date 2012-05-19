@@ -25,7 +25,7 @@ def convert(path):
     if len(a) < len(BASEPATH) or b == '.':
         return '/'
     else:
-        return '/' + b
+        return '/%s' %b
 
 def exists(path):
     return os.path.exists(abs_path(path))
@@ -70,7 +70,7 @@ def open_program(path):
     x = abs_path(path)
     try:
         try:
-            program = imp.load_source('program', x+'.py')
+            program = imp.load_source('program', '%s.py' %x)
         except IOError:
             program = imp.load_source('program', x)
     except IOError:

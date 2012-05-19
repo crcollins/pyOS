@@ -19,7 +19,7 @@ def run(shell, args):
                 shell.stdout.write("Moving %s to %s" %(src, dest)
             kernel.filesystem.move(src, dest)
         else:
-            shell.stderr.write(dest + " is not a directory")
+            shell.stderr.write("%s is not a directory" %dest)
     else:
         shell.stderr.write("missing file operand")
 

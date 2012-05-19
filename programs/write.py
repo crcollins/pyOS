@@ -13,7 +13,7 @@ def run(shell, args):
         try:
             f = kernel.filesystem.open_file(path,mode)
             for line in shell.stdin.read():
-                f.write(line+"\n")
+                f.write("%s\n" %line)
             f.close()
         except:
             shell.stderr.write("file error")
