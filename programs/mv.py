@@ -12,11 +12,11 @@ pa('-v', action="store_true", dest="verbose", default=False)
 def run(shell, args):
     args = parser.parse_args(args)
     if len(args.paths) >= 2:
-        src = shell.iabs_path(args[0])
-        dest = shell.iabs_path(args[1])
-        if kernel.filesystem.is_dir(dest):
+        src = shell.iabs_path(args.paths[0])
+        dest = shell.iabs_path(args.paths[1])
+        if kernel.filesystem.is_directory(dest):
             if args.verbose:
-                shell.stdout.write("Moving %s to %s" %(src, dest)
+                shell.stdout.write("Moving %s to %s" %(src, dest))
             kernel.filesystem.move(src, dest)
         else:
             shell.stderr.write("%s is not a directory" %dest)
