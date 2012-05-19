@@ -23,7 +23,7 @@ APPENDCHAR = ">>"
 INCHAR = "<"
 
 #System State Vars
-RESTART = -2
+REBOOT = -2
 SHUTDOWN = -1
 IDLE = 0
 RUNNING = 1
