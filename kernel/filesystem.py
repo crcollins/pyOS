@@ -75,7 +75,7 @@ def open_program(path):
         except IOError:
             program = imp.load_source('program', x)
     except IOError:
-        return False
+        program = False
     return program
 
 def dir_name(path):
