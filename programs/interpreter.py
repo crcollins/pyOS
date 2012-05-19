@@ -42,14 +42,17 @@ def eval_input(shell, string):
             program = shell.aliases[program]
         args, cin, cout = [], None, None
         #reversed so that the operators near the command take precedence
-        for part in pipeset[::-1]:
+        for part in pipeset:
             p2 = part.lstrip("%s%s " %(OUTCHAR, INCHAR))
             if APPENDCHAR in part:
-                cout = ((p2, "a"))
+                if not cout:
+                    cout = ((p2, "a"))
             elif OUTCHAR in part:
-                cout = ((p2, "w"))
+                if not cout:
+                    cout = ((p2, "w"))
             elif INCHAR in part:
-                cin = p2
+                if not cin:
+                    cin = p2
             else:
                 args.extend(part.split())
         final.append((program, args, cin, cout))
