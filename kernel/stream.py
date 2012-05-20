@@ -29,6 +29,11 @@ class Pipe(object):
             yield line
             self._line += 1
 
+    def readline(self):
+        line = self.value[self._line]
+        self._line += 1
+        return line
+
     def readlines(self): 
         return self.value
 
