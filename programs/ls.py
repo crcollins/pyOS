@@ -5,7 +5,7 @@ def run(shell, args):
         path = shell.iabs_path(args[0])
     else:
         path = shell.path
-    a = kernel.filesystem.list_dir(path)
+    a = sorted(kernel.filesystem.list_dir(path))
     if shell.stdout:
         shell.stdout.write('\n'.join(a))
     else:
