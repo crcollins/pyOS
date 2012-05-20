@@ -5,7 +5,7 @@ import kernel.filesystem
 parser = argparse.ArgumentParser(add_help=False)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
-pa('-n', action="store", type=str, dest="lineamount", default=5)
+pa('-n', action="store", type=int, dest="lineamount", default=5)
 
 def run(shell, args):
     if args or shell.stdin:
