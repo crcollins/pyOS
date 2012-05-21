@@ -1,6 +1,7 @@
 import os
 import shutil
 import imp
+import glob
 
 from kernel.constants import BASEPATH
 
@@ -59,6 +60,9 @@ def get_size(path):
 
 def list_dir(path):
     return sorted(os.listdir(abs_path(path)))
+
+def list_glob(expression):
+    return [convert(x) for x in glob.glob(abs_path(expression))]
 
 def make_dir(path):
     return os.mkdir(abs_path(path))
