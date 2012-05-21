@@ -1,4 +1,4 @@
-import kernel.filesystem
+import kernel.filesystem as fs
 from kernel.system import System
 from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, INCHAR, OUTCHAR, APPENDCHAR
 
@@ -25,11 +25,10 @@ def eval_input(shell, string):
     string = re.sub(varparse, shell.get_var, string)
 
     #split pipes/stdio
+    #shlex.split()
     split = string.split(PIPECHAR)
     programsplit = (re.split(stdioparse, x) for x in split)
     cleaned = [[y.strip() for y in x if y.strip()] for x in programsplit]
-
-    fs = kernel.filesystem
 
     #format them things
     final = []
