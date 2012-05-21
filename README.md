@@ -18,7 +18,8 @@ Todo
 - sdterr redirection
 - users
 - file metadata
-- other Utilities (grep, find, xargs, etc)
+- other utilities (xargs, edit, awk, sed, tee, etc)
+- polish utilities
 - formalize the directory structure
 - thread(multiprocess?) processes
 - new argument parser
@@ -26,6 +27,7 @@ Todo
 - tests
 - documentation
 - formalize syscalls
+- networking
 
 Setup
 -----
