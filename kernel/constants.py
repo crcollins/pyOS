@@ -11,8 +11,8 @@ CURRENTDIR = "."
 PARENTDIR = ".."
 PROGRAMSDIR = "/programs"
 KERNELDIR = "/kernel"
-METADIR = "/meta" #need to implement
-USERDIR = "/user" #need to implement
+METADIR = "/meta"  # need to implement
+USERDIR = "/user"  # need to implement
 
 #Special Characters/strings
 VARCHAR = "$"

@@ -14,9 +14,10 @@ class System(object):
     1:  running shell
     """
     _state = {}
+
     def __init__(self):
         self.__dict__ = self._state
-        self.display = None#Display()
+        self.display = None  # Display()
         self.output = None
         self.pids = []
         self.state = IDLE
@@ -68,7 +69,7 @@ class System(object):
         return x
 
     def new_pid(self, item):
-        x =  len(self.pids)
+        x = len(self.pids)
         self.pids.append(item)
         return x
 

@@ -9,14 +9,14 @@ def run(shell, args):
             for x in args[1:]:
                 path = shell.iabs_path(x)
                 try:
-                    f = kernel.filesystem.open_file(path,'r')
+                    f = kernel.filesystem.open_file(path, 'r')
                     for line in f:
                         m = re.match(expression, line)
                         if m is not None:
                             shell.stdout.write(line.rstrip())
                     f.close()
                 except IOError:
-                    shell.stderr.write("%s does not exist" %(path))
+                    shell.stderr.write("%s does not exist" % (path, ))
             if shell.stdin:
                 for line in shell.stdin.read():
                     shell.stdout.write(line)

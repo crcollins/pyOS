@@ -13,14 +13,14 @@ def run(shell, args):
         for x in args.paths:
             path = shell.iabs_path(x)
             if args > 1:
-                shell.stdout.write("==> %s <==" %x)
+                shell.stdout.write("==> %s <==" % (x, ))
             try:
-                f = kernel.filesystem.open_file(path,'r')
+                f = kernel.filesystem.open_file(path, 'r')
                 for line in f.readlines()[-args.lineamount:]:
                     shell.stdout.write(line.rstrip())
                 f.close()
             except IOError:
-                shell.stderr.write("%s does not exist" %(path))
+                shell.stderr.write("%s does not exist" % (path, ))
         if shell.stdin:
             if args.paths:
                 shell.stdout.write("==> %% stdin %% <==")

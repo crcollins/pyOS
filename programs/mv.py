@@ -17,13 +17,13 @@ def run(shell, args):
             for src in args.paths[:-1]:
                 src = shell.iabs_path(src)
                 if args.verbose:
-                    shell.stdout.write("Moving %s to %s" %(src, dest))
+                    shell.stdout.write("Moving %s to %s" % (src, dest))
                 try:
                     kernel.filesystem.move(src, dest)
                 except IOError:
-                    shell.stderr.write("file error" %dest)
+                    shell.stderr.write("file error" % (dest, ))
         else:
-            shell.stderr.write("%s is not a directory" %dest)
+            shell.stderr.write("%s is not a directory" % (dest, ))
     else:
         shell.stderr.write("missing file operand")
 

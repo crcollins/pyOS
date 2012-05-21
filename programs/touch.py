@@ -5,9 +5,9 @@ def run(shell, args):
         for x in args:
             path = shell.iabs_path(x)
             if not kernel.filesystem.exists(path):
-                kernel.filesystem.open_file(path,'w').close()
+                kernel.filesystem.open_file(path, 'w').close()
             else:
-                shell.stderr.write("%s already exists" %(path))
+                shell.stderr.write("%s already exists" % (path, ))
     else:
         shell.stderr.write("missing file operand")
 

@@ -9,7 +9,7 @@ def run(shell, args):
                 shell.stdout.write(program.help())
                 break
         else:
-            shell.stderr.write("%s: command not found" %name)
+            shell.stderr.write("%s: command not found" % (name, ))
     else:
         shell.stdout.write(help())
 

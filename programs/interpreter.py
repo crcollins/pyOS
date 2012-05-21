@@ -1,15 +1,16 @@
 import kernel.filesystem as fs
 from kernel.system import System
-from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, INCHAR, OUTCHAR, APPENDCHAR
+from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, \
+        INCHAR, OUTCHAR, APPENDCHAR
 
 import re
 
-varparse = re.compile(r"\%s\w*" %(VARCHAR))
-stdioparse = re.compile(r"([%s%s]+\s*\w+)" %(OUTCHAR, INCHAR))
+varparse = re.compile(r"\%s\w*" % (VARCHAR, ))
+stdioparse = re.compile(r"([%s%s]+\s*\w+)" % (OUTCHAR, INCHAR))
 
 def run(shell, args):
     while System.state >= RUNNING:
-        data = raw_input("root@%s:%s$ "%(OSNAME, shell.path))
+        data = raw_input("root@%s:%s$ "% (OSNAME, shell.path))
         shell.prevcommands.append(data)
         try:
             programs = eval_input(shell, data)
@@ -42,7 +43,7 @@ def eval_input(shell, string):
         args, cin, cout = [], None, None
         #reversed so that the operators near the command take precedence
         for part in pipeset:
-            p2 = part.lstrip("%s%s " %(OUTCHAR, INCHAR))
+            p2 = part.lstrip("%s%s " % (OUTCHAR, INCHAR))
             if APPENDCHAR in part:
                 if not cout:
                     cout = ((p2, "a"))

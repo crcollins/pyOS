@@ -10,7 +10,6 @@ def run(shell, args):
     a = find(path, expression)
     shell.stdout.write('\n'.join(a))
 
-
 def find(path, expression):
     listing = []
 

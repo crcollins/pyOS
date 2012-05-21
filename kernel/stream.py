@@ -34,7 +34,7 @@ class Pipe(object):
         self._line += 1
         return line
 
-    def readlines(self): 
+    def readlines(self):
         return self.value
 
     def close(self):
@@ -50,13 +50,14 @@ class Pipe(object):
 
     def broadcast(self):
         if not (self.reader is None):
-            pass#self.reader()
+            pass  # self.reader()
         else:
             if any(self.value):
-                print "<%s> %s" %(self.name, '\n'.join(self.value)),
+                print "<%s> %s" % (self.name, '\n'.join(self.value)),
 
     def __repr__(self):
-        return "<Pipe(name=%s, value=%s, writer=%d, reader=%d)>" %(self.name, self.value, self.writer.pid, self.reader.pid)
+        return "<Pipe(name=%s, value=%s, writer=%d, reader=%d)>" % (
+                self.name, self.value, self.writer.pid, self.reader.pid)
 
     def __str__(self):
-        return "<Pipe %d: %s>" %(self._line, self.value[self._line])
+        return "<Pipe %d: %s>" % (self._line, self.value[self._line])

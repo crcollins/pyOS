@@ -6,8 +6,8 @@ import kernel.system
 from kernel.constants import PROGRAMSDIR, VARCHAR, BASEDIR
 
 class Shell(object):
-    def __init__(self, pid, parent=None, program="interpreter", args="",
-                 stdin=None, path=BASEDIR):
+    def __init__(self, pid, parent=None, program="interpreter",
+                 args="", stdin=None, path=BASEDIR):
         self.programname = program
         self.args = args
 
@@ -20,7 +20,7 @@ class Shell(object):
             self.aliases = self.parent.aliases.copy()
             self.prevcommands = self.parent.prevcommands[:]
         else:
-            self.vars = {"PATH":PROGRAMSDIR}
+            self.vars = {"PATH": PROGRAMSDIR}
             self.aliases = dict()
             self.prevcommands = []
 
@@ -33,7 +33,7 @@ class Shell(object):
         if self.program:
             self.program.run(self, self.args)
         else:
-            self.stderr.write("%s: command not found\n" %self.programname)
+            self.stderr.write("%s: command not found\n" % (self.programname, ))
 
         #cleanup
         self.stdout.close()
@@ -56,7 +56,8 @@ class Shell(object):
     def irel_path(self, path, base=None):
         if base is None:
             base = self.path
-        return kernel.filesystem.rel_path(self.iabs_path(path), self.iabs_path(base))
+        return kernel.filesystem.rel_path(self.iabs_path(path),
+                                          self.iabs_path(base))
 
     def program_paths(self, name):
         if name[0:2] == "./":
@@ -86,7 +87,8 @@ class Shell(object):
         return program
 
     def __repr__(self):
-        return "<Shell(pid=%d, program=%s, args=%s, path=%s)>" %(self.pid, self.programname, self.args, self.path)
+        return "<Shell(pid=%d, program=%s, args=%s, path=%s)>" % (self.pid,
+                                    self.programname, self.args, self.path)
 
     def __str__(self):
-        return "<%s %d>" %(self.programname, self.pid)
+        return "<%s %d>" % (self.programname, self.pid)

@@ -11,13 +11,13 @@ def abs_path(path):
 def rel_path(path, base):
     return os.path.relpath(path, base)
 
-def eval_path( path):
+def eval_path(path):
     #returns relative path
     path = path.strip('/') if path != '/' else '.'
     b = os.path.relpath(path, BASEPATH)
     if b in ('..', '.'):
         b = ''
-    return b.replace('../','')
+    return b.replace('../', '')
 
 def convert(path):
     #returns relative path
@@ -26,7 +26,7 @@ def convert(path):
     if len(a) < len(BASEPATH) or b == '.':
         return '/'
     else:
-        return '/%s' %b
+        return '/%s' % (b, )
 
 def exists(path):
     return os.path.exists(abs_path(path))
@@ -74,7 +74,7 @@ def open_program(path):
     x = abs_path(path)
     try:
         try:
-            program = imp.load_source('program', '%s.py' %x)
+            program = imp.load_source('program', '%s.py' % (x, ))
         except IOError:
             program = imp.load_source('program', x)
     except IOError:

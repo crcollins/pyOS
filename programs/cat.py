@@ -5,12 +5,12 @@ def run(shell, args):
         for x in args:
             path = shell.iabs_path(x)
             try:
-                f = kernel.filesystem.open_file(path,'r')
+                f = kernel.filesystem.open_file(path, 'r')
                 for line in f:
                     shell.stdout.write(line)
                 f.close()
             except IOError:
-                shell.stderr.write("%s does not exist" %(path))
+                shell.stderr.write("%s does not exist" % (path))
         if shell.stdin:
             for line in shell.stdin.read():
                 shell.stdout.write(line)

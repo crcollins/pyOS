@@ -8,7 +8,7 @@ def run(shell, args):
         if kernel.filesystem.is_directory(path):
             shell.set_path(path)
         else:
-            shell.stderr.write("%s: no such directory" %path)
+            shell.stderr.write("%s: no such directory" % (path, ))
 
 def help():
     a = """

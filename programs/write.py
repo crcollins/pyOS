@@ -4,16 +4,16 @@ def run(shell, args):
     if args:
         path = shell.iabs_path(args[0])
         try:
-            if args[1] in ["a","w"]:
+            if args[1] in ("a", "w"):
                 mode = args[1]
             else:
-                shell.stderr.write("%s is not a valid file mode" %(args[1]))
+                shell.stderr.write("%s is not a valid file mode" % (args[1]))
         except IndexError:
             mode = 'w'
         try:
-            f = kernel.filesystem.open_file(path,mode)
+            f = kernel.filesystem.open_file(path, mode)
             for line in shell.stdin.read():
-                f.write("%s\n" %line)
+                f.write("%s\n" % (line, ))
             f.close()
         except:
             shell.stderr.write("file error")

@@ -6,7 +6,7 @@ def run(shell, args):
         if not kernel.filesystem.exists(path):
             kernel.filesystem.make_dir(path)
         else:
-            shell.stderr.write("%s already exists" %(path))
+            shell.stderr.write("%s already exists" % (path, ))
     else:
         shell.stderr.write("missing directory operand")
 
