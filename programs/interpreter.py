@@ -14,15 +14,16 @@ quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
 def run(shell, args):
     while System.state >= RUNNING:
         data = raw_input("root@%s:%s$ "% (OSNAME, shell.path))
-        shell.prevcommands.append(data)
-        try:
-            programs = eval_input(shell, data)
-            shells = start_shells(shell, programs)
-            connect_shells(shells)
-            for x in shells:
-                x.run()
-        except IndexError:
-            pass
+        if data:
+            shell.prevcommands.append(data)
+            try:
+                programs = eval_input(shell, data)
+                shells = start_shells(shell, programs)
+                connect_shells(shells)
+                for x in shells:
+                    x.run()
+            except IndexError:
+                pass
 
 def quote_split(string):
     a = []
