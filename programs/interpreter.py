@@ -1,9 +1,12 @@
+import re
+import shlex
+
 import kernel.filesystem as fs
 from kernel.system import System
 from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, \
         INCHAR, OUTCHAR, APPENDCHAR
 
-import re
+
 
 varparse = re.compile(r"\%s\w*" % (VARCHAR, ))
 stdioparse = re.compile(r"([%s%s]+\s*\w+)" % (OUTCHAR, INCHAR))
@@ -24,40 +27,34 @@ def run(shell, args):
 def eval_input(shell, string):
     #replace $vars
     string = re.sub(varparse, shell.get_var, string)
+    a = shlex.split(string)
 
-    #split pipes/stdio
-    #shlex.split()
-    split = string.split(" %s " % (PIPECHAR, ))
-    programsplit = (re.split(stdioparse, x) for x in split)
-    cleaned = [[y.strip() for y in x if y.strip()] for x in programsplit]
-
-    #format them things
-    final = []
-    for pipeset in cleaned:
-        #hack to extract the program name
-        program = pipeset[0].split()[0]
-        pipeset = pipeset[0].split()[1:] + pipeset[1:]
-
-        if program in shell.aliases:
-            program = shell.aliases[program]
-        args, cin, cout = [], None, None
-        #reversed so that the operators near the command take precedence
-        for part in pipeset:
-            p2 = part.lstrip("%s%s " % (OUTCHAR, INCHAR))
-            if APPENDCHAR in part:
-                if not cout:
-                    cout = ((p2, "a"))
-            elif OUTCHAR in part:
-                if not cout:
-                    cout = ((p2, "w"))
-            elif INCHAR in part:
-                if not cin:
-                    cin = p2
-            else:
-                args.extend(part.split())
-        final.append((program, args, cin, cout))
-    #((program, [arg0, arg1, ...], cin, (cout, mode)), ...)
-    return final
+    b = [[None, [], None, None]]
+    state = None
+    charstates = [APPENDCHAR, OUTCHAR, INCHAR, PIPECHAR]
+    for part in a:
+        if part in charstates and state in charstates:
+            raise SyntaxError
+        elif part in charstates:
+            state = part
+        else:
+            if state in [None, PIPECHAR]:
+                if state == PIPECHAR:
+                    b.append([None, [], None, None])
+                if part in shell.aliases:
+                    part = shell.aliases[part]
+                b[-1][0] = part         # program
+            elif state == "args":
+                b[-1][1].append(part)   # args
+            elif state == INCHAR and not b[-1][2]:
+                b[-1][2] = part         # stdin
+            elif state == OUTCHAR and not b[-1][3]:
+                b[-1][3] = (part, 'w')  # stdout
+            elif state == APPENDCHAR and not b[-1][3]:
+                b[-1][3] = (part, 'a')  #stdout append
+            state = "args"
+    # [[program, [arg0, arg1, ...], cin, (cout, mode)], ...]
+    return b
 
 def start_shells(parent, programs):
     path = parent.path
