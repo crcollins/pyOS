@@ -27,7 +27,7 @@ def eval_input(shell, string):
 
     #split pipes/stdio
     #shlex.split()
-    split = string.split(PIPECHAR)
+    split = string.split(" %s " % (PIPECHAR, ))
     programsplit = (re.split(stdioparse, x) for x in split)
     cleaned = [[y.strip() for y in x if y.strip()] for x in programsplit]
 
