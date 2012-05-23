@@ -1,5 +1,4 @@
 import re
-import shlex
 
 import kernel.filesystem as fs
 from kernel.system import System
@@ -10,6 +9,7 @@ from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, \
 
 varparse = re.compile(r"\%s\w*" % (VARCHAR, ))
 stdioparse = re.compile(r"([%s%s]+\s*\w+)" % (OUTCHAR, INCHAR))
+quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
 
 def run(shell, args):
     while System.state >= RUNNING:
@@ -24,10 +24,19 @@ def run(shell, args):
         except IndexError:
             pass
 
+def quote_split(string):
+    a = []
+    for x in re.split(quoteparse, string):
+        if not x.startswith("'") and not x.startswith('"'):
+            a.extend(x.strip().split())
+        else:
+            a.append(x)
+    return a
+
 def eval_input(shell, string):
     #replace $vars
     string = re.sub(varparse, shell.get_var, string)
-    a = shlex.split(string)
+    a = quote_split(string)
 
     b = [[None, [], None, None]]
     state = None
