@@ -156,5 +156,5 @@ def get_permission_number(path):
 
 def get_permission_string(path):
     base = 'rwxrwxrwx'
-    permissions = [1] * 9
-    return ''.join([b if all(a and b) else '-' for a, b in zip(permissions, base)])
+    permissions = get_metadata(path)[4]
+    return ''.join([b if (a and b) else '-' for a, b in zip(permissions, base)])
