@@ -151,8 +151,11 @@ def permissions_to_list(permissions):
         a.extend([int(y) for y in bin(int(x))[2:]])
     return a
 
-def get_permission_number(path):
-    pass
+def calc_permission_number(string):
+    numbers = []
+    for group in (string[:3], string[3:6], string[6:]):
+        numbers.append(int("0b" + ''.join(['1' if x and x not in ["-", "0"] else '0' for x in group]), 2))
+    return ''.join(numbers)
 
 def get_permission_string(path):
     base = 'rwxrwxrwx'
