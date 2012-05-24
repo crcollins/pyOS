@@ -126,7 +126,19 @@ def build_metadata_database():
             con.commit()
 
 def get_metadata(path):
-    pass
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    path = convert(path)
+    data = None
+    with con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM metadata WHERE path = ?", (path, ))
+        data = cur.fetchone()
+        if data:
+            ## to be added with users
+            # cur.execute("SELECT username FROM users WHERE id = ?", (data[2], ))
+            # data[2] = cur.fetchone()[0]
+            data = tuple(str(x) for x in data)
+    return data
 
 def get_permission_number(path):
     ''.join([str(int(x)) for x in permissions])
