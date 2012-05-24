@@ -104,7 +104,6 @@ def split(path):
     return dir_name(path), base_name(path)
 
 def build_metadata_database():
-    #pseudocode
     con = sqlite3.connect(abs_path(METADATAFILE))
     try:
         with con:
@@ -137,6 +136,7 @@ def get_metadata(path):
             ## to be added with users
             # cur.execute("SELECT username FROM users WHERE id = ?", (data[2], ))
             # data[2] = cur.fetchone()[0]
+            ## force data to be strings and not unicode
             data = tuple(str(x) for x in data)
     return data
 
