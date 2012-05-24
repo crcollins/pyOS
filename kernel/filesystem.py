@@ -4,7 +4,7 @@ import imp
 import glob
 import sqlite3
 
-from kernel.constants import BASEPATH
+from kernel.constants import BASEPATH, METADATAFILE
 
 def abs_path(path):
     # returns external absolute path
@@ -103,9 +103,9 @@ def base_name(path):
 def split(path):
     return dir_name(path), base_name(path)
 
-def build_metadata_database(path="/data"):
+def build_metadata_database():
     #pseudocode
-    con = sqlite3.connect(abs_path(join_path(path, 'data')))
+    con = sqlite3.connect(abs_path(METADATAFILE))
     try:
         with con:
             cur = con.cursor()
