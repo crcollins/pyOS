@@ -61,7 +61,7 @@ def get_size(path):
     return os.path.getsize(abs_path(path))
 
 def list_dir(path):
-    return sorted(os.listdir(abs_path(path)))
+    return sorted(x for x in os.listdir(abs_path(path)) if ".git" not in x and not x.endswith(".pyc"))
 
 def list_glob(expression):
     return [convert(x) for x in glob.glob(abs_path(expression))]

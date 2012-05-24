@@ -17,9 +17,7 @@ def tree_gen(path):
         listing = sorted([fs.join_path(path, x) for x in fs.list_dir(path)],
                  key=sorter)
         for x in listing:
-            # remove this filter later
-            if ".git" not in x and x[-4:] != ".pyc":
-                pathtree.append(tree_gen(fs.join_path(path, x)))
+            pathtree.append(tree_gen(fs.join_path(path, x)))
     return pathtree
 
 def tree_print(tree, level=0, extra="", idx=None):

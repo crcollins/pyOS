@@ -18,9 +18,7 @@ def find(path, expression):
         if fs.is_directory(x):
             listing.extend(find(new, expression))
         else:
-            #remove this filter later
-            if ".git" not in x and x[-4:] != ".pyc":
-                listing.append(new)
+            listing.append(new)
     return listing
 
 def help():
