@@ -2,6 +2,7 @@ import os
 import shutil
 import imp
 import glob
+import sqlite3
 
 from kernel.constants import BASEPATH
 
@@ -101,3 +102,47 @@ def base_name(path):
 
 def split(path):
     return dir_name(path), base_name(path)
+
+def build_metadata_database(path="/data"):
+    #pseudocode
+    con = sqlite3.connect(abs_path(join_path(path, 'data')))
+    try:
+        with con:
+            cur = con.cursor()
+            cur.execute("SELECT path FROM metadata")
+            matches = cur.fetchall()
+            for x in list_all():
+                #1-tuple because the matches are stored in 1-tuples
+                if (x, ) not in matches:
+                    print x
+                    cur.execute('INSERT INTO metadata VALUES (NULL, ?, ?, ?)', ((x, 0, '777')))
+            con.commit()
+    except:
+        items = ((x, 0, '777') for x in list_all())
+        with con:
+            cur = con.cursor()
+            cur.execute("CREATE TABLE IF NOT EXISTS metadata (id INTEGER PRIMARY KEY, path TEXT, ownerid INT, permissions TEXT)")
+            cur.executemany('INSERT INTO metadata VALUES (NULL, ?, ?, ?)', items)
+            con.commit()
+
+def get_metadata(path):
+    pass
+
+def get_permission_number(path):
+    ''.join([str(int(x)) for x in permissions])
+    pass
+
+
+def permissions_to_list(permissions):
+    a = []
+    for x in permissions:
+        a.extend([int(y) for y in bin(int(x))[2:]])
+    return a
+
+def get_permission_number(path):
+    pass
+
+def get_permission_string(path):
+    base = 'rwxrwxrwx'
+    permissions = [1] * 9
+    return ''.join([b if all(a and b) else '-' for a, b in zip(permissions, base)])
