@@ -140,16 +140,13 @@ def get_metadata(path):
             data = tuple(str(x) for x in data)
     return data
 
-def get_permission_number(path):
-    ''.join([str(int(x)) for x in permissions])
-    pass
-
-
-def permissions_to_list(permissions):
-    a = []
-    for x in permissions:
-        a.extend([int(y) for y in bin(int(x))[2:]])
-    return a
+def calc_permission_string(number):
+    base = 'rwxrwxrwx'
+    number = str(number)
+    binary = []
+    for digit in number:
+        binary.extend([int(y) for y in '{0:03b}'.format(int(digit))])
+    return ''.join([b if (a and b) else '-' for a, b in zip(binary, base)])
 
 def calc_permission_number(string):
     numbers = []
@@ -158,6 +155,4 @@ def calc_permission_number(string):
     return ''.join(numbers)
 
 def get_permission_string(path):
-    base = 'rwxrwxrwx'
-    permissions = get_metadata(path)[4]
-    return ''.join([b if (a and b) else '-' for a, b in zip(permissions, base)])
+    return calc_permission_string(get_metadata(path)[4])
