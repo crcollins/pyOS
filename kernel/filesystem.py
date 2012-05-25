@@ -105,23 +105,32 @@ def split(path):
 
 def build_metadata_database():
     con = sqlite3.connect(abs_path(METADATAFILE))
+    delsql = 'DELETE FROM metadata WHERE path = ?'
+    addsql = 'INSERT INTO metadata VALUES (NULL, ?, ?, ?)'
+    tablesql = '''CREATE TABLE IF NOT EXISTS metadata (
+                    id INTEGER PRIMARY KEY,
+                    path TEXT,
+                    ownerid INT,
+                    permissions TEXT)'''
     try:
         with con:
             cur = con.cursor()
             cur.execute("SELECT path FROM metadata")
-            matches = cur.fetchall()
-            for x in list_all():
-                #1-tuple because the matches are stored in 1-tuples
-                if (x, ) not in matches:
-                    print x
-                    cur.execute('INSERT INTO metadata VALUES (NULL, ?, ?, ?)', ((x, 0, '777')))
+            fsmatches = set(list_all())
+            dbmatches = set(x[0] for x in cur.fetchall())
+
+            for x in fsmatches.difference(dbmatches):
+                cur.execute(addsql, ((x, 0, '777')))
+            for x in dbmatches.difference(fsmatches):
+                cur.execute(delsql, (x, ))
+
             con.commit()
     except:
         items = ((x, 0, '777') for x in list_all())
         with con:
             cur = con.cursor()
-            cur.execute("CREATE TABLE IF NOT EXISTS metadata (id INTEGER PRIMARY KEY, path TEXT, ownerid INT, permissions TEXT)")
-            cur.executemany('INSERT INTO metadata VALUES (NULL, ?, ?, ?)', items)
+            cur.execute(tablesql)
+            cur.executemany(addsql, items)
             con.commit()
 
 def get_metadata(path):
