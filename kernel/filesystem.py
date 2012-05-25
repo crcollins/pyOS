@@ -165,3 +165,25 @@ def calc_permission_number(string):
 
 def get_permission_string(path):
     return calc_permission_string(get_metadata(path)[4])
+
+def set_permission_string(path, value):
+    pass
+
+def get_permission(path):
+    return get_metadata(path)[4]
+
+def set_permission(path, value):
+    try:
+        int(value)
+
+    except TypeError:
+        set_permission_string(path, value)
+
+def get_owner_id(path):
+    return get_metadata(path)[2]
+
+def set_owner_id(path, owner):
+    pass
+
+def get_owner_name(path):
+    pass
