@@ -14,6 +14,7 @@ quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
 def run(shell, args):
     while System.state >= RUNNING:
         data = raw_input("root@%s:%s$ "% (OSNAME, shell.path))
+        data = data.strip()
         if data:
             shell.prevcommands.append(data)
             try:
