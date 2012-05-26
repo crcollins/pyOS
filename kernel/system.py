@@ -34,19 +34,13 @@ class System(object):
 
     def startup(self):
         path = kernel.filesystem.join_path(KERNELDIR, "startup")
-        try:
-            program = kernel.filesystem.open_program(path)
-            program.run()
-        except:
-            raise IOError
+        program = kernel.filesystem.open_program(path)
+        program.run()
 
     def shutdown(self):
         path = kernel.filesystem.join_path(KERNELDIR, "shutdown")
-        try:
-            program = kernel.filesystem.open_program(path)
-            program.run()
-        except:
-            raise IOError
+        program = kernel.filesystem.open_program(path)
+        program.run()
 
     def new_shell(self, *args, **kwargs):
         y = kernel.shell.Shell(len(self.pids), *args, **kwargs)
