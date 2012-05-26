@@ -1,5 +1,3 @@
-import argparse
-
 import kernel.filesystem
 
 desc = "Allows tapping into the stdout to write to multiple files."

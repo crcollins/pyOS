@@ -1,5 +1,3 @@
-import argparse
-
 import kernel.filesystem
 
 desc = "Returns the last n lines of a file."

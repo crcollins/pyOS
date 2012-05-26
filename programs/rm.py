@@ -1,5 +1,3 @@
-import argparse
-
 import kernel.filesystem as fs
 
 desc = "Removes the file/directory."

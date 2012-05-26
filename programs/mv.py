@@ -1,5 +1,3 @@
-import argparse
-
 import kernel.filesystem
 
 desc = "Moves the given file/directory to the given location."
