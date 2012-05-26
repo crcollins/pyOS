@@ -2,7 +2,8 @@ import argparse
 
 import kernel.filesystem
 
-parser = argparse.ArgumentParser(add_help=False)
+desc = "Moves the given file/directory to the given location."
+parser = kernel.filesystem.Parser('mv', description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-f', action="store_true", dest="force", default=False)
@@ -28,11 +29,4 @@ def run(shell, args):
         shell.stderr.write("missing file operand")
 
 def help():
-    a = """
-    Move
-
-    Moves the given file/directory to the given location.
-
-    usage: cd [source] [dest]
-    """
-    return a
+    return parser.format_help()

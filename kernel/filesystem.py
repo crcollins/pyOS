@@ -2,6 +2,7 @@ import os
 import shutil
 import imp
 import glob
+import argparse
 
 from kernel.constants import BASEPATH
 
@@ -101,3 +102,16 @@ def base_name(path):
 
 def split(path):
     return dir_name(path), base_name(path)
+
+class Parser(argparse.ArgumentParser):
+    def __init__(self, program, *args, **kwargs):
+        argparse.ArgumentParser.__init__(self, program, *args, **kwargs)
+
+    def exit(*args, **kwargs):
+        raise Exception(args[-1])
+
+    def print_usage(*args, **kwargs):
+        pass
+
+    def print_help(*args, **kwargs):
+        pass

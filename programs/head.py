@@ -1,13 +1,13 @@
-import argparse
-
 import kernel.filesystem
 
-parser = argparse.ArgumentParser(add_help=False)
+desc = "Returns the first n lines of a file."
+parser = kernel.filesystem.Parser('head', description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-n', action="store", type=int, dest="lineamount", default=5)
 
 def run(shell, args):
+    print 
     if args or shell.stdin:
         args = parser.parse_args(args)
         for x in args.paths:
@@ -31,11 +31,4 @@ def run(shell, args):
         shell.stderr.write("missing file operand")
 
 def help():
-    a = """
-    Head
-
-    Returns the first n lines of a file.
-
-    usage: head [path] [-n 5]
-    """
-    return a
+    return parser.format_help()

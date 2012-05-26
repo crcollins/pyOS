@@ -18,11 +18,10 @@ Todo
 - sdterr redirection
 - users
 - file metadata
-- other utilities (xargs, edit, awk, sed, tee, etc)
+- other utilities (xargs, edit, awk, sed, etc)
 - polish utilities
 - formalize the directory structure
 - thread(multiprocess?) processes
-- new argument parser
 - exit codes
 - tests
 - documentation

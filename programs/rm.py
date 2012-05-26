@@ -2,7 +2,8 @@ import argparse
 
 import kernel.filesystem as fs
 
-parser = argparse.ArgumentParser(add_help=False)
+desc = "Removes the file/directory."
+parser = fs.Parser('rm', description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-f', action="store_true", dest="force", default=False)
@@ -27,11 +28,4 @@ def run(shell, args):
         shell.stderr.write("missing file operand")
 
 def help():
-    a = """
-    Remove
-
-    Removes the file/directory.
-
-    usage: rm [path]
-    """
-    return a
+    return parser.format_help()

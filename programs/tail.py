@@ -2,7 +2,8 @@ import argparse
 
 import kernel.filesystem
 
-parser = argparse.ArgumentParser(add_help=False)
+desc = "Returns the last n lines of a file."
+parser = kernel.filesystem.Parser('tail', description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-n', action="store", type=int, dest="lineamount", default=5)
@@ -31,11 +32,4 @@ def run(shell, args):
         shell.stderr.write("missing file operand")
 
 def help():
-    a = """
-    Tail
-
-    Returns the last n lines of a file.
-
-    usage: tail [path] [-n 5]
-    """
-    return a
+    return parser.format_help()
