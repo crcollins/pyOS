@@ -105,13 +105,25 @@ def split(path):
 
 class Parser(argparse.ArgumentParser):
     def __init__(self, program, *args, **kwargs):
-        argparse.ArgumentParser.__init__(self, program, *args, **kwargs)
+        argparse.ArgumentParser.__init__(self, prog=program, *args, **kwargs)
+        self.help = False
 
-    def exit(*args, **kwargs):
-        raise Exception(args[-1])
+    def add_shell(self, shell):
+        self.shell = shell
 
-    def print_usage(*args, **kwargs):
+    def exit(self, *args, **kwargs):
         pass
 
-    def print_help(*args, **kwargs):
-        pass
+    def print_usage(self, *args, **kwargs):
+        try:
+            self.shell.stderr.write(self.format_usage())
+            self.help = True
+        except AttributeError:
+            pass
+
+    def print_help(self, *args, **kwargs):
+        try:
+            self.shell.stdout.write(self.format_help())
+            self.help = True
+        except AttributeError:
+            pass
