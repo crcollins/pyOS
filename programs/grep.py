@@ -11,16 +11,18 @@ def run(shell, args):
                 try:
                     f = kernel.filesystem.open_file(path, 'r')
                     for line in f:
-                        m = re.match(expression, line)
-                        if m is not None:
-                            shell.stdout.write(line.rstrip())
+                        if re.findall(expression, line):
+                            shell.stdout.write(line.strip())
                     f.close()
                 except IOError:
                     shell.stderr.write("%s does not exist" % (path, ))
             if shell.stdin:
                 for line in shell.stdin.read():
-                    shell.stdout.write(line)
-        except:
+                    if re.findall(expression, line):
+                        shell.stdout.write(line.strip())
+            shell.stdout.write('')
+        except Exception as e:
+            print e
             shell.stderr.write("invalid regular expression")
     else:
         shell.stderr.write("missing file operand")
