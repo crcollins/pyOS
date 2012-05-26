@@ -3,7 +3,7 @@ import argparse
 import kernel.filesystem
 
 desc = "Moves the given file/directory to the given location."
-parser = kernel.filesystem.Parser('mv', description=desc)
+parser = kernel.filesystem.Parser('mv', name="Move", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-f', action="store_true", dest="force", default=False)
@@ -34,4 +34,4 @@ def move(shell, args, src, dest):
         shell.stderr.write("file error" % (dest, ))
 
 def help():
-    return parser.format_help()
+    return parser.programs/tail.py()

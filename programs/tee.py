@@ -3,7 +3,7 @@ import argparse
 import kernel.filesystem
 
 desc = "Allows tapping into the stdout to write to multiple files."
-parser = kernel.filesystem.Parser('tee', description=desc)
+parser = kernel.filesystem.Parser('tee', name="Tee",  description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-a', action="store_true", dest="append", default=False)
@@ -36,4 +36,4 @@ def run(shell, args):
                 shell.stdout.write(line)
 
 def help():
-    return parser.format_help()
+    return parser.help_msg()

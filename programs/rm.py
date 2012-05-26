@@ -3,7 +3,7 @@ import argparse
 import kernel.filesystem as fs
 
 desc = "Removes the file/directory."
-parser = fs.Parser('rm', description=desc)
+parser = fs.Parser('rm', name="Remove", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-f', action="store_true", dest="force", default=False)
@@ -32,4 +32,4 @@ def remove(shell, args, path):
         shell.stderr.write("%s is not a file" % (path,))
 
 def help():
-    return parser.format_help()
+    return parser.help_msg()

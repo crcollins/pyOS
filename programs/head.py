@@ -1,7 +1,7 @@
 import kernel.filesystem
 
 desc = "Returns the first n lines of a file."
-parser = kernel.filesystem.Parser('head', description=desc)
+parser = kernel.filesystem.Parser('head', name="Head", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-n', action="store", type=int, dest="lineamount", default=5)
@@ -32,4 +32,4 @@ def run(shell, args):
                 shell.stderr.write("missing file operand")
 
 def help():
-    return parser.format_help()
+    return parser.help_msg()
