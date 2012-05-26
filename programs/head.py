@@ -7,12 +7,12 @@ pa('paths', type=str, nargs='*',)
 pa('-n', action="store", type=int, dest="lineamount", default=5)
 
 def run(shell, args):
-    print 
-    if args or shell.stdin:
-        args = parser.parse_args(args)
+    parser.add_shell(shell)
+    args = parser.parse_args(args)
+    if not parser.help:
         for x in args.paths:
             path = shell.iabs_path(x)
-            if args > 1:
+            if args.paths > 1 or shell.stdin:
                 shell.stdout.write("==> %s <==" % (x, ))
             try:
                 f = kernel.filesystem.open_file(path, 'r')
@@ -26,9 +26,10 @@ def run(shell, args):
                 shell.stdout.write("==> %% stdin %% <==")
             for x in xrange(args.lineamount):
                 shell.stdout.write(shell.stdin.readline())
-        shell.stdout.write("")
-    else:
-        shell.stderr.write("missing file operand")
+            shell.stdout.write("")
+        else:
+            if not args.paths:
+                shell.stderr.write("missing file operand")
 
 def help():
     return parser.format_help()
