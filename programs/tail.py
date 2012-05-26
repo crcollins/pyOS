@@ -11,7 +11,7 @@ def run(shell, args):
     args = parser.parse_args(args)
     if not parser.help:
         for x in args.paths:
-            path = shell.iabs_path(x)
+            path = shell.sabs_path(x)
             if args.paths > 1 or shell.stdin:
                 shell.stdout.write("==> %s <==" % (x, ))
             try:

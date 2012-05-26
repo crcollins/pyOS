@@ -5,8 +5,6 @@ from kernel.system import System
 from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, \
         INCHAR, OUTCHAR, APPENDCHAR
 
-
-
 varparse = re.compile(r"\%s\w*" % (VARCHAR, ))
 stdioparse = re.compile(r"([%s%s]+\s*\w+)" % (OUTCHAR, INCHAR))
 quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")

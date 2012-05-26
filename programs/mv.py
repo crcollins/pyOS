@@ -13,7 +13,7 @@ def run(shell, args):
     args = parser.parse_args(args)
     if not parser.help:
         if len(args.paths) >= 2:
-            dest = shell.iabs_path(args.paths[-1])
+            dest = shell.sabs_path(args.paths[-1])
             if kernel.filesystem.is_directory(dest) or len(args.paths) == 2:
                 for src in args.paths[:-1]:
                     move(shell, args, src, dest)
@@ -23,7 +23,7 @@ def run(shell, args):
             shell.stderr.write("missing file operand")
 
 def move(shell, args, src, dest):
-    src = shell.iabs_path(src)
+    src = shell.sabs_path(src)
     if args.verbose:
         shell.stdout.write("Moving %s to %s" % (src, dest))
     try:

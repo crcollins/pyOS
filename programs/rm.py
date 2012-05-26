@@ -19,7 +19,7 @@ def run(shell, args):
             shell.stderr.write("missing file operand")
 
 def remove(shell, args, path):
-    path = shell.iabs_path(path)
+    path = shell.sabs_path(path)
     if fs.is_file(path) or (fs.is_directory(path) and args.recursive):
         if args.verbose:
             shell.stdout.write("Removing %s" % (path, ))

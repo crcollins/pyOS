@@ -2,7 +2,7 @@ import kernel.filesystem
 
 def run(shell, args):
     if args:
-        path = shell.iabs_path(args[0])
+        path = shell.sabs_path(args[0])
         try:
             if args[1] in ("a", "w"):
                 mode = args[1]

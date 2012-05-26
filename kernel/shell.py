@@ -44,24 +44,24 @@ class Shell(object):
         return self.path
 
     def set_path(self, path):
-        self.path = self.iabs_path(path)
+        self.path = self.sabs_path(path)
 
-    def iabs_path(self, path):
-        if path[0] != '/':
-            if path[0:2] == "./":
-                path = path[2:]
+    def sabs_path(self, path):
+        if not path.startswith('/'):
+            if path.startswith('./'):
+                path = path[path.index('/') + 1:]
             path = kernel.filesystem.join_path(self.path, path)
-        return '/' + kernel.filesystem.eval_path(path)
+        return kernel.filesystem.iabs_path(path)
 
-    def irel_path(self, path, base=None):
+    def srel_path(self, path, base=None):
         if base is None:
             base = self.path
-        return kernel.filesystem.rel_path(self.iabs_path(path),
-                                          self.iabs_path(base))
+        return kernel.filesystem.rel_path(self.sabs_path(path),
+                                          self.sabs_path(base))
 
     def program_paths(self, name):
         if name[0:2] == "./":
-            a = [self.iabs_path(name)]
+            a = [self.sabs_path(name)]
         else:
             paths = self.get_var('PATH').split(':')
             a = [kernel.filesystem.join_path(x, name) for x in paths]

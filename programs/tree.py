@@ -2,7 +2,7 @@ import kernel.filesystem as fs
 
 def run(shell, args):
     if args:
-        path = shell.iabs_path(args[0])
+        path = shell.sabs_path(args[0])
     else:
         path = shell.path
     tree = tree_gen(path)

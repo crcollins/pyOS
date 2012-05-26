@@ -3,7 +3,7 @@ import kernel.filesystem
 def run(shell, args):
     if args or shell.stdin:
         for x in args:
-            path = shell.iabs_path(x)
+            path = shell.sabs_path(x)
             try:
                 f = kernel.filesystem.open_file(path, 'r')
                 for line in f:

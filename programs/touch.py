@@ -3,7 +3,7 @@ import kernel.filesystem
 def run(shell, args):
     if args:
         for x in args:
-            path = shell.iabs_path(x)
+            path = shell.sabs_path(x)
             if not kernel.filesystem.exists(path):
                 kernel.filesystem.open_file(path, 'w').close()
             else:

@@ -8,28 +8,27 @@ from kernel.constants import BASEPATH
 
 def abs_path(path):
     # returns external absolute path
-    return os.path.join(BASEPATH, path.lstrip('/'))
+    return os.path.abspath(os.path.join(BASEPATH, path.lstrip('/')))
 
 def rel_path(path, base):
     # returns external relative path
     return os.path.relpath(path, base)
 
-def eval_path(path):
+def irel_path(path):
     # returns internal relative path
-    path = path.strip('/') if path != '/' else '.'
+    path = abs_path(path)
     b = os.path.relpath(path, BASEPATH)
+    b = b.replace('../', '')
     if b in ('..', '.'):
         b = ''
-    return b.replace('../', '')
+    return b
 
-def convert(path):
+def iabs_path(path):
     # returns internal absolute path
-    a = os.path.commonprefix([BASEPATH, os.path.abspath(path)])
-    b = os.path.relpath(path, BASEPATH)
-    if len(a) < len(BASEPATH) or b == '.':
-        return '/'
-    else:
-        return '/%s' % (b, )
+    a = os.path.commonprefix([BASEPATH, abs_path(path)])
+    b = os.path.relpath(abs_path(path), BASEPATH)
+    c = irel_path(path)
+    return join_path('/', c)
 
 def exists(path):
     return os.path.exists(abs_path(path))
@@ -65,7 +64,7 @@ def list_dir(path):
     return sorted(x for x in os.listdir(abs_path(path)) if ".git" not in x and not x.endswith(".pyc"))
 
 def list_glob(expression):
-    return [convert(x) for x in glob.glob(abs_path(expression))]
+    return [iabs_path(x) for x in glob.glob(abs_path(expression))]
 
 def list_all(path="/"):
     listing = []

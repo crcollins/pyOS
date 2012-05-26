@@ -4,7 +4,7 @@ def run(shell, args):
     #hack to fix encapsulation
     shell = shell.parent
     if args:
-        path = shell.iabs_path(args[0])
+        path = shell.sabs_path(args[0])
         if kernel.filesystem.is_directory(path):
             shell.set_path(path)
         else:

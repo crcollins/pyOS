@@ -7,7 +7,7 @@ def run(shell, args):
         try:
             expression = re.compile(args[0])
             for x in args[1:]:
-                path = shell.iabs_path(x)
+                path = shell.sabs_path(x)
                 try:
                     f = kernel.filesystem.open_file(path, 'r')
                     for line in f:

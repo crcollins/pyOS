@@ -2,7 +2,7 @@ import kernel.filesystem
 
 def run(shell, args):
     if args:
-        path = shell.iabs_path(args[0])
+        path = shell.sabs_path(args[0])
         if kernel.filesystem.exists(path):
             f = kernel.filesystem.open_file(path, 'r')
             for line in reversed(f.readlines()):

@@ -2,7 +2,7 @@ import kernel.filesystem
 
 def run(shell, args):
     if args:
-        path = shell.iabs_path(args[0])
+        path = shell.sabs_path(args[0])
         if not kernel.filesystem.exists(path):
             kernel.filesystem.make_dir(path)
         else:
