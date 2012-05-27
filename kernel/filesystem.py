@@ -110,7 +110,7 @@ def build_meta_data_database():
     tablesql = '''CREATE TABLE IF NOT EXISTS metadata (
                     path TEXT,
                     ownerid INT,
-                    permissions TEXT)'''
+                    permission TEXT)'''
     try:
         with con:
             cur = con.cursor()
@@ -167,7 +167,7 @@ def _update_permission(path, value):
     con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
-        cur.execute("UPDATE metadata SET permissions = ? WHERE path = ?", (value, path))
+        cur.execute("UPDATE metadata SET permission = ? WHERE path = ?", (value, path))
         con.commit()
 
 def calc_permission_string(number):
@@ -199,10 +199,10 @@ def get_permission_number(path):
 
 def set_permission_string(path, value):
     number = calc_permission_number(value)
-    _update_permissions(path, number)
+    _update_permission(path, number)
 
 def set_permission_number(path, value):
-    _update_permissions(path, number)
+    _update_permission(path, number)
 
 def set_permission(path, value):
     try:
@@ -229,5 +229,5 @@ def set_owner(path, owner):
     try:
         set_owner_id(path, owner)
     except ValueError:
-        set_owner_id(path, owner)
+        set_owner_name(path, owner)
 
