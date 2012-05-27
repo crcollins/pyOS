@@ -106,9 +106,8 @@ def split(path):
 def build_meta_data_database():
     con = sqlite3.connect(abs_path(METADATAFILE))
     delsql = 'DELETE FROM metadata WHERE path = ?'
-    addsql = 'INSERT INTO metadata VALUES (NULL, ?, ?, ?)'
+    addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
     tablesql = '''CREATE TABLE IF NOT EXISTS metadata (
-                    id INTEGER PRIMARY KEY,
                     path TEXT,
                     ownerid INT,
                     permissions TEXT)'''
@@ -193,10 +192,10 @@ def check_permission(value):
             raise ValueError
 
 def get_permission_string(path):
-    return calc_permission_string(get_meta_data(path)[4])
+    return calc_permission_string(get_meta_data(path)[2])
 
 def get_permission_number(path):
-    return get_meta_data(path)[4]
+    return get_meta_data(path)[2]
 
 def set_permission_string(path, value):
     number = calc_permission_number(value)
@@ -212,7 +211,7 @@ def set_permission(path, value):
         set_permission_string(path, value)
 
 def get_owner_id(path):
-    return get_meta_data(path)[2]
+    return get_meta_data(path)[1]
 
 def get_owner_name(path):
     pass
