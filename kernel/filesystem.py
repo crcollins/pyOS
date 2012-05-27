@@ -194,27 +194,40 @@ def check_permission(value):
 def get_permission_string(path):
     return calc_permission_string(get_meta_data(path)[4])
 
-def set_permission_string(path, value):
-    pass
-
-def get_permission(path):
+def get_permission_number(path):
     return get_meta_data(path)[4]
+
+def set_permission_string(path, value):
+    number = calc_permission_number(value)
+    _update_permissions(path, number)
+
+def set_permission_number(path, value):
+    _update_permissions(path, number)
 
 def set_permission(path, value):
     try:
-        int(value)
-
-    except TypeError:
+        set_permission_number(path, value)
+    except ValueError:
         set_permission_string(path, value)
-
-def check_owner_id(owner):
-    pass
 
 def get_owner_id(path):
     return get_meta_data(path)[2]
 
+def get_owner_name(path):
+    pass
+
+def check_owner_id(owner):
+    pass
+
 def set_owner_id(path, owner):
     pass
 
-def get_owner_name(path):
+def set_owner_name(path, owner):
     pass
+
+def set_owner(path, owner):
+    try:
+        set_owner_id(path, owner)
+    except ValueError:
+        set_owner_id(path, owner)
+
