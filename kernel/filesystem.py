@@ -144,6 +144,22 @@ def get_meta_data(path):
             data = tuple(str(x) for x in data)
     return data
 
+def add_path(path, owner, permission):
+    check_permission(permission)
+    check_owner(owner)
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
+    with con:
+        cur = con.cursor()
+        cur.execute(addsql, (path, owner, permission))
+
+def delete_path(path):
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    delsql = 'DELETE FROM metadata WHERE path = ?'
+    with con:
+        cur = con.cursor()
+        cur.execute(delsql, (path, ))
+
 def _update_path(path, value):
     con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
