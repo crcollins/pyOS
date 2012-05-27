@@ -135,7 +135,6 @@ def build_meta_data_database():
 
 def get_meta_data(path):
     con = sqlite3.connect(abs_path(METADATAFILE))
-    path = convert(path)
     data = None
     with con:
         cur = con.cursor()
