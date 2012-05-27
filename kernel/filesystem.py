@@ -175,14 +175,16 @@ def calc_permission_string(number):
     base = 'rwxrwxrwx'
     number = str(number)
     binary = []
-    for digit in number:
+    for digit in number[:3]:
         binary.extend([int(y) for y in '{0:03b}'.format(int(digit))])
     return ''.join([b if (a and b) else '-' for a, b in zip(binary, base)])
 
 def calc_permission_number(string):
     numbers = []
-    for group in (string[:3], string[3:6], string[6:]):
-        numbers.append(int("0b" + ''.join(['1' if x and x not in ["-", "0"] else '0' for x in group]), 2))
+    string += '-' * (9 - len(string))
+    for group in (string[:3], string[3:6], string[6:9]):
+        a = ['1' if x and x not in ["-", "0"] else '0' for x in group]
+        numbers.append(int("0b" + ''.join(a), 2))
     return ''.join(numbers)
 
 def check_permission(value):
