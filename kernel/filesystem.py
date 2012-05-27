@@ -109,7 +109,7 @@ def build_meta_data_database():
     addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
     tablesql = '''CREATE TABLE IF NOT EXISTS metadata (
                     path TEXT,
-                    ownerid INT,
+                    owner TEXT,
                     permission TEXT)'''
     try:
         with con:
@@ -125,7 +125,7 @@ def build_meta_data_database():
 
             con.commit()
     except:
-        items = ((x, 0, '777') for x in list_all())
+        items = ((x, 'root', '777') for x in list_all())
         with con:
             cur = con.cursor()
             cur.execute(tablesql)
@@ -140,9 +140,6 @@ def get_meta_data(path):
         cur.execute("SELECT * FROM metadata WHERE path = ?", (path, ))
         data = cur.fetchone()
         if data:
-            ## to be added with users
-            # cur.execute("SELECT username FROM users WHERE id = ?", (data[2], ))
-            # data[2] = cur.fetchone()[0]
             ## force data to be strings and not unicode
             data = tuple(str(x) for x in data)
     return data
@@ -154,12 +151,12 @@ def _update_path(path, value):
         cur.execute("UPDATE metadata SET path = ? WHERE path = ?", (value, path))
         con.commit()
 
-def _update_owner_id(path, value):
-    value = check_owner_id(value)
+def _update_owner(path, value):
+    value = check_owner(value)
     con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
-        cur.execute("UPDATE metadata SET ownerid = ? WHERE path = ?", (value, path))
+        cur.execute("UPDATE metadata SET owner = ? WHERE path = ?", (value, path))
         con.commit()
 
 def _update_permission(path, value):
@@ -210,24 +207,13 @@ def set_permission(path, value):
     except ValueError:
         set_permission_string(path, value)
 
-def get_owner_id(path):
+def get_owner(path):
     return get_meta_data(path)[1]
 
-def get_owner_name(path):
-    pass
-
-def check_owner_id(owner):
-    pass
-
-def set_owner_id(path, owner):
-    pass
-
-def set_owner_name(path, owner):
+def check_owner(owner):
     pass
 
 def set_owner(path, owner):
-    try:
-        set_owner_id(path, owner)
-    except ValueError:
-        set_owner_name(path, owner)
+    _update_owner(path, owner)
+
 
