@@ -103,7 +103,7 @@ def base_name(path):
 def split(path):
     return dir_name(path), base_name(path)
 
-def build_metadata_database():
+def build_meta_data_database():
     con = sqlite3.connect(abs_path(METADATAFILE))
     delsql = 'DELETE FROM metadata WHERE path = ?'
     addsql = 'INSERT INTO metadata VALUES (NULL, ?, ?, ?)'
@@ -133,7 +133,7 @@ def build_metadata_database():
             cur.executemany(addsql, items)
             con.commit()
 
-def get_metadata(path):
+def get_meta_data(path):
     con = sqlite3.connect(abs_path(METADATAFILE))
     path = convert(path)
     data = None
@@ -192,13 +192,13 @@ def check_permission(value):
             raise ValueError
 
 def get_permission_string(path):
-    return calc_permission_string(get_metadata(path)[4])
+    return calc_permission_string(get_meta_data(path)[4])
 
 def set_permission_string(path, value):
     pass
 
 def get_permission(path):
-    return get_metadata(path)[4]
+    return get_meta_data(path)[4]
 
 def set_permission(path, value):
     try:
@@ -211,7 +211,7 @@ def check_owner_id(owner):
     pass
 
 def get_owner_id(path):
-    return get_metadata(path)[2]
+    return get_meta_data(path)[2]
 
 def set_owner_id(path, owner):
     pass
