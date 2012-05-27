@@ -149,6 +149,29 @@ def get_metadata(path):
             data = tuple(str(x) for x in data)
     return data
 
+def _update_path(path, value):
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    with con:
+        cur = con.cursor()
+        cur.execute("UPDATE metadata SET path = ? WHERE path = ?", (value, path))
+        con.commit()
+
+def _update_owner_id(path, value):
+    value = check_owner_id(value)
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    with con:
+        cur = con.cursor()
+        cur.execute("UPDATE metadata SET ownerid = ? WHERE path = ?", (value, path))
+        con.commit()
+
+def _update_permission(path, value):
+    check_permission(value)
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    with con:
+        cur = con.cursor()
+        cur.execute("UPDATE metadata SET permissions = ? WHERE path = ?", (value, path))
+        con.commit()
+
 def calc_permission_string(number):
     base = 'rwxrwxrwx'
     number = str(number)
@@ -162,6 +185,11 @@ def calc_permission_number(string):
     for group in (string[:3], string[3:6], string[6:]):
         numbers.append(int("0b" + ''.join(['1' if x and x not in ["-", "0"] else '0' for x in group]), 2))
     return ''.join(numbers)
+
+def check_permission(value):
+    for x in value:
+        if 7 < int(x) or int(x) < 0:
+            raise ValueError
 
 def get_permission_string(path):
     return calc_permission_string(get_metadata(path)[4])
@@ -178,6 +206,9 @@ def set_permission(path, value):
 
     except TypeError:
         set_permission_string(path, value)
+
+def check_owner_id(owner):
+    pass
 
 def get_owner_id(path):
     return get_metadata(path)[2]
