@@ -127,7 +127,7 @@ def build_meta_data_database():
             dbmatches = set(x[0] for x in cur.fetchall())
 
             for x in fsmatches.difference(dbmatches):
-                cur.execute(addsql, ((x, 0, '777')))
+                cur.execute(addsql, ((x, "root", "777")))
             for x in dbmatches.difference(fsmatches):
                 cur.execute(delsql, (x, ))
 
