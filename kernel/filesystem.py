@@ -46,8 +46,12 @@ def move(src, dst):
 def copy(src, dst, recursive=False):
     if recursive:
         shutil.copytree(abs_path(src), abs_path(dst))
+        a = list_glob(join_path(src, "*")) + [src]
+        b = list_glob(join_path(dst, "*")) + [dst]
+        copy_path(a, b)
     else:
         shutil.copy2(abs_path(src), abs_path(dst))
+        copy_path(src, dst)
 
 def remove(path, recursive=False):
     if recursive:
@@ -166,6 +170,24 @@ def add_path(path, owner, permission):
     con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
+        cur.executemany(addsql, data)
+
+def copy_path(src, dst):
+    src = convert_many(src)
+    dst = convert_many(dst)
+    assert len(src) == len(dst)
+    selsql = 'SELECT owner,permission FROM metadata WHERE path = ?'
+    addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
+
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    with con:
+        cur = con.cursor()
+        temp = []
+        for x in src:
+            cur.execute(selsql, x)
+            temp.append(cur.fetchone())
+
+        data = [(path, owner, perm) for ((path, ), (owner, perm)) in zip(dst, temp)]
         cur.executemany(addsql, data)
 
 def delete_path(path):
