@@ -104,6 +104,13 @@ def base_name(path):
 def split(path):
     return dir_name(path), base_name(path)
 
+def convert_many(start, *args):
+    if type(start) not in (list, set, tuple):
+        done = [(start, ) + args]
+    else:
+        done = [(x, ) + args for x in start]
+    return done
+
 def build_meta_data_database():
     con = sqlite3.connect(abs_path(METADATAFILE))
     delsql = 'DELETE FROM metadata WHERE path = ?'
