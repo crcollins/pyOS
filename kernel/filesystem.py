@@ -79,10 +79,15 @@ def list_all(path="/"):
     return listing
 
 def make_dir(path):
-    return os.mkdir(abs_path(path))
+    os.mkdir(abs_path(path))
+    add_path(path, "root", "777")
 
 def open_file(path, mode):
-    return open(abs_path(path), mode)
+    temp = not is_file(path)
+    x = open(abs_path(path), mode)
+    if temp:
+        add_path(path, "root", "777")
+    return x
 
 def open_program(path):
     x = abs_path(path)
@@ -155,11 +160,13 @@ def get_meta_data(path):
 def add_path(path, owner, permission):
     check_permission(permission)
     check_owner(owner)
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    data = convert_many(path, owner, permission)
     addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
+
+    con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
-        cur.execute(addsql, (path, owner, permission))
+        cur.executemany(addsql, data)
 
 def delete_path(path):
     con = sqlite3.connect(abs_path(METADATAFILE))
