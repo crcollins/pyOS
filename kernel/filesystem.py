@@ -59,8 +59,11 @@ def copy(src, dst, recursive=False):
 def remove(path, recursive=False):
     if recursive:
         shutil.rmtree(abs_path(path))
+        a = list_glob(join_path(path, "*")) + [path]
+        delete_path(a)
     else:
         os.remove(abs_path(path))
+        delete_path(path)
 
 def join_path(*args):
     return os.path.join(*args)
@@ -206,11 +209,13 @@ def move_path(src, dst):
         con.commit()
 
 def delete_path(path):
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    path = convert_many(path)
     delsql = 'DELETE FROM metadata WHERE path = ?'
+
+    con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
-        cur.execute(delsql, (path, ))
+        cur.executemany(delsql, path)
 
 def _update_path(path, value):
     con = sqlite3.connect(abs_path(METADATAFILE))
