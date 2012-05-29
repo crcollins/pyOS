@@ -127,13 +127,14 @@ def convert_many(start, *args):
     return done
 
 def build_meta_data_database():
-    con = sqlite3.connect(abs_path(METADATAFILE))
     delsql = 'DELETE FROM metadata WHERE path = ?'
     addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
     tablesql = '''CREATE TABLE IF NOT EXISTS metadata (
                     path TEXT,
                     owner TEXT,
                     permission TEXT)'''
+
+    con = sqlite3.connect(abs_path(METADATAFILE))
     try:
         with con:
             cur = con.cursor()
@@ -156,8 +157,9 @@ def build_meta_data_database():
             con.commit()
 
 def get_meta_data(path):
-    con = sqlite3.connect(abs_path(METADATAFILE))
     data = None
+
+    con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
         cur.execute("SELECT * FROM metadata WHERE path = ?", (path, ))
@@ -219,6 +221,7 @@ def delete_path(path):
 
 def _update_owner(path, value):
     value = check_owner(value)
+
     con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
@@ -227,6 +230,7 @@ def _update_owner(path, value):
 
 def _update_permission(path, value):
     check_permission(value)
+
     con = sqlite3.connect(abs_path(METADATAFILE))
     with con:
         cur = con.cursor()
