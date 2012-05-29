@@ -42,6 +42,9 @@ def is_directory(path):
 
 def move(src, dst):
     shutil.move(abs_path(src), abs_path(dst))
+    a = list_glob(join_path(src, "*")) + [src]
+    b = list_glob(join_path(dst, "*")) + [dst]
+    move_path(a, b)
 
 def copy(src, dst, recursive=False):
     if recursive:
@@ -189,6 +192,18 @@ def copy_path(src, dst):
 
         data = [(path, owner, perm) for ((path, ), (owner, perm)) in zip(dst, temp)]
         cur.executemany(addsql, data)
+
+def move_path(src, dst):
+    src = convert_many(src)
+    dst = convert_many(dst)
+    assert len(src) == len(dst)
+    data = [(x, y) for ((x, ), (y, )) in zip(dst, src)]
+
+    con = sqlite3.connect(abs_path(METADATAFILE))
+    with con:
+        cur = con.cursor()
+        cur.executemany("UPDATE metadata SET path = ? WHERE path = ?", data)
+        con.commit()
 
 def delete_path(path):
     con = sqlite3.connect(abs_path(METADATAFILE))
