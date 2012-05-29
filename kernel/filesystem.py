@@ -217,13 +217,6 @@ def delete_path(path):
         cur = con.cursor()
         cur.executemany(delsql, path)
 
-def _update_path(path, value):
-    con = sqlite3.connect(abs_path(METADATAFILE))
-    with con:
-        cur = con.cursor()
-        cur.execute("UPDATE metadata SET path = ? WHERE path = ?", (value, path))
-        con.commit()
-
 def _update_owner(path, value):
     value = check_owner(value)
     con = sqlite3.connect(abs_path(METADATAFILE))
