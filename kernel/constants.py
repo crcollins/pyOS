@@ -13,6 +13,10 @@ PROGRAMSDIR = "/programs"
 KERNELDIR = "/kernel"
 METADIR = "/meta"  # need to implement
 USERDIR = "/user"  # need to implement
+SYSDATADIR = "/data"
+
+#Standard file paths
+METADATAFILE = "/data/data"
 
 #Special Characters/strings
 VARCHAR = "$"
