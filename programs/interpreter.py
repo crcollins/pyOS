@@ -5,24 +5,26 @@ from kernel.system import System
 from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, \
         INCHAR, OUTCHAR, APPENDCHAR
 
+
 varparse = re.compile(r"\%s\w*" % (VARCHAR, ))
 stdioparse = re.compile(r"([%s%s]+\s*\w+)" % (OUTCHAR, INCHAR))
 quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
+
 
 def run(shell, args):
     while System.state >= RUNNING:
         data = raw_input("root@%s:%s$ "% (OSNAME, shell.path))
         data = data.strip()
         if data:
-            shell.prevcommands.append(data)
-            try:
-                programs = eval_input(shell, data)
-                shells = start_shells(shell, programs)
-                connect_shells(shells)
-                for x in shells:
-                    x.run()
-            except IndexError:
-                pass
+            cleaned, command = clean_input(shell, data)
+            shell.prevcommands.append(command)
+
+            programs = eval_input(shell, cleaned)
+            shells = start_shells(shell, programs)
+            connect_shells(shells)
+
+            for x in shells:
+                x.run()
 
 def quote_split(string):
     a = []
@@ -33,15 +35,31 @@ def quote_split(string):
             a.append(x)
     return a
 
-def eval_input(shell, string):
-    #replace $vars
-    string = re.sub(varparse, shell.get_var, string)
-    a = quote_split(string)
+def clean_input(shell, string):
+    quote = quote_split(string)
 
+    #replace !!
+    if shell.prevcommands:
+        bang = []
+        for x in quote:
+            if not x.startswith('"') and not x.startswith("'"):
+                bang.append(x.replace("!!", shell.prevcommands[-1]))
+            else:
+                bang.append(x)
+        if bang != quote:
+            shell.stdout.write(' '.join(bang))
+    else:
+        bang = quote
+
+    #replace $vars
+    cleaned = [re.sub(varparse, shell.get_var, xs) for xs in bang]
+    return cleaned, ' '.join(bang)
+
+def eval_input(shell, cleaned):
     b = [[None, [], None, None]]
     state = None
     charstates = [APPENDCHAR, OUTCHAR, INCHAR, PIPECHAR]
-    for part in a:
+    for part in cleaned:
         if part in charstates and state in charstates:
             raise SyntaxError
         elif part in charstates:
