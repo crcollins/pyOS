@@ -98,9 +98,18 @@ def list_all(path="/"):
             listing.append(new)
     return listing
 
-def make_dir(path):
-    os.mkdir(abs_path(path))
-    add_path(path, "root", "777")
+def make_dir(path, parents=False):
+    if parents:
+        if not is_directory(path):
+            try:
+                os.mkdir(abs_path(path))
+            except OSError:
+                make_dir(os.path.dirname(path), parents)
+                os.mkdir(abs_path(path))
+            add_path(path, "root", "777")
+    else:
+        os.mkdir(abs_path(path))
+        add_path(path, "root", "777")
 
 def open_file(path, mode):
     temp = not is_file(path)
