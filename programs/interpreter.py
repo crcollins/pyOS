@@ -43,7 +43,7 @@ def clean_input(shell, string):
         bang = []
         for x in quote:
             if not x.startswith('"') and not x.startswith("'"):
-                bang.append(x.replace("!!", shell.prevcommands[-1]))
+                bang.extend(x.replace("!!", shell.prevcommands[-1]).split())
             else:
                 bang.append(x)
         if bang != quote:
