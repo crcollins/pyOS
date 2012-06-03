@@ -17,7 +17,6 @@ def rel_path(path, base):
 
 def irel_path(path):
     # returns internal relative path
-    path = abs_path(path)
     b = os.path.relpath(path, BASEPATH)
     b = b.replace('../', '')
     if b in ('..', '.'):
@@ -74,7 +73,7 @@ def list_dir(path):
     return sorted(x for x in os.listdir(abs_path(path)) if ".git" not in x and not x.endswith(".pyc"))
 
 def list_glob(expression):
-    return [iabs_path(x) for x in glob.glob(abs_path(expression))]
+    return [irel_path(x) for x in glob.glob(abs_path(expression))]
 
 def list_all(path="/"):
     listing = []
