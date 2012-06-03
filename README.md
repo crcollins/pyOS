@@ -12,12 +12,13 @@ Features
 - common utilities (cp, mv, rm, ls, cat, head, etc)
 - piping and stdio redirection
 - semi virtual filesystem
+- file/directory metadata
+- dynamic manipulation of files
 
 Todo
 ----
 - sdterr redirection
 - users
-- file metadata
 - other utilities (xargs, edit, awk, sed, etc)
 - polish utilities
 - formalize the directory structure
