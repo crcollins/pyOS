@@ -81,16 +81,6 @@ def list_all(path="/"):
     for x in list_dir(path):
         new = join_path(path, x)
         if is_directory(new):
-            listing.extend(list_all(new))
-        else:
-            listing.append(new)
-    return listing
-
-def list_all(path="/"):
-    listing = []
-    for x in list_dir(path):
-        new = join_path(path, x)
-        if is_directory(new):
             listing.append(new)
             listing.extend(list_all(new))
         else:
