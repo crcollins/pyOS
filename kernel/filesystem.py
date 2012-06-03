@@ -26,9 +26,8 @@ def irel_path(path):
 
 def iabs_path(path):
     # returns internal absolute path
-    a = os.path.commonprefix([BASEPATH, abs_path(path)])
-    b = os.path.relpath(abs_path(path), BASEPATH)
-    c = irel_path(path)
+    b = os.path.relpath(path, BASEPATH)
+    c = irel_path(b)
     return join_path('/', c)
 
 def exists(path):
