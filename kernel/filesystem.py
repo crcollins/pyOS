@@ -235,7 +235,9 @@ def copy_path(src, dst):
             cur.execute(selsql, x)
             temp.append(cur.fetchone())
 
-        data = [(path, owner, perm) for ((path, ), (owner, perm)) in zip(dst, temp)]
+        # fix for ignored files
+        zipped = ((x, y) for (x, y) in zip(dst, temp) if y is not None)
+        data = [(path, owner, perm) for ((path, ), (owner, perm)) in zipped]
         cur.executemany(addsql, data)
 
 def move_path(src, dst):
