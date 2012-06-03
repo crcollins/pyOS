@@ -40,8 +40,8 @@ def is_directory(path):
     return os.path.isdir(abs_path(path))
 
 def move(src, dst):
-    shutil.move(abs_path(src), abs_path(dst))
     a = list_glob(join_path(src, "*")) + [src]
+    shutil.move(abs_path(src), abs_path(dst))
     b = list_glob(join_path(dst, "*")) + [dst]
     move_path(a, b)
 
