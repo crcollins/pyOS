@@ -29,7 +29,7 @@ def move(shell, args, src, dest):
     try:
         kernel.filesystem.move(src, dest)
     except IOError:
-        shell.stderr.write("file error" % (dest, ))
+        shell.stderr.write("%s: file error" % (dest, ))
 
 def help():
     return parser.programs/tail.py()
