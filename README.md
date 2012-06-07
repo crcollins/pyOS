@@ -28,6 +28,7 @@ Todo
 - documentation
 - formalize syscalls
 - networking
+- `command` execution
 
 Setup
 -----
