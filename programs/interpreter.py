@@ -12,8 +12,9 @@ quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
 
 
 def run(shell, args):
+    user = shell.get_var('USER')
     while System.state >= RUNNING:
-        data = raw_input("root@%s:%s$ "% (OSNAME, shell.path))
+        data = raw_input("%s@%s:%s$ "% (user, OSNAME, shell.path))
         data = data.strip()
         if data:
             cleaned, command = clean_input(shell, data)

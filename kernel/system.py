@@ -26,7 +26,7 @@ class System(object):
         self.startup()
         self.state = IDLE
         while self.state >= IDLE:
-            current = self.new_shell()
+            current = self.new_shell(program='login')
             current.run()
         self.shutdown()
         if self.state == REBOOT:
