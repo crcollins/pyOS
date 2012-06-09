@@ -173,7 +173,7 @@ def build_meta_data_database():
                     owner TEXT,
                     permission TEXT)'''
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     try:
         with con:
             cur = con.cursor()
@@ -198,7 +198,7 @@ def build_meta_data_database():
 def get_meta_data(path):
     data = None
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
         cur.execute("SELECT * FROM metadata WHERE path = ?", (path, ))
@@ -214,7 +214,7 @@ def add_path(path, owner, permission):
     data = convert_many(path, owner, permission)
     addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
         cur.executemany(addsql, data)
@@ -226,7 +226,7 @@ def copy_path(src, dst):
     selsql = 'SELECT owner,permission FROM metadata WHERE path = ?'
     addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
         temp = []
@@ -245,7 +245,7 @@ def move_path(src, dst):
     assert len(src) == len(dst)
     data = [(x, y) for ((x, ), (y, )) in zip(dst, src)]
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
         cur.executemany("UPDATE metadata SET path = ? WHERE path = ?", data)
@@ -255,7 +255,7 @@ def delete_path(path):
     path = convert_many(path)
     delsql = 'DELETE FROM metadata WHERE path = ?'
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
         cur.executemany(delsql, path)
@@ -263,7 +263,7 @@ def delete_path(path):
 def _update_owner(path, value):
     value = check_owner(value)
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
         cur.execute("UPDATE metadata SET owner = ? WHERE path = ?", (value, path))
@@ -272,7 +272,7 @@ def _update_owner(path, value):
 def _update_permission(path, value):
     check_permission(value)
 
-    con = sqlite3.connect(abs_path(METADATAFILE))
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
         cur.execute("UPDATE metadata SET permission = ? WHERE path = ?", (value, path))
