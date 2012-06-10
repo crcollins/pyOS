@@ -93,16 +93,16 @@ def make_dir(path, parents=False):
             except OSError:
                 make_dir(os.path.dirname(path), parents)
                 os.mkdir(abs_path(path))
-            add_path(path, "root", "777")
+            add_path(path, "root", "rwxrwxrwx")
     else:
         os.mkdir(abs_path(path))
-        add_path(path, "root", "777")
+        add_path(path, "root", "rwxrwxrwx")
 
 def open_file(path, mode):
     temp = not is_file(path)
     x = open(abs_path(path), mode)
     if temp:
-        add_path(path, "root", "777")
+        add_path(path, "root", "rwxrwxrwx")
     return x
 
 def open_program(path):
@@ -181,13 +181,13 @@ def build_meta_data_database():
             dbmatches = set(x[0] for x in cur.fetchall())
 
             for x in fsmatches.difference(dbmatches):
-                cur.execute(addsql, ((x, "root", "777")))
+                cur.execute(addsql, ((x, "root", "rwxrwxrwx")))
             for x in dbmatches.difference(fsmatches):
                 cur.execute(delsql, (x, ))
-
+          
             con.commit()
     except:
-        items = ((x, 'root', '777') for x in list_all())
+        items = ((x, 'root', 'rwxrwxrwx') for x in list_all())
         with con:
             cur = con.cursor()
             cur.execute(tablesql)
@@ -307,15 +307,17 @@ def calc_permission_number(string):
     return ''.join(numbers)
 
 def check_permission(value):
-    for x in value:
-        if 7 < int(x) or int(x) < 0:
-            raise ValueError
+    full = 'rwxrwxrwx'
+    assert len(value) == len(full)
+    for l, f in zip(value, full):
+        assert (l == '-') or (l == f)
+
 
 def get_permission_string(path):
-    return calc_permission_string(get_meta_data(path)[2])
+    return get_meta_data(path)[2]
 
 def get_permission_number(path):
-    return get_meta_data(path)[2]
+    return calc_permission_number(get_meta_data(path)[2])
 
 def set_permission_string(path, value):
     number = calc_permission_number(value)
