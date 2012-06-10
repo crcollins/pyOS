@@ -208,6 +208,19 @@ def get_meta_data(path):
             data = tuple(str(x) for x in data)
     return data
 
+def get_all_meta_data(path='/'):
+    data = None
+
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
+    with con:
+        cur = con.cursor()
+        cur.execute("SELECT * FROM metadata WHERE path LIKE ?", (path+'%', ))
+        data = cur.fetchall()
+        if data:
+            ## force data to be strings and not unicode
+            data = [tuple(str(x) for x in row) for row in data]
+    return data
+
 def add_path(path, owner, permission):
     check_permission(permission)
     check_owner(owner)
