@@ -4,6 +4,7 @@ import imp
 import glob
 import argparse
 import sqlite3
+import datetime
 
 from kernel.constants import BASEPATH, METADATAFILE
 
@@ -165,12 +166,17 @@ def convert_many(start, *args):
     return done
 
 def build_meta_data_database():
+    now = datetime.datetime.now()
+
     delsql = 'DELETE FROM metadata WHERE path = ?'
-    addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
+    addsql = 'INSERT INTO metadata VALUES (?, ?, ?, ?, ?, ?)'
     tablesql = '''CREATE TABLE IF NOT EXISTS metadata (
                     path TEXT,
                     owner TEXT,
-                    permission TEXT)'''
+                    permission TEXT,
+                    created TIMESTAMP,
+                    accessed TIMESTAMP,
+                    modifed TIMESTAMP)'''
 
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     try:
@@ -181,13 +187,14 @@ def build_meta_data_database():
             dbmatches = set(x[0] for x in cur.fetchall())
 
             for x in fsmatches.difference(dbmatches):
-                cur.execute(addsql, ((x, "root", "rwxrwxrwx")))
+                cur.execute(addsql, ((x, "root", "rwxrwxrwx", now, now, now)))
             for x in dbmatches.difference(fsmatches):
                 cur.execute(delsql, (x, ))
           
             con.commit()
     except:
-        items = ((x, 'root', 'rwxrwxrwx') for x in list_all())
+        items = ((x, "root", "rwxrwxrwx", now, now, now) for x in list_all())
+
         with con:
             cur = con.cursor()
             cur.execute(tablesql)
@@ -204,7 +211,7 @@ def get_meta_data(path):
         data = cur.fetchone()
         if data:
             ## force data to be strings and not unicode
-            data = tuple(str(x) for x in data)
+            data = tuple(str(x) if type(x) == unicode else x for x in data)
     return data
 
 def get_all_meta_data(path='/'):
@@ -217,14 +224,18 @@ def get_all_meta_data(path='/'):
         data = cur.fetchall()
         if data:
             ## force data to be strings and not unicode
-            data = [tuple(str(x) for x in row) for row in data]
+            data = [tuple(str(x) if type(x) == unicode else x for x in row) for row in data]
     return data
 
 def add_path(path, owner, permission):
+    now = datetime.datetime.now()
+    
     check_permission(permission)
     check_owner(owner)
-    data = convert_many(path, owner, permission)
-    addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
+
+    data = convert_many(path, owner, permission, now, now, now)
+
+    addsql = 'INSERT INTO metadata VALUES (?, ?, ?, ?, ?, ?)'
 
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
@@ -232,11 +243,14 @@ def add_path(path, owner, permission):
         cur.executemany(addsql, data)
 
 def copy_path(src, dst):
+    now = datetime.datetime.now()
+
     src = convert_many(src)
     dst = convert_many(dst)
     assert len(src) == len(dst)
+
     selsql = 'SELECT owner,permission FROM metadata WHERE path = ?'
-    addsql = 'INSERT INTO metadata VALUES (?, ?, ?)'
+    addsql = 'INSERT INTO metadata VALUES (?, ?, ?, ?, ?, ?)'
 
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
@@ -248,19 +262,22 @@ def copy_path(src, dst):
 
         # fix for ignored files
         zipped = ((x, y) for (x, y) in zip(dst, temp) if y is not None)
-        data = [(path, owner, perm) for ((path, ), (owner, perm)) in zipped]
+        data = [(path, owner, perm, now, now, now) for ((path, ), (owner, perm)) in zipped]
         cur.executemany(addsql, data)
 
 def move_path(src, dst):
+    now = datetime.datetime.now()
+
     src = convert_many(src)
     dst = convert_many(dst)
     assert len(src) == len(dst)
-    data = [(x, y) for ((x, ), (y, )) in zip(dst, src)]
+
+    data = [(x, y, now) for ((x, ), (y, )) in zip(dst, src)]
 
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
-        cur.executemany("UPDATE metadata SET path = ? WHERE path = ?", data)
+        cur.executemany("UPDATE metadata SET path = ?, modifed = ? WHERE path = ?", data)
         con.commit()
 
 def delete_path(path):
