@@ -289,15 +289,6 @@ def delete_path(path):
         cur = con.cursor()
         cur.executemany(delsql, path)
 
-def _update_owner(path, value):
-    value = check_owner(value)
-
-    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
-    with con:
-        cur = con.cursor()
-        cur.execute("UPDATE metadata SET owner = ? WHERE path = ?", (value, path))
-        con.commit()
-
 def _update_permission(path, value):
     check_permission(value)
 
@@ -356,4 +347,12 @@ def check_owner(owner):
     pass
 
 def set_owner(path, owner):
-    _update_owner(path, owner)
+    now = datetime.datetime.now()
+
+    value = check_owner(value)
+
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
+    with con:
+        cur = con.cursor()
+        cur.execute("UPDATE metadata SET owner = ?, modifed = ? WHERE path = ?", (value, path, now))
+        con.commit()
