@@ -310,12 +310,14 @@ def delete_path(path):
         cur.executemany(delsql, path)
 
 def _update_permission(path, value):
+    now = datetime.datetime.now()
+
     check_permission(value)
 
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
-        cur.execute("UPDATE metadata SET permission = ? WHERE path = ?", (value, path))
+        cur.execute("UPDATE metadata SET permission = ?, modifed = ? WHERE path = ?", (value, now, path))
         con.commit()
 
 def calc_permission_string(number):
