@@ -1,0 +1,99 @@
+
+Data
+
+Table: metadata
+---------------------------------------------------------------------------------------------
+|   path   |   uid   |   gid   |   permissions   |   created   |   accessed   |   modifed   |
+---------------------------------------------------------------------------------------------
+
+
+Table: userdata
+------------------------------------
+|   uid   |   gid   |   password   |
+------------------------------------
+
+========================================
+
+http://www.ucblueash.edu/thomas/Intro_Unix_Text/TOC.html
+http://www.comptechdoc.org/os/linux/howlinuxworks/linux_hllogin.html
+
+Startup
+
+ROM -> RAM
+bootloader
+system kernel
+mem check 
+init process
+    sets sys states
+    login
+        sets uid, gid
+        starts /etc/passwd startup application
+
+System Start
+    startup.py
+    login.py
+        interpreter.py
+            STUFF            
+    shutdown.py
+
+--- System ------------------------
+| --- Login --------------------- |
+| | --- <Shell> --------------- | |
+| | |                         | | |
+| | |          STUFF          | | |
+| | |                         | | |
+| | --------------------------- | |
+| ------------------------------- |              
+-----------------------------------
+
+/etc/passwd (: delimited)
+---------------------------------------------------------
+| username      |                                       |
+| password      | random length encrypted (if not 'x')  |
+| uid           |                                       |
+| gid           |                                       |
+| text info     | name, dept, etc (optional fields)     |
+| login dir     |                                       |
+| startup app   |                                       |
+---------------------------------------------------------
+
+
+========================================
+
+Processes
+
+PCB
+---------------
+| pid         |
+| ppid        |
+| owner       |
+| priority    |
+| state       |
+---------------
+
+
+========================================
+
+Directories
+
+/
+|++ bin
+|   |-- alias.py
+|   |-- cat.py
+|   |-- cp.py
+|   `-- ...
+|++ home
+|   |++ <USER0>
+|   |++ <USER1>
+|   `++ ...
+|++ etc
+|   |-- passwd
+|   |-- data
+|   `-- system.py
+|++ dev
+|   |-- null
+|   `-- ...
+`++ kernel
+    |-- constants.py
+    |-- filesystem.py
+    `-- ...
