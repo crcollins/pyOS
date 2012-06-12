@@ -101,7 +101,7 @@ def make_dir(path, parents=False):
 
 def open_file(path, mode):
     temp = not is_file(path)
-    x = open(abs_path(path), mode)
+    x = FileDecorator(open(abs_path(path), mode), path)
     if temp:
         add_path(path, "root", "rwxrwxrwx")
     return x
@@ -125,6 +125,25 @@ def base_name(path):
 
 def split(path):
     return dir_name(path), base_name(path)
+
+
+class FileDecorator(object):
+    def __init__(self, f, name):
+        self.__f = f
+        self.__name = name
+        set_time(self.name, 'an')
+
+    def close(self):
+        set_time(self.name, 'mn')
+        self.__f.close()
+
+    @property
+    def name(self):
+        return self.__name
+
+    def __getattr__(self, name):
+        return getattr(self.__f, name)
+
 
 class Parser(argparse.ArgumentParser):
     def __init__(self, program, name=None, *args, **kwargs):
@@ -157,6 +176,7 @@ class Parser(argparse.ArgumentParser):
 
     def help_msg(self):
         return "%s\n\n%s" % (self.name, self.format_help())
+
 
 def convert_many(start, *args):
     if type(start) not in (list, set, tuple):
