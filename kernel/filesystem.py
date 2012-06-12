@@ -320,7 +320,6 @@ def check_permission(value):
     for l, f in zip(value, full):
         assert (l == '-') or (l == f)
 
-
 def get_permission_string(path):
     return get_meta_data(path)[2]
 
@@ -339,6 +338,63 @@ def set_permission(path, value):
         set_permission_number(path, value)
     except ValueError:
         set_permission_string(path, value)
+
+def _update_time(path, value):
+    con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
+    columns = ['accessed', 'created', 'modified']
+
+    a = [x + ' = ? ' for (x, y) in zip(columns, value) if y is not None]
+    b = tuple(x for x in value if x is not None)
+    upsql = "UPDATE metadata SET %s WHERE path = ?" % ''.join(a)
+
+    with con:
+        cur = con.cursor()
+        cur.execute(upsql, b + (path, ))
+        con.commit()
+
+def set_time(path, value=None):
+    # some magic that should not exist
+    done = [None, None, None]
+    d = {
+        'a': 0,
+        'm': 1,
+        'c': 2
+    }
+    timeinc = {
+        'w':'weeks',
+        'd': 'days',
+        'h':'hours',
+        'm':'minutes',
+        's':'seconds'
+    }
+    for time in value.split(','):
+        time = time.strip()
+        if time:
+            lvl = time[0]
+            try:
+                other = float(time[1:-1])
+            except ValueError:
+                other = 0.0
+            if len(time) >= 2:
+                unit = time[-1]
+            else:
+                unit = 'n'
+
+            if unit == 'y':
+                unit = 'd'
+                other *= year
+            elif unit == 'n':
+                unit = 'd'
+                other = 0.0
+            delta = datetime.timedelta(**{timeinc[unit]: other})
+            
+            if done[d[lvl]] is None:
+                done[d[lvl]] = delta
+            else:
+                done[d[lvl]] += delta
+
+    done = [x + datetime.datetime.now() if x is not None else None for x in done]
+    _update_time(path, done)
 
 def get_owner(path):
     return get_meta_data(path)[1]
