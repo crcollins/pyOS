@@ -409,7 +409,6 @@ def set_time(path, value=None):
                 unit = 'd'
                 other = 0.0
             delta = datetime.timedelta(**{timeinc[unit]: other})
-            
             if done[d[lvl]] is None:
                 done[d[lvl]] = delta
             else:
@@ -417,6 +416,9 @@ def set_time(path, value=None):
 
     done = [x + datetime.datetime.now() if x is not None else None for x in done]
     _update_time(path, done)
+
+def get_time(path):
+    return get_meta_data(path)[3:6]
 
 def get_owner(path):
     return get_meta_data(path)[1]
