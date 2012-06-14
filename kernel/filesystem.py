@@ -196,7 +196,7 @@ def build_meta_data_database():
                     permission TEXT,
                     created TIMESTAMP,
                     accessed TIMESTAMP,
-                    modifed TIMESTAMP)'''
+                    modified TIMESTAMP)'''
 
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     try:
@@ -297,7 +297,7 @@ def move_path(src, dst):
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
-        cur.executemany("UPDATE metadata SET path = ?, modifed = ? WHERE path = ?", data)
+        cur.executemany("UPDATE metadata SET path = ?, modified = ? WHERE path = ?", data)
         con.commit()
 
 def delete_path(path):
@@ -317,7 +317,7 @@ def _update_permission(path, value):
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
-        cur.execute("UPDATE metadata SET permission = ?, modifed = ? WHERE path = ?", (value, now, path))
+        cur.execute("UPDATE metadata SET permission = ?, modified = ? WHERE path = ?", (value, now, path))
         con.commit()
 
 def calc_permission_string(number):
@@ -379,8 +379,8 @@ def set_time(path, value=None):
     done = [None, None, None]
     d = {
         'a': 0,
-        'm': 1,
-        'c': 2
+        'c': 1,
+        'm': 2
     }
     timeinc = {
         'w':'weeks',
@@ -434,5 +434,5 @@ def set_owner(path, owner):
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
         cur = con.cursor()
-        cur.execute("UPDATE metadata SET owner = ?, modifed = ? WHERE path = ?", (value, path, now))
+        cur.execute("UPDATE metadata SET owner = ?, modified = ? WHERE path = ?", (value, path, now))
         con.commit()

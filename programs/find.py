@@ -75,10 +75,10 @@ def run(shell, args):
 def find(args, basepath, perms, times):  
     done = []
     access, modify, create = times
-    for (path, uid, perm, created, accessed, modifed) in fs.get_all_meta_data(basepath):
+    for (path, uid, perm, created, accessed, modified) in fs.get_all_meta_data(basepath):
         mtimes = {
             'a': accessed,
-            'm': modifed,
+            'm': modified,
             'c': created
         }
         plen = len([x for x in path.split('/') if x])

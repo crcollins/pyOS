@@ -3,7 +3,7 @@ Data
 
 Table: metadata
 ---------------------------------------------------------------------------------------------
-|   path   |   uid   |   gid   |   permissions   |   created   |   accessed   |   modifed   |
+|   path   |   uid   |   gid   |   permissions   |   created   |   accessed   |   modified   |
 ---------------------------------------------------------------------------------------------
 
 
