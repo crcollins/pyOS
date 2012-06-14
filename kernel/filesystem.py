@@ -375,6 +375,24 @@ def _update_time(path, value):
         con.commit()
 
 def set_time(path, value=None):
+    if type(value) == dict:
+        done = [None, None, None]
+        d = {
+            'a': 0, 'access': 0, 'accessed': 0,
+            'm': 1, 'modify': 1, 'modified': 1,
+            'c': 2, 'create': 2, 'created': 2
+        }
+        for key in value:
+           done[d[key]] = value[key]
+        _update_time(path, done)
+    elif type(value) == str:
+        set_time_string(path, value)
+    elif type(value) in (tuple, list):
+        _update_time(path, value)
+    else:
+        raise TypeError
+
+def set_time_string(path, value=None):
     # some magic that should not exist
     done = [None, None, None]
     d = {
