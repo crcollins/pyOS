@@ -365,9 +365,9 @@ def _update_time(path, value):
     con = sqlite3.connect(abs_path(METADATAFILE),  detect_types=sqlite3.PARSE_DECLTYPES)
     columns = ['accessed', 'created', 'modified']
 
-    a = [x + ' = ? ' for (x, y) in zip(columns, value) if y is not None]
+    a = [x + ' = ?' for (x, y) in zip(columns, value) if y is not None]
     b = tuple(x for x in value if x is not None)
-    upsql = "UPDATE metadata SET %s WHERE path = ?" % ''.join(a)
+    upsql = "UPDATE metadata SET %s WHERE path = ?" % ', '.join(a)
 
     with con:
         cur = con.cursor()
