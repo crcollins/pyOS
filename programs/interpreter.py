@@ -10,7 +10,6 @@ varparse = re.compile(r"\%s\w*" % (VARCHAR, ))
 stdioparse = re.compile(r"([%s%s]+\s*\w+)" % (OUTCHAR, INCHAR))
 quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
 
-
 def run(shell, args):
     user = shell.get_var('USER')
     while System.state >= RUNNING:
@@ -22,7 +21,6 @@ def run(shell, args):
 
             programs = eval_input(shell, cleaned)
             shells = start_shells(shell, programs)
-            connect_shells(shells)
 
             for x in shells:
                 x.run()
@@ -107,6 +105,7 @@ def start_shells(parent, programs):
             newcout = cout
         proper.extend([x for x in [newcin, newshell, newcout] if x])
     #(Scin0, shell0, Scout0, Scin1 ...)
+    connect_shells(proper)
     return proper
 
 def connect_shells(shells):
