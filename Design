@@ -2,15 +2,22 @@
 Data
 
 Table: metadata
----------------------------------------------------------------------------------------------
-|   path   |   uid   |   gid   |   permissions   |   created   |   accessed   |   modified   |
----------------------------------------------------------------------------------------------
-
+---------------------------------------------
+| path          |                           |
+| uid           |                           |
+| gid           |                           |
+| permissions   | rwxrwxrwx                 |
+| created       | YYYY-MM-DD HH:mm:ss.f     |
+| accessed      | YYYY-MM-DD HH:mm:ss.f     |
+| modified      | YYYY-MM-DD HH:mm:ss.f     |
+---------------------------------------------
 
 Table: userdata
-------------------------------------
-|   uid   |   gid   |   password   |
-------------------------------------
+---------------------------------
+| uid       |                   |
+| gid       |                   |
+| password  |                   |
+---------------------------------
 
 ========================================
 
@@ -57,7 +64,6 @@ System Start
 | startup app   |                                       |
 ---------------------------------------------------------
 
-
 ========================================
 
 Processes
@@ -71,11 +77,30 @@ PCB
 | state       |
 ---------------
 
-
 ========================================
 
 Directories
 
+/
+|++ programs
+|   |-- alias.py
+|   |-- cat.py
+|   |-- cp.py
+|   `-- ...
+|++ documents
+|   |++ <USER0>
+|   |++ <USER1>
+|   `++ ...
+|++ data
+|   |-- passwd
+|   |-- data
+|   `-- system.py
+`++ kernel
+    |-- constants.py
+    |-- filesystem.py
+    `-- ...
+
+# TODO
 /
 |++ bin
 |   |-- alias.py
@@ -97,3 +122,25 @@ Directories
     |-- constants.py
     |-- filesystem.py
     `-- ...
+
+========================================
+
+Programs
+
+Required functions
+
+run(shell, args)
+    arguments
+        shell
+            a Shell instance from /kernel/shell.py
+        args
+            a list of all the input from the interpreter split on spaces
+    return
+        None
+        # TODO
+        status codes
+
+help()
+    return
+        string of help info
+
