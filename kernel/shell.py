@@ -79,6 +79,17 @@ class Shell(object):
     def set_var(self, name, value):
         self.vars[name] = value
 
+    def hist_find(self, value, start=True):
+        done = ''
+        for x in reversed(self.prevcommands):
+            if start and x.startswith(value):
+                done = x
+                break
+            elif not start and value in x:
+                done = x
+                break
+        return done
+
     def find_program(self, name):
         for x in self.program_paths(name):
             program = kernel.filesystem.open_program(x)
