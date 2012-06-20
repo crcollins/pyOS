@@ -26,11 +26,7 @@ def run(shell, args):
             else:
                 pattern = re.compile(args.pattern, case)
 
-            paths = []
-            for path in args.paths[skip:]:
-                paths.extend(kernel.filesystem.list_glob(path))
-
-            for path in sorted(paths):
+            for path in sorted(args.paths[skip:]):
                 grep(shell, args, pattern, path)
 
             if shell.stdin:

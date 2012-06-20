@@ -143,6 +143,15 @@ def bang_replacement(shell, listing):
         shell.stdout.write(' '.join(bang))
     return bang, execute
 
+def filename_expansion(shell, listing):
+    filenames = []
+    for part in listing:
+        if '*' in part or '?' in part or ('[' in part and ']' in part):
+            filenames.extend(fs.list_glob(shell.sabs_path(part)))
+        else:
+            filenames.append(part)
+    return filenames
+
 def shell_expansion(shell, string):
     # http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_04.html
     quote = quote_split(string)
@@ -156,7 +165,8 @@ def shell_expansion(shell, string):
 
     #replace $vars
     cleaned = [re.sub(varparse, shell.get_var, xs) for xs in bang]
-    return cleaned, ' '.join(bang)
+    filenames = filename_expansion(shell, cleaned)
+    return filenames, ' '.join(bang)
 
 def eval_input(shell, cleaned):
     b = [[None, [], None, None]]
