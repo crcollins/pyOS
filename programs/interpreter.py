@@ -147,7 +147,8 @@ def bang_replacement(shell, listing):
 def filename_expansion(shell, listing):
     filenames = []
     for part in listing:
-        if '*' in part or '?' in part or ('[' in part and ']' in part):
+        if not part.startswith('"') and not part.startswith("'") \
+        and '*' in part or '?' in part or ('[' in part and ']' in part):
             filenames.extend(fs.list_glob(shell.sabs_path(part)))
         else:
             filenames.append(part)
