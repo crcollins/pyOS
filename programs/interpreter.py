@@ -11,6 +11,7 @@ quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
 subparse = re.compile(r"""s(?P<lim>.)(.*?)(?P=lim)(.*?)(?P=lim)""")
 bangparse = re.compile(r"""(\!+[^!]*)""")
 # r"""(\!\!|(?<!\\)\![^!\s]*|\s+)"""
+braceparse = re.compile(r"""(\{[^\{\}]*\})""")
 
 def run(shell, args):
     user = shell.get_var('USER')
@@ -152,6 +153,53 @@ def filename_expansion(shell, listing):
             filenames.append(part)
     return filenames
 
+def brace_expansion(shell, listing):
+    def expand(remaining, curlist=None):
+        '''
+        {a,b}{c,d}{e,f}
+
+                a               b
+           ac      ad      bc      bd
+        ace acf ade adf bce bcf bde bdf
+        '''
+        out = []
+        if curlist is None:
+            out = remaining[0]
+        else:
+            for base in curlist:
+                for end in remaining[0]:
+                    out.append(base + end)
+        if len(remaining) > 1:
+            out = expand(remaining[1:], out)
+        return out
+
+    def compress(item):
+        out = []
+        if len(item) > 1:
+            # used to find the last iteration 
+            len2 = (len(item) / 2) - 1
+            for i, (start, end) in enumerate(zip(item[::2], item[1::2])):
+                temp2 = []
+                # [1:-1] removes braces
+                for part in end[1:-1].split(','):
+                    if i == len2:
+                        temp2.append(start + part + item[-1])
+                    else:
+                        temp2.append(start + part)
+                out.append(temp2)
+        else:
+            out.append(item)
+        return out
+
+    braces = []
+    for part in listing:
+        if not part.startswith('"') and not part.startswith("'") and '{' in part and '}' in part:
+            compressed = compress(re.split(braceparse, part))
+            braces.extend(expand(compressed)) 
+        else:
+            braces.append(part)
+    return braces
+
 def shell_expansion(shell, string):
     # http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_04.html
     quote = quote_split(string)
@@ -165,7 +213,9 @@ def shell_expansion(shell, string):
 
     #replace $vars
     cleaned = [re.sub(varparse, shell.get_var, xs) for xs in bang]
-    filenames = filename_expansion(shell, cleaned)
+    braces = brace_expansion(shell, cleaned)
+    filenames = filename_expansion(shell, braces)
+
     return filenames, ' '.join(bang)
 
 def eval_input(shell, cleaned):
