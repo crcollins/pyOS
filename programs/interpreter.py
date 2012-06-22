@@ -212,11 +212,27 @@ def shell_expansion(shell, string):
         bang = quote
         execute = True
 
-    #replace $vars
-    cleaned = [re.sub(varparse, shell.get_var, xs) for xs in bang]
-    braces = brace_expansion(shell, cleaned)
-    filenames = filename_expansion(shell, braces)
+    #if execute:
+    
+    # brace expansion
+    braces = brace_expansion(shell, bang)
 
+    # tilde expansion
+
+    # replace $vars
+    cleaned = [re.sub(varparse, shell.get_var, xs) for xs in braces]
+
+    # command sub
+
+
+
+    # process sub
+
+    # word splitting
+
+    filenames = filename_expansion(shell, cleaned)
+
+    # strip quotes
     return filenames, ' '.join(bang)
 
 def eval_input(shell, cleaned):
