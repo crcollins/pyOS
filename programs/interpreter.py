@@ -11,7 +11,7 @@ quoteparse = re.compile(r"""(\"[^\"]*\"|\'[^\']*\'|\|)""")
 subparse = re.compile(r"""s(?P<lim>.)(.*?)(?P=lim)(.*?)(?P=lim)""")
 bangparse = re.compile(r"""(\!+[^!]*)""")
 # r"""(\!\!|(?<!\\)\![^!\s]*|\s+)"""
-braceparse = re.compile(r"""(\{[^\{\}]*\})""")
+braceparse = re.compile(r"""((?<!\$)\{[^\{\}]*\})""")
 
 def run(shell, args):
     user = shell.get_var('USER')
