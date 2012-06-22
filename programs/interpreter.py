@@ -148,7 +148,7 @@ def filename_expansion(shell, listing):
     filenames = []
     for part in listing:
         if not part.startswith('"') and not part.startswith("'") \
-        and '*' in part or '?' in part or ('[' in part and ']' in part):
+            and '*' in part or '?' in part or ('[' in part and ']' in part):
             filenames.extend(fs.list_glob(shell.sabs_path(part)))
         else:
             filenames.append(part)
@@ -194,7 +194,8 @@ def brace_expansion(shell, listing):
 
     braces = []
     for part in listing:
-        if not part.startswith('"') and not part.startswith("'") and '{' in part and '}' in part:
+        if not part.startswith('"') and not part.startswith("'") \
+            and '{' in part and '}' in part:
             compressed = compress(re.split(braceparse, part))
             braces.extend(expand(compressed)) 
         else:
