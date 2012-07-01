@@ -16,7 +16,7 @@ USERDIR = "/user"  # need to implement
 SYSDATADIR = "/data"
 
 #Standard file paths
-METADATAFILE = "/data/data"
+METADATAFILE = os.path.join(BASEPATH, "data/data")
 
 #Special Characters/strings
 VARCHAR = "$"

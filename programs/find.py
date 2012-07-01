@@ -3,6 +3,7 @@ import fnmatch
 import datetime
 
 import kernel.filesystem as fs
+import kernel.metadata as md
 
 desc = "Finds files matching the expression given."
 parser = fs.Parser('find', name="Find", description=desc)
@@ -75,7 +76,7 @@ def run(shell, args):
 def find(args, basepath, perms, times):  
     done = []
     access, modify, create = times
-    for (path, uid, perm, created, accessed, modified) in fs.get_all_meta_data(basepath):
+    for (path, uid, perm, created, accessed, modified) in md.get_all_meta_data(basepath):
         mtimes = {
             'a': accessed,
             'm': modified,
@@ -161,7 +162,7 @@ def convert_permissions(args):
     if args.perm:
         try:
             int(args.perm[0])
-            perm = [fs.calc_permission_string(args.perm[0])]
+            perm = [md.calc_permission_string(args.perm[0])]
         except:
             for permset in ','.join(args.perm).split(','):
                 lvl = permset[0]

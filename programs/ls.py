@@ -19,8 +19,8 @@ def run(shell, args):
             ls(shell, relpath, args)
 
 def ls(shell, relpath, args):
-    fscp = kernel.filesystem.calc_permission_string
-    fsgm = kernel.filesystem.get_meta_data
+    fscp = kernel.metadata.calc_permission_string
+    fsgm = kernel.metadata.get_meta_data
     fsbn = kernel.filesystem.base_name
     format = "%s %s %s %s"
     path = shell.sabs_path(relpath)
