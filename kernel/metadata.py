@@ -35,7 +35,7 @@ def build_meta_data_database(fsmatches):
                 cur.execute(addsql, ((x, "root", "rwxrwxrwx", now, now, now)))
             for x in dbmatches.difference(fsmatches):
                 cur.execute(delsql, (x, ))
-          
+
             con.commit()
     except:
         items = ((x, "root", "rwxrwxrwx", now, now, now) for x in fsmatches)
@@ -74,9 +74,9 @@ def get_all_meta_data(path='/'):
 
 def add_path(path, owner, permission):
     now = datetime.datetime.now()
-    
-    check_permission(permission)
-    check_owner(owner)
+
+    validate_permission(permission)
+    validate_owner(owner)
 
     data = convert_many(path, owner, permission, now, now, now)
 
@@ -137,7 +137,7 @@ def delete_path(path):
 def _update_permission(path, value):
     now = datetime.datetime.now()
 
-    check_permission(value)
+    validate_permission(value)
 
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
@@ -161,7 +161,7 @@ def calc_permission_number(string):
         numbers.append(int("0b" + ''.join(a), 2))
     return ''.join(numbers)
 
-def check_permission(value):
+def validate_permission(value):
     full = 'rwxrwxrwx'
     assert len(value) == len(full)
     for l, f in zip(value, full):
@@ -266,13 +266,13 @@ def get_time(path):
 def get_owner(path):
     return get_meta_data(path)[1]
 
-def check_owner(owner):
+def validate_owner(owner):
     pass
 
 def set_owner(path, owner):
     now = datetime.datetime.now()
 
-    value = check_owner(value)
+    value = validate_owner(value)
 
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
