@@ -16,7 +16,7 @@ Table: userdata
 ---------------------------------
 | uid       |                   |
 | gid       |                   |
-| password  |                   |
+| password  | sha256 hashed     |
 ---------------------------------
 
 ========================================
@@ -29,7 +29,7 @@ Startup
 ROM -> RAM
 bootloader
 system kernel
-mem check 
+mem check
 init process
     sets sys states
     login
@@ -40,7 +40,7 @@ System Start
     startup.py
     login.py
         interpreter.py
-            STUFF            
+            STUFF
     shutdown.py
 
 --- System ------------------------
@@ -50,8 +50,14 @@ System Start
 | | |          STUFF          | | |
 | | |                         | | |
 | | --------------------------- | |
-| ------------------------------- |              
+| ------------------------------- |
 -----------------------------------
+
+                                                            ---> Process <------
+                                                           /                   |
+Filesystem Driver -----> System <---> Kernel <--------------------> Shell <-----
+Display Driver      --/                         \--> syscalls --/
+
 
 /etc/passwd (: delimited)
 ---------------------------------------------------------
@@ -144,3 +150,58 @@ help()
     return
         string of help info
 
+========================================
+
+drivers
+    system
+        abs_path
+        rel_path
+        exists
+        is_file
+        is_directory
+        copy
+        remove
+        move
+        join_path
+        get_size
+        list_dir
+    filesystem
+        directories
+        files
+    database
+        create
+        add
+        delete
+    display
+        write
+        ouput
+
+filesystem
+    .path
+        abs
+        rel
+        iabs
+        irel
+        join
+        split
+        dir_name
+        base_name
+
+    #require permission
+    open_file
+    open_program
+    move
+    copy
+    remove
+    make_dir
+
+    exists
+    is_file
+    is_directory
+
+    list_dir
+    list_glob
+    list_all
+
+# used to abstract permissions
+syscalls
