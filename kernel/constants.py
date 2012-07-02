@@ -17,6 +17,7 @@ SYSDATADIR = "/data"
 
 #Standard file paths
 METADATAFILE = os.path.join(BASEPATH, "data/data")
+USERDATAFILE = METADATAFILE
 
 #Special Characters/strings
 VARCHAR = "$"

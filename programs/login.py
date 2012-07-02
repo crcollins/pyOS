@@ -2,12 +2,13 @@ import hashlib
 import getpass
 
 from kernel.system import System
+import kernel.userdata
 
 def run(shell, args):
     user = raw_input("user: ")
-    passwd = hashlib.sha256(getpass.getpass("password: ")).hexdigest()
+    password = hashlib.sha256(getpass.getpass("password: ")).hexdigest()
 
-    if passwd: # == db(user).password
+    if kernel.userdata.correct_password(user, password): # == db(user).password
         stuff = {
                 'USER': user,
                 'SHELL': 'interpreter',
@@ -19,6 +20,9 @@ def run(shell, args):
         newshell = System.new_shell(parent=shell, path=path)
         add_vars(newshell, stuff)
         newshell.run()
+    else:
+        shell.stderr.write("Invalid username or password.")
+        shell.stderr.write("")
 
 def add_vars(shell, stuff):
     for key in stuff:
