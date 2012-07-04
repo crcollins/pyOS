@@ -25,7 +25,6 @@ def build_user_data_database():
         cur = con.cursor()
         cur.execute(tablesql)
         cur.executemany(addsql, items)
-        con.commit()
 
 def get_user_data(uid):
     data = None
@@ -48,7 +47,6 @@ def add_user(uid, gid, password):
         cur = con.cursor()
         cur.execute(tablesql)
         cur.executemany(addsql, items)
-        con.commit()
 
 def delete_user(uid):
     path = convert_many(uid)
@@ -67,7 +65,6 @@ def set_gid(uid, value):
     with con:
         cur = con.cursor()
         cur.execute("UPDATE userdata SET gid = ? WHERE uid = ?", (value, uid))
-        con.commit()
 
 def get_password(uid):
     return get_user_data(uid)[1]
@@ -77,7 +74,6 @@ def set_password(uid, value):
     with con:
         cur = con.cursor()
         cur.execute("UPDATE userdata SET password = ? WHERE uid = ?", (value, uid))
-        con.commit()
 
 def correct_password(uid, password):
     data = get_user_data(uid)

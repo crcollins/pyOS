@@ -36,7 +36,6 @@ def build_meta_data_database(fsmatches):
             for x in dbmatches.difference(fsmatches):
                 cur.execute(delsql, (x, ))
 
-            con.commit()
     except:
         items = ((x, "root", "rwxrwxrwx", now, now, now) for x in fsmatches)
 
@@ -44,7 +43,6 @@ def build_meta_data_database(fsmatches):
             cur = con.cursor()
             cur.execute(tablesql)
             cur.executemany(addsql, items)
-            con.commit()
 
 def get_meta_data(path):
     data = None
@@ -123,7 +121,6 @@ def move_path(src, dst):
     with con:
         cur = con.cursor()
         cur.executemany("UPDATE metadata SET path = ?, modified = ? WHERE path = ?", data)
-        con.commit()
 
 def delete_path(path):
     path = convert_many(path)
@@ -175,7 +172,6 @@ def set_permission_number(path, value):
     with con:
         cur = con.cursor()
         cur.execute("UPDATE metadata SET permission = ?, modified = ? WHERE path = ?", (value, now, path))
-        con.commit()
 
 def set_permission(path, value):
     try:
@@ -204,7 +200,6 @@ def set_time_list(path, value):
     with con:
         cur = con.cursor()
         cur.execute(upsql, b + (path, ))
-        con.commit()
 
 def set_time_dict(path, value=None):
     done = [None, None, None]
@@ -279,4 +274,3 @@ def set_owner(path, owner):
     with con:
         cur = con.cursor()
         cur.execute("UPDATE metadata SET owner = ?, modified = ? WHERE path = ?", (value, path, now))
-        con.commit()
