@@ -21,7 +21,6 @@ def build_user_data_database():
 
     with con:
         cur = con.cursor()
-        print tablesql
         cur.execute(tablesql)
         cur.executemany(addsql, items)
 
