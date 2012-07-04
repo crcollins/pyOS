@@ -124,5 +124,5 @@ def set_password(user, value):
 def correct_password(user, password):
     try:
         return get_password(user) == password
-    except:
+    except TypeError:
         return 0
