@@ -1,7 +1,8 @@
+from kernel.utils import Parser
 import kernel.filesystem
 
 desc = "Returns the command history."
-parser = kernel.filesystem.Parser('history', name="History", description=desc)
+parser = Parser('history', name="History", description=desc)
 pa = parser.add_argument
 pa('bla', type=str, nargs='*',)
 

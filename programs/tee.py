@@ -1,7 +1,8 @@
+from kernel.utils import Parser
 import kernel.filesystem
 
 desc = "Allows tapping into the stdout to write to multiple files."
-parser = kernel.filesystem.Parser('tee', name="Tee",  description=desc)
+parser = Parser('tee', name="Tee",  description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-a', action="store_true", dest="append", default=False)

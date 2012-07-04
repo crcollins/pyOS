@@ -6,6 +6,7 @@ import argparse
 
 from kernel.constants import BASEPATH, METADATAFILE
 import kernel.metadata
+import kernel.userdata
 
 def abs_path(path):
     # returns external absolute path
@@ -125,7 +126,6 @@ def base_name(path):
 def split(path):
     return dir_name(path), base_name(path)
 
-
 class FileDecorator(object):
     def __init__(self, f, name):
         self.__f = f
@@ -143,35 +143,10 @@ class FileDecorator(object):
     def __getattr__(self, name):
         return getattr(self.__f, name)
 
-
-class Parser(argparse.ArgumentParser):
-    def __init__(self, program, name=None, *args, **kwargs):
-        argparse.ArgumentParser.__init__(self, prog=program, *args, **kwargs)
-        if name is None:
-            self.name = program
-        else:
-            self.name = name
-        self.help = False
-
-    def add_shell(self, shell):
-        self.shell = shell
-
-    def exit(self, *args, **kwargs):
-        pass
-
-    def print_usage(self, *args, **kwargs):
-        try:
-            self.shell.stderr.write(self.format_usage())
-            self.help = True
-        except AttributeError:
-            pass
-
-    def print_help(self, *args, **kwargs):
-        try:
-            self.shell.stdout.write(self.help_msg())
-            self.help = True
-        except AttributeError:
-            pass
-
-    def help_msg(self):
-        return "%s\n\n%s" % (self.name, self.format_help())
+def has_permission(path, user, access):
+    metadata = kernel.metadata.get_meta_data(path)
+    permissions = kernel.metadata.get_permission_number(path)
+    userinfo = kernel.userdata.get_user_data(user)
+    d = {'r': 4, 'w': 2, 'x': 1}
+    compare = [d[access] * (metadata[1] == user), 0, d[access]]
+    return any(int(x) & y for (x, y) in zip(permissions, compare))

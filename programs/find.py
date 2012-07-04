@@ -2,11 +2,12 @@ import re
 import fnmatch
 import datetime
 
+from kernel.utils import Parser
 import kernel.filesystem as fs
 import kernel.metadata as md
 
 desc = "Finds files matching the expression given."
-parser = fs.Parser('find', name="Find", description=desc)
+parser = Parser('find', name="Find", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 
@@ -40,7 +41,7 @@ pa('-nogroup', action="store_true", dest="nogroup", default=False)
 
 # -fstype TYPE
 # -ilname PATTERN
-# -iname PATTERN 
+# -iname PATTERN
 # -inum N
 # -iwholename PATTERN
 # -iregex PATTERN
@@ -73,7 +74,7 @@ def run(shell, args):
         if not shell.stdout:
             shell.stdout.write('')
 
-def find(args, basepath, perms, times):  
+def find(args, basepath, perms, times):
     done = []
     access, modify, create = times
     for (path, uid, perm, created, accessed, modified) in md.get_all_meta_data(basepath):

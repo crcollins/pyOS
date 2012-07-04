@@ -1,10 +1,11 @@
 import datetime
 
+from kernel.utils import Parser
 import kernel.filesystem
 import kernel.metadata
 
 desc = "Creates an empty file at the given path."
-parser = fs.Parser('touch', name="Touch", description=desc)
+parser = Parser('touch', name="Touch", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*')
 

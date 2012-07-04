@@ -1,10 +1,10 @@
 import re
 
+from kernel.utils import Parser
 import kernel.filesystem
 
-
 desc = "Search for lines in a file matching the pattern given."
-parser = kernel.filesystem.Parser('grep', name="Grep", description=desc)
+parser = Parser('grep', name="Grep", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-e', action="store", type=str, dest="pattern", default='')

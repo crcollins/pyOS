@@ -2,13 +2,8 @@ import datetime
 import sqlite3
 
 from kernel.constants import METADATAFILE
-
-def convert_many(start, *args):
-    if type(start) not in (list, set, tuple):
-        done = [(start, ) + args]
-    else:
-        done = [(x, ) + args for x in start]
-    return done
+from kernel.utils import calc_permission_number, calc_permission_string
+from kernel.utils import convert_many
 
 def build_meta_data_database(fsmatches):
     now = datetime.datetime.now()
@@ -130,22 +125,6 @@ def delete_path(path):
     with con:
         cur = con.cursor()
         cur.executemany(delsql, path)
-
-def calc_permission_string(number):
-    base = 'rwxrwxrwx'
-    number = str(number)
-    binary = []
-    for digit in number[:3]:
-        binary.extend([int(y) for y in '{0:03b}'.format(int(digit))])
-    return ''.join([b if (a and b) else '-' for a, b in zip(binary, base)])
-
-def calc_permission_number(string):
-    numbers = []
-    string += '-' * (9 - len(string))
-    for group in (string[:3], string[3:6], string[6:9]):
-        a = ['1' if x and x not in ["-", "0"] else '0' for x in group]
-        numbers.append(int("0b" + ''.join(a), 2))
-    return ''.join(numbers)
 
 def validate_permission(value):
     full = 'rwxrwxrwx'

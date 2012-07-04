@@ -1,7 +1,8 @@
+from kernel.utils import Parser
 import kernel.filesystem
 
 desc = "Returns the first n lines of a file."
-parser = kernel.filesystem.Parser('head', name="Head", description=desc)
+parser = Parser('head', name="Head", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-n', action="store", type=int, dest="lineamount", default=5)

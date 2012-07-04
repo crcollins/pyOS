@@ -1,7 +1,8 @@
+from kernel.utils import Parser
 import kernel.filesystem
 
 desc = "Returns the last n lines of a file."
-parser = kernel.filesystem.Parser('tail', name="Tail", description=desc)
+parser = Parser('tail', name="Tail", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-n', action="store", type=int, dest="lineamount", default=5)

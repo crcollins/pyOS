@@ -1,7 +1,8 @@
+from kernel.utils import Parser
 import kernel.filesystem
 
 desc = "Returns the contents of a directory."
-parser = kernel.filesystem.Parser('ls', name="List Directory", description=desc)
+parser = Parser('ls', name="List Directory", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-l', action="store_true", dest="long", default=False)

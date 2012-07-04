@@ -1,7 +1,8 @@
+from kernel.utils import Parser
 import kernel.filesystem
 
 desc = "Moves the given file/directory to the given location."
-parser = kernel.filesystem.Parser('mv', name="Move", description=desc)
+parser = Parser('mv', name="Move", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-f', action="store_true", dest="force", default=False)

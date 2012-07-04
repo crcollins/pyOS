@@ -1,8 +1,9 @@
+from kernel.utils import Parser
 import kernel.filesystem
 
 
 desc = "Creates a directory at the given path."
-parser = kernel.filesystem.Parser('mkdir', name="Make Directory", description=desc)
+parser = Parser('mkdir', name="Make Directory", description=desc)
 pa = parser.add_argument
 pa('paths', type=str, nargs='*',)
 pa('-p', action="store_true", dest="parent", default=False)
