@@ -205,3 +205,62 @@ filesystem
 
 # used to abstract permissions
 syscalls
+
+========================================
+
+Path
+
+
+Metadata
+    get_meta_data(path) -> (path, owner, permission, created, accessed, modifed)
+    get_all_meta_data() -> list(get_meta_data)
+
+    add_path(path, owner, permission)
+    copy_path(src, dest)
+    move_path(src, dest)
+    delete_path(path)
+
+    calc_permission_string(number) -> "rwxrwxrwx"
+    calc_permission_number(string) -> "777"
+    get_permission_string(path) -> "rwxrwxrwx"
+    get_permission_number(path) -> "777"
+    set_permission(path, value)
+    set_permission_string(path, value)
+    set_permission_number(path, value)
+
+    get_time(path) -> (created, accessed, modifed)
+    set_time(path, value=None)
+    set_time_string(path, value=None)
+    set_time_list(path, value=None)
+    set_time_dict(path, value=None)
+
+    get_owner(path) -> owner
+    set_owner(path, owner)
+
+
+Userdata
+    get_user_data(user) -> (user, uid, gid, info, homedir, shell, password)
+    get_all_user_data() -> list(get_user_data)
+
+    add_user(user, uid, gid, info, homedir, shell, password=None)
+    delete_user(user)
+
+    get_user(uid) -> user
+    get_uid(user) -> uid
+    set_uid(user, value)
+
+    get_group(user) -> group
+    get_gid(user) -> gid
+    set_gid(user, value)
+
+    get_info(user) -> info
+    set_info(user, value)
+
+    get_homedir(user) -> uid
+    set_homedir(user, value)
+
+    get_shell(user) -> shell
+    set_shell(user, value)
+
+    get_password(user) -> password
+    set_password(user, value)
