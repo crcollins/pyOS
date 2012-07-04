@@ -213,7 +213,7 @@ Path
 
 Metadata
     get_meta_data(path) -> (path, owner, permission, created, accessed, modifed)
-    get_all_meta_data() -> list(get_meta_data)
+    get_all_meta_data(path='/') -> list(get_meta_data)
 
     add_path(path, owner, permission)
     copy_path(src, dest)
