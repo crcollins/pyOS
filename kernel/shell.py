@@ -33,11 +33,14 @@ class Shell(object):
         self.stderr = kernel.stream.Pipe(name="err", writer=self)
 
     def run(self):
-        self.program = self.find_program(self.programname)
-        if self.program:
-            self.program.run(self, self.args)
+        if not kernel.filesystem.is_directory(self.programname):
+            self.program = self.find_program(self.programname)
+            if self.program:
+                self.program.run(self, self.args)
+            else:
+                self.stderr.write("%s: command not found\n" % (self.programname, ))
         else:
-            self.stderr.write("%s: command not found\n" % (self.programname, ))
+            self.stderr.write("%s is a directory\n" % (self.programname, ))
         #cleanup
         self.stdout.close()
         self.stderr.close()
