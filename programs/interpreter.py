@@ -24,7 +24,6 @@ def run(shell, args):
 
             programs = eval_input(shell, cleaned)
             shells = start_shells(shell, programs)
-
             for x in shells:
                 x.run()
 
@@ -57,7 +56,7 @@ def get_hist(shell, value):
             command = shell.prevcommands[int(search)]
         else:
             command = shell.hist_find(search)
-    
+
     d = {
         '$': lambda : slice(-1, None),
         '^': lambda : slice(1, 2),
@@ -107,7 +106,7 @@ def bang_replacement(shell, listing):
 
     If the word designator begins with $, %, ^, *, or - the : is not needed.
     :0          command name
-    :^          first arg of command    
+    :^          first arg of command
     :n          arg n of command
     :$          last arg of command
     :*          all the args of command
@@ -177,7 +176,7 @@ def brace_expansion(shell, listing):
     def compress(item):
         out = []
         if len(item) > 1:
-            # used to find the last iteration 
+            # used to find the last iteration
             len2 = (len(item) / 2) - 1
             for i, (start, end) in enumerate(zip(item[::2], item[1::2])):
                 temp2 = []
@@ -197,10 +196,19 @@ def brace_expansion(shell, listing):
         if not part.startswith('"') and not part.startswith("'") \
             and '{' in part and '}' in part:
             compressed = compress(re.split(braceparse, part))
-            braces.extend(expand(compressed)) 
+            braces.extend(expand(compressed))
         else:
             braces.append(part)
     return braces
+
+def tilde_expansion(string):
+    if string == "~+":
+        out = "$PWD"
+    if string == "~-":
+        out = "$OLDPWD"
+    else:
+        out = "$HOME"
+    return out
 
 def shell_expansion(shell, string):
     # http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_04.html
@@ -214,23 +222,20 @@ def shell_expansion(shell, string):
         execute = True
 
     #if execute:
-    
-    # brace expansion
+
     braces = brace_expansion(shell, bang)
 
     # tilde expansion
+    subed = [re.sub("~[\+-]?", tilde_expansion, xs) for xs in braces]
 
     # replace $vars
-    cleaned = [re.sub(varparse, shell.get_var, xs) for xs in braces]
+    cleaned = [re.sub(varparse, shell.get_var, xs) for xs in subed]
 
     # command sub
 
 
 
     # process sub
-
-    # word splitting
-
     filenames = filename_expansion(shell, cleaned)
 
     # strip quotes

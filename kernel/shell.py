@@ -11,7 +11,8 @@ class Shell(object):
         self.programname = program
         self.args = args
 
-        self.path = path
+        self.__path = path
+        self.__oldpath = path
         self.parent = parent
         self.pid = pid
 
@@ -20,7 +21,10 @@ class Shell(object):
             self.aliases = self.parent.aliases.copy()
             self.prevcommands = self.parent.prevcommands[:]
         else:
-            self.vars = {"PATH": PROGRAMSDIR}
+            self.vars = {"PATH": PROGRAMSDIR,
+                         "HOME": BASEDIR,
+                         "PWD": self.__path,
+                         "OLDPWD": self.__oldpath}
             self.aliases = dict()
             self.prevcommands = []
 
@@ -34,17 +38,20 @@ class Shell(object):
             self.program.run(self, self.args)
         else:
             self.stderr.write("%s: command not found\n" % (self.programname, ))
-
         #cleanup
         self.stdout.close()
         self.stderr.close()
         kernel.system.System.kill(self)
 
     def get_path(self):
-        return self.path
+        return self.__path
 
     def set_path(self, path):
-        self.path = self.sabs_path(path)
+        self.__oldpath = self.__path
+        self.__path = self.sabs_path(path)
+
+    def get_old_path(self):
+        return self.__oldpath
 
     def sabs_path(self, path):
         if not path.startswith('/'):
