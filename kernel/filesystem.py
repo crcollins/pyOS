@@ -143,6 +143,15 @@ class FileDecorator(object):
     def __getattr__(self, name):
         return getattr(self.__f, name)
 
+    def __iter__(self):
+        return self.__f.__iter__()
+    def __repr__(self):
+        return self.__f.__iter__()
+    def __enter__(self):
+        return self.__f.__enter__()
+    def __exit__(self, *excinfo):
+        return self.__f.__exit__(self, *excinfo)
+
 def has_permission(path, user, access):
     metadata = kernel.metadata.get_meta_data(path)
     permissions = kernel.metadata.get_permission_number(path)
