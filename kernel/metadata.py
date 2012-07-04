@@ -134,17 +134,6 @@ def delete_path(path):
         cur = con.cursor()
         cur.executemany(delsql, path)
 
-def _update_permission(path, value):
-    now = datetime.datetime.now()
-
-    validate_permission(value)
-
-    con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
-    with con:
-        cur = con.cursor()
-        cur.execute("UPDATE metadata SET permission = ?, modified = ? WHERE path = ?", (value, now, path))
-        con.commit()
-
 def calc_permission_string(number):
     base = 'rwxrwxrwx'
     number = str(number)
@@ -175,10 +164,18 @@ def get_permission_number(path):
 
 def set_permission_string(path, value):
     number = calc_permission_number(value)
-    _update_permission(path, number)
+    set_permission_number(path, number)
 
 def set_permission_number(path, value):
-    _update_permission(path, number)
+    now = datetime.datetime.now()
+
+    validate_permission(value)
+
+    con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
+    with con:
+        cur = con.cursor()
+        cur.execute("UPDATE metadata SET permission = ?, modified = ? WHERE path = ?", (value, now, path))
+        con.commit()
 
 def set_permission(path, value):
     try:
@@ -186,7 +183,17 @@ def set_permission(path, value):
     except ValueError:
         set_permission_string(path, value)
 
-def _update_time(path, value):
+def set_time(path, value=None):
+    if type(value) == dict:
+        set_time_dict(path, value)
+    elif type(value) == str:
+        set_time_string(path, value)
+    elif type(value) in (tuple, list):
+        set_time_list(path, value)
+    else:
+        raise TypeError
+
+def set_time_list(path, value):
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
     columns = ['accessed', 'created', 'modified']
 
@@ -199,23 +206,17 @@ def _update_time(path, value):
         cur.execute(upsql, b + (path, ))
         con.commit()
 
-def set_time(path, value=None):
-    if type(value) == dict:
-        done = [None, None, None]
-        d = {
-            'a': 0, 'access': 0, 'accessed': 0,
-            'm': 1, 'modify': 1, 'modified': 1,
-            'c': 2, 'create': 2, 'created': 2
-        }
-        for key in value:
-           done[d[key]] = value[key]
-        _update_time(path, done)
-    elif type(value) == str:
-        set_time_string(path, value)
-    elif type(value) in (tuple, list):
-        _update_time(path, value)
-    else:
-        raise TypeError
+def set_time_dict(path, value=None):
+    done = [None, None, None]
+    d = {
+        'a': 0, 'access': 0, 'accessed': 0,
+        'm': 1, 'modify': 1, 'modified': 1,
+        'c': 2, 'create': 2, 'created': 2
+    }
+    for key in value:
+       done[d[key]] = value[key]
+    set_time_list(path, done)
+
 
 def set_time_string(path, value=None):
     # some magic that should not exist
@@ -258,7 +259,7 @@ def set_time_string(path, value=None):
                 done[d[lvl]] += delta
 
     done = [x + datetime.datetime.now() if x is not None else None for x in done]
-    _update_time(path, done)
+    set_time_list(path, done)
 
 def get_time(path):
     return get_meta_data(path)[3:6]
