@@ -15,7 +15,7 @@ def run(shell, args):
         if args.paths:
             paths = args.paths
         else:
-            paths = [shell.path]
+            paths = [shell.get_path()]
         for relpath in sorted(paths):
             ls(shell, relpath, args)
 

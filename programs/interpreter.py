@@ -16,7 +16,7 @@ braceparse = re.compile(r"""((?<!\$)\{[^\{\}]*\})""")
 def run(shell, args):
     user = shell.get_var('USER')
     while System.state >= RUNNING:
-        data = raw_input("%s@%s:%s$ "% (user, OSNAME, shell.path))
+        data = raw_input("%s@%s:%s$ "% (user, OSNAME, shell.get_path()))
         data = data.strip()
         if data:
             cleaned, command = shell_expansion(shell, data)
@@ -270,7 +270,7 @@ def eval_input(shell, cleaned):
     return b
 
 def start_shells(parent, programs):
-    path = parent.path
+    path = parent.get_path()
 
     proper = []
     for (programname, args, cin, cout) in programs:

@@ -4,7 +4,7 @@ def run(shell, args):
     if args:
         path = shell.sabs_path(args[0])
     else:
-        path = shell.path
+        path = shell.get_path()
     tree = tree_gen(path)
     shell.stdout.write(tree_print(tree))
 

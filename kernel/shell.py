@@ -60,12 +60,12 @@ class Shell(object):
         if not path.startswith('/'):
             if path.startswith('./'):
                 path = path[path.index('/') + 1:]
-            path = kernel.filesystem.join_path(self.path, path)
+            path = kernel.filesystem.join_path(self.get_path(), path)
         return kernel.filesystem.iabs_path(path)
 
     def srel_path(self, path, base=None):
         if base is None:
-            base = self.path
+            base = self.get_path()
         return kernel.filesystem.rel_path(self.sabs_path(path),
                                           self.sabs_path(base))
 
