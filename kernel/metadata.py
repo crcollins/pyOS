@@ -110,7 +110,7 @@ def move_path(src, dst):
     dst = convert_many(dst)
     assert len(src) == len(dst)
 
-    data = [(x, y, now) for ((x, ), (y, )) in zip(dst, src)]
+    data = [(x, now, y) for ((x, ), (y, )) in zip(dst, src)]
 
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:
