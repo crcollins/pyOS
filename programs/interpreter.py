@@ -93,7 +93,7 @@ def get_hist(shell, value):
             slicer = int(word)
     else:
         slicer = slice(None)
-    return command.split()[slicer], execute
+    return quote_split(command)[slicer], execute
 
 def bang_replacement(shell, listing):
     # http://www.softpanorama.org/Scripting/Shellorama/bash_command_history_reuse.shtml
