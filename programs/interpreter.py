@@ -239,7 +239,8 @@ def shell_expansion(shell, string):
     filenames = filename_expansion(shell, cleaned)
 
     # strip quotes
-    return filenames, ' '.join(bang)
+    unquoted = [x.strip('"').strip("'") for x in filenames]
+    return unquoted, ' '.join(bang)
 
 def eval_input(shell, cleaned):
     b = [[None, [], None, None]]
