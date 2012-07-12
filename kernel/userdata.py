@@ -14,15 +14,17 @@ def build_user_data_database():
                     password TEXT)'''
 
     con = sqlite3.connect(USERDATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
-    items = (("root", "root", 'Root', '/', "/programs/interpreter",
-    "d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1"), # pass
-            ("chris", "chris", 'Chris', '/', "/programs/interpreter",
-    "2744ccd10c7533bd736ad890f9dd5cab2adb27b07d500b9493f29cdc420cb2e0")) # me
-
+    root = ("root", "root", 'Root', '/', "/programs/interpreter",
+    "d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1") # pass
+    chris = ("chris", "chris", 'Chris', '/', "/programs/interpreter",
+    "2744ccd10c7533bd736ad890f9dd5cab2adb27b07d500b9493f29cdc420cb2e0") # me
     with con:
         cur = con.cursor()
         cur.execute(tablesql)
-        cur.executemany(addsql, items)
+        if get_user_data("chris") is None:
+            cur.execute(addsql, chris)
+        if get_user_data("root") is None:
+            cur.execute(addsql, root)
 
 def get_user_data(user):
     data = None
