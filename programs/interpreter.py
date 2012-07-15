@@ -229,11 +229,10 @@ def shell_expansion(shell, string):
     subed = [re.sub("~[\+-]?", tilde_expansion, xs) for xs in braces]
 
     # replace $vars
-    cleaned = [re.sub(varparse, shell.get_var, xs) for xs in subed]
+    cleaned = [re.sub(varparse, shell.get_var, xs) if not xs.startswith("'")
+                 and not xs.startswith('"') else xs for xs in subed]
 
     # command sub
-
-
 
     # process sub
     filenames = filename_expansion(shell, cleaned)
