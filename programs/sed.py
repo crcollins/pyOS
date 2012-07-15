@@ -39,26 +39,32 @@ def sed(shell, args, path):
         with kernel.filesystem.open_file(newpath, 'r') as f:
             try:
                 address, command = parse_expression(args.expression[0])
+                singleregex = (address[0] == address[-1]) and \
+                                (type(address[-1]) == str)
                 start = False
                 end = False
                 linematch = False
                 for i, line in enumerate(f):
                     if match(i, line, address[0]):
                         start = True
-
                     if (start and not end) != command.startswith("!"):
                         line = edit_line(line, command)
                         linematch = True
                     if not args.inplace:
                         line = line.rstrip('\n')
-
                     if not linematch and args.silent:
                         pass
                     else:
                         out.write(line)
                     if match(i, line, address[-1]):
                         end = True
+
+                    # do resets
                     linematch = False
+                    if singleregex:
+                        start = False
+                        end = False
+
                 if args.inplace:
                     out.close()
                     kernel.filesystem.move(newpath + "~", newpath)
