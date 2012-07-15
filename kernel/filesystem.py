@@ -146,7 +146,7 @@ class FileDecorator(object):
     def __iter__(self):
         return self.__f.__iter__()
     def __repr__(self):
-        return self.__f.__iter__()
+        return self.__f.__repr__()
     def __enter__(self):
         return self.__f.__enter__()
     def __exit__(self, *excinfo):
