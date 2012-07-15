@@ -12,6 +12,8 @@ pa('-f', action="store", type=str, nargs='*', dest="file", default='')
 pa('-s', action="store_true", dest="separate", default=False)
 pa('-v', action="store_true", dest="invert", default=False)
 pa('-i', action="store_true", dest="inplace", default=False)
+pa('-n', action="store_true", dest="silent", default=False)
+
 
 subparse = re.compile(r"""(s)(?P<lim>.)(.*?)(?P=lim)(.*?)(?P=lim)(.*)""")
 
@@ -39,17 +41,24 @@ def sed(shell, args, path):
                 address, command = parse_expression(args.expression[0])
                 start = False
                 end = False
+                linematch = False
                 for i, line in enumerate(f):
                     if match(i, line, address[0]):
                         start = True
 
                     if (start and not end) != command.startswith("!"):
                         line = edit_line(line, command)
+                        linematch = True
                     if not args.inplace:
                         line = line.rstrip('\n')
-                    out.write(line)
+
+                    if not linematch and args.silent:
+                        pass
+                    else:
+                        out.write(line)
                     if match(i, line, address[-1]):
                         end = True
+                    linematch = False
                 if args.inplace:
                     out.close()
                     kernel.filesystem.move(newpath + "~", newpath)
@@ -115,7 +124,6 @@ def parse_expression(expression):
             # remove the slashes
             address[i] = value[1:-1]
     command = cmdstr
-    print command
     return address, command
 
 def help():
