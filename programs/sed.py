@@ -36,11 +36,19 @@ def sed(shell, args, path):
             out = kernel.filesystem.open_file(newpath + "~", 'w')
         else:
             out = shell.stdout
+        # iterator to find length of file
+        with kernel.filesystem.open_file(newpath, 'r') as f:
+            for lenfile, x in enumerate(f):
+                pass
         with kernel.filesystem.open_file(newpath, 'r') as f:
             try:
                 address, command = parse_expression(args.expression[0])
+
                 singleregex = (address[0] == address[-1]) and \
                                 (type(address[-1]) == str)
+                address = [lenfile if x == "$" else x for x in address]
+                if all(type(x) == int for x in address):
+                    address[-1] = max(address)
                 start = False
                 end = False
                 linematch = False
@@ -69,6 +77,7 @@ def sed(shell, args, path):
                     out.close()
                     kernel.filesystem.move(newpath + "~", newpath)
             except:
+
                 shell.stderr.write("No command")
     else:
         shell.stderr.write("%s does not exist" % (newpath, ))
@@ -110,7 +119,7 @@ def parse_expression(expression):
     addrstr = ''.join(split[:idx])
     cmdstr = ''
     end = 0
-    # separate the induvidual chars
+    # separate the individual chars
     for letter in ''.join(split[idx:]):
         if not end:
             if letter not in commands:
@@ -128,7 +137,8 @@ def parse_expression(expression):
             address[i] = int(value) - 1
         except:
             # remove the slashes
-            address[i] = value[1:-1]
+            if value.startswith('/') and address.endswith('/'):
+                address[i] = value[1:-1]
     command = cmdstr
     return address, command
 
