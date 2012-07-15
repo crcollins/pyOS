@@ -1,6 +1,6 @@
 pyOS
 ====
-pyOS (prounounced "pious") is a python implemention of a psuedo unix-like operating system. 
+pyOS (prounounced "pious") is a python implemention of a psuedo unix-like operating system.
 
 Requirements
 -------------
@@ -9,7 +9,7 @@ Requirements
 Features
 --------
 - unix terminal interface
-- common utilities (cp, mv, rm, ls, cat, head, etc)
+- common utilities (cp, mv, rm, ls, cat, head, sed etc)
 - piping and stdio redirection
 - semi virtual filesystem
 - file/directory metadata
@@ -19,7 +19,7 @@ Todo
 ----
 - sdterr redirection
 - users
-- other utilities (xargs, edit, awk, sed, etc)
+- other utilities (xargs, edit(ed?), awk, etc)
 - polish utilities
 - formalize the directory structure
 - thread(multiprocess?) processes

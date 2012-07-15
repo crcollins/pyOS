@@ -152,6 +152,18 @@ help()
 
 ========================================
 
+Process Manager
+Memeory Manager
+    Not needed
+Filesystem
+    Files
+    Metadata
+Device Control
+    Keyboard/Mouse
+    Display
+Networking
+
+
 drivers
     system
         abs_path
