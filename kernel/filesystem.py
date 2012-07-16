@@ -2,7 +2,6 @@ import os
 import shutil
 import imp
 import glob
-import argparse
 
 from kernel.constants import BASEPATH, METADATAFILE
 import kernel.metadata

@@ -18,7 +18,6 @@ class System(object):
     def __init__(self):
         self.__dict__ = self._state
         self.display = None  # Display()
-        self.output = None
         self.pids = []
         self.state = IDLE
 
