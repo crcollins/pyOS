@@ -47,6 +47,8 @@ def sed(shell, args, path):
                 singleregex = (address[0] == address[-1]) and \
                                 (type(address[-1]) == str)
                 address = [lenfile if x == "$" else x for x in address]
+                if address[-1].startswith("+"):
+                    address[-1] = address[0] + int(address[-1][1:])
                 if all(type(x) == int for x in address):
                     address[-1] = max(address)
                 start = False
@@ -77,7 +79,6 @@ def sed(shell, args, path):
                     out.close()
                     kernel.filesystem.move(newpath + "~", newpath)
             except:
-
                 shell.stderr.write("No command")
     else:
         shell.stderr.write("%s does not exist" % (newpath, ))
@@ -133,12 +134,13 @@ def parse_expression(expression):
     address = addrstr.split(',')
     # clean address values
     for i, value in enumerate(address):
-        try:
-            address[i] = int(value) - 1
-        except:
-            # remove the slashes
-            if value.startswith('/') and address.endswith('/'):
-                address[i] = value[1:-1]
+        if not value.startswith("+"):
+            try:
+                address[i] = int(value) - 1
+            except:
+                # remove the slashes
+                if value.startswith('/') and address.endswith('/'):
+                    address[i] = value[1:-1]
     command = cmdstr
     return address, command
 
