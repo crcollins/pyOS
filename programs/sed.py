@@ -55,7 +55,7 @@ def sed(shell, args, path):
                 end = False
                 linematch = False
                 for i, line in enumerate(f):
-                    if match(i, line, address[0]):
+                    if match(i, line, address[0]) and not start:
                         start = True
                     if (start and not end) != command.startswith("!"):
                         line = edit_line(line, command)
@@ -66,7 +66,7 @@ def sed(shell, args, path):
                         pass
                     else:
                         out.write(line)
-                    if match(i, line, address[-1]):
+                    if match(i, line, address[-1]) and not end:
                         end = True
 
                     # do resets
