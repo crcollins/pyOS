@@ -30,7 +30,7 @@ def run(shell, args):
 def quote_split(string):
     a = []
     for x in re.split(quoteparse, string):
-        if not x.startswith("'") and not x.startswith('"'):
+        if not x.startswith(("'", '"')):
             a.extend(x.strip().split())
         else:
             a.append(x)
@@ -127,7 +127,7 @@ def bang_replacement(shell, listing):
     bang = []
     execute = True
     for part in listing:
-        if not part.startswith('"') and not part.startswith("'") and '!' in part:
+        if not part.startswith(('"', "'")) and '!' in part:
             for x in re.split(bangparse, part):
                 y = True
                 if x.startswith("!") and x != '!':
@@ -145,9 +145,10 @@ def bang_replacement(shell, listing):
 
 def filename_expansion(shell, listing):
     filenames = []
+    inter = set('*?').intersection
+    sub = set('[]').issubset
     for part in listing:
-        if not part.startswith('"') and not part.startswith("'") \
-            and '*' in part or '?' in part or ('[' in part and ']' in part):
+        if not part.startswith(('"', "'")) and (inter(part) or sub(part)):
             filenames.extend(fs.list_glob(shell.sabs_path(part)))
         else:
             filenames.append(part)
@@ -192,9 +193,9 @@ def brace_expansion(shell, listing):
         return out
 
     braces = []
+    inter = set('{}').intersection
     for part in listing:
-        if not part.startswith('"') and not part.startswith("'") \
-            and '{' in part and '}' in part:
+        if not part.startswith(('"', "'")) and inter(part):
             compressed = compress(re.split(braceparse, part))
             braces.extend(expand(compressed))
         else:
@@ -229,8 +230,8 @@ def shell_expansion(shell, string):
     subed = [re.sub("~[\+-]?", tilde_expansion, xs) for xs in braces]
 
     # replace $vars
-    cleaned = [re.sub(varparse, shell.get_var, xs) if not xs.startswith("'")
-                 and not xs.startswith('"') else xs for xs in subed]
+    cleaned = [re.sub(varparse, shell.get_var, xs) if not xs.startswith(("'", '"'))
+                else xs for xs in subed]
 
     # command sub
 
