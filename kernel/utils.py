@@ -46,7 +46,7 @@ def calc_permission_number(string):
     for group in (string[:3], string[3:6], string[6:9]):
         a = ['1' if x and x not in ["-", "0"] else '0' for x in group]
         numbers.append(int("0b" + ''.join(a), 2))
-    return ''.join(numbers)
+    return ''.join((str(x) for x in numbers))
 
 def validate_permission(value):
     full = 'rwxrwxrwx'
