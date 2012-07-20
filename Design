@@ -170,7 +170,7 @@ drivers
         rel_path
         exists
         is_file
-        is_directory
+        is_dir
         copy
         remove
         move
@@ -209,7 +209,7 @@ filesystem
 
     exists
     is_file
-    is_directory
+    is_dir
 
     list_dir
     list_glob

@@ -28,7 +28,7 @@ def run(shell, args):
                 times = get_times(args)
                 for x in args.paths:
                     path = shell.sabs_path(x)
-                    if not kernel.filesystem.is_directory(path):
+                    if not kernel.filesystem.is_dir(path):
                         kernel.filesystem.open_file(path, 'a').close()
                     if timestuff:
                         kernel.metadata.set_time(path, times)

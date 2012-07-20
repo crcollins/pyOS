@@ -15,7 +15,7 @@ def run(shell, args):
     if not parser.help:
         if len(args.paths) >= 2:
             dest = shell.sabs_path(args.paths[-1])
-            if kernel.filesystem.is_directory(dest) or len(args.paths) == 2:
+            if kernel.filesystem.is_dir(dest) or len(args.paths) == 2:
                 for src in args.paths[:-1]:
                     move(shell, args, src, dest)
             else:

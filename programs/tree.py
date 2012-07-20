@@ -13,7 +13,7 @@ def sorter(x):
 
 def tree_gen(path):
     pathtree = [path]
-    if fs.is_directory(path):
+    if fs.is_dir(path):
         listing = sorted([fs.join_path(path, x) for x in fs.list_dir(path)],
                  key=sorter)
         for x in listing:

@@ -5,7 +5,7 @@ def run(shell, args):
     shell = shell.parent
     if args:
         path = shell.sabs_path(args[0])
-        if kernel.filesystem.is_directory(path):
+        if kernel.filesystem.is_dir(path):
             shell.set_path(path)
         else:
             shell.stderr.write("%s: no such directory" % (path, ))

@@ -35,7 +35,7 @@ def exists(path):
 def is_file(path):
     return os.path.isfile(abs_path(path))
 
-def is_directory(path):
+def is_dir(path):
     return os.path.isdir(abs_path(path))
 
 def move(src, dst):
@@ -79,7 +79,7 @@ def list_all(path="/"):
     listing = [path]
     for x in list_dir(path):
         new = join_path(path, x)
-        if is_directory(new):
+        if is_dir(new):
             listing.extend(list_all(new))
         else:
             listing.append(new)
@@ -87,7 +87,7 @@ def list_all(path="/"):
 
 def make_dir(path, parents=False):
     if parents:
-        if not is_directory(path):
+        if not is_dir(path):
             try:
                 os.mkdir(abs_path(path))
             except OSError:

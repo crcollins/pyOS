@@ -33,7 +33,7 @@ class Shell(object):
         self.stderr = kernel.stream.Pipe(name="err", writer=self)
 
     def run(self):
-        if not kernel.filesystem.is_directory(self.programname):
+        if not kernel.filesystem.is_dir(self.programname):
             self.program = self.find_program(self.programname)
             if self.program:
                 self.program.run(self, self.args)
