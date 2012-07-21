@@ -1,6 +1,5 @@
 import re
 
-import kernel.filesystem as fs
 from kernel.system import System
 from kernel.constants import OSNAME, RUNNING, PIPECHAR, VARCHAR, \
         INCHAR, OUTCHAR, APPENDCHAR
@@ -148,7 +147,7 @@ def filename_expansion(shell, listing):
     for part in listing:
         if not part.startswith('"') and not part.startswith("'") \
             and '*' in part or '?' in part or ('[' in part and ']' in part):
-            filenames.extend(fs.list_glob(shell.sabs_path(part)))
+            filenames.extend(shell.syscall.list_glob(shell.sabs_path(part)))
         else:
             filenames.append(part)
     return filenames

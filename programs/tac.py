@@ -1,10 +1,8 @@
-import kernel.filesystem
-
 def run(shell, args):
     if args:
         path = shell.sabs_path(args[0])
-        if kernel.filesystem.exists(path):
-            f = kernel.filesystem.open_file(path, 'r')
+        if shell.syscall.exists(path):
+            f = shell.syscall.open_file(path, 'r')
             for line in reversed(f.readlines()):
                 shell.stdout.write(line)
             f.close()

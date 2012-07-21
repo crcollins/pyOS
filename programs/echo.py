@@ -1,5 +1,3 @@
-import kernel.filesystem
-
 def run(shell, args):
     shell.stdout.write(" ".join(args))
     if not shell.stdout:

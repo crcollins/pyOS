@@ -1,5 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem as fs
 
 desc = "Removes the file/directory."
 parser = Parser('rm', name="Remove", description=desc)
@@ -21,6 +20,7 @@ def run(shell, args):
 
 def remove(shell, args, path):
     path = shell.sabs_path(path)
+    fs = shell.syscall
     if fs.is_file(path) or (fs.is_dir(path) and args.recursive):
         if args.verbose:
             shell.stdout.write("Removing %s" % (path, ))

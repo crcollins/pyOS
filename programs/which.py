@@ -1,9 +1,7 @@
-import kernel.filesystem
-
 def run(shell, args):
     if args:
         for x in shell.program_paths(args[0]):
-            program = kernel.filesystem.open_program(x)
+            program = shell.syscall.open_program(x)
             if program:
                 shell.stdout.write(x)
                 break

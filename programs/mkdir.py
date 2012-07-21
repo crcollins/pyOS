@@ -1,6 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem
-
 
 desc = "Creates a directory at the given path."
 parser = Parser('mkdir', name="Make Directory", description=desc)
@@ -16,10 +14,10 @@ def run(shell, args):
         if args.paths:
             for path in args.paths:
                 path = shell.sabs_path(path)
-                if not kernel.filesystem.exists(path):
+                if not shell.syscall.exists(path):
                     if args.verbose:
                         shell.stdout.write("Making directory: %s" %(path, ))
-                    kernel.filesystem.make_dir(path, args.parent)
+                    shell.syscall.make_dir(path, args.parent)
                 else:
                     shell.stderr.write("%s already exists" % (path, ))
         else:

@@ -3,8 +3,6 @@ import fnmatch
 import datetime
 
 from kernel.utils import Parser
-import kernel.filesystem as fs
-import kernel.metadata as md
 
 desc = "Finds files matching the expression given."
 parser = Parser('find', name="Find", description=desc)
@@ -65,19 +63,20 @@ def run(shell, args):
         else:
             paths = ['/']
         now = datetime.datetime.now()
-        perms = convert_permissions(args)
+        perms = convert_permissions(shell, args)
         times = convert_time(args, now)
         for path in paths:
-            a = find(args, shell.sabs_path(path), perms, times)
+            a = find(shell, args, shell.sabs_path(path), perms, times)
             for x in a:
                 shell.stdout.write(x)
         if not shell.stdout:
             shell.stdout.write('')
 
-def find(args, basepath, perms, times):
+def find(shell, args, basepath, perms, times):
     done = []
     access, modify, create = times
-    for (path, uid, perm, created, accessed, modified) in md.get_all_meta_data(basepath):
+    get_data = shell.syscall.get_all_meta_data
+    for (path, uid, perm, created, accessed, modified) in get_data(basepath):
         mtimes = {
             'a': accessed,
             'm': modified,
@@ -153,7 +152,7 @@ def convert_time(args, now):
     return d
 
 
-def convert_permissions(args):
+def convert_permissions(shell, args):
     d = {
         'u': list('...'),
         'g': list('...'),
@@ -163,7 +162,7 @@ def convert_permissions(args):
     if args.perm:
         try:
             int(args.perm[0])
-            perm = [md.calc_permission_string(args.perm[0])]
+            perm = [shell.syscall.calc_permission_string(args.perm[0])]
         except:
             for permset in ','.join(args.perm).split(','):
                 lvl = permset[0]

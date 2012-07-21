@@ -2,13 +2,12 @@ import hashlib
 import getpass
 
 from kernel.system import System
-import kernel.userdata
 
 def run(shell, args):
     user = raw_input("user: ")
     password = hashlib.sha256(getpass.getpass("password: ")).hexdigest()
 
-    if kernel.userdata.correct_password(user, password): # == db(user).password
+    if shell.syscall.correct_password(user, password): # == db(user).password
         stuff = {
                 'USER': user,
                 'SHELL': 'interpreter',

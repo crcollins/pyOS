@@ -1,5 +1,3 @@
-import kernel.filesystem
-
 def run(shell, args):
     if args:
         path = shell.sabs_path(args[0])
@@ -11,7 +9,7 @@ def run(shell, args):
         except IndexError:
             mode = 'w'
         try:
-            f = kernel.filesystem.open_file(path, mode)
+            f = shell.syscall.open_file(path, mode)
             for line in shell.stdin.read():
                 f.write("%s\n" % (line, ))
             f.close()

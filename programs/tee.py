@@ -1,5 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem
 
 desc = "Allows tapping into the stdout to write to multiple files."
 parser = Parser('tee', name="Tee",  description=desc)
@@ -20,7 +19,7 @@ def run(shell, args):
                 files = []
                 for x in args.paths:
                     try:
-                        files.append(kernel.filesystem.open_file(x, mode))
+                        files.append(shell.syscall.open_file(x, mode))
                     except:
                         pass
                 for line in shell.stdin.read():

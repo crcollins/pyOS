@@ -1,4 +1,3 @@
-import kernel.filesystem
 from kernel.utils import Parser
 
 desc = "Copies the given file/directory to the given location."
@@ -15,7 +14,7 @@ def run(shell, args):
     if not parser.help:
         if len(args.paths) >= 2:
             dest = shell.sabs_path(args.paths[-1])
-            if kernel.filesystem.is_dir(dest) or len(args.paths) == 2:
+            if shell.syscall.is_dir(dest) or len(args.paths) == 2:
                 for src in args.paths[:-1]:
                     copy(shell, args, src, dest)
             else:
@@ -28,7 +27,7 @@ def copy(shell, args, src, dest):
     if args.verbose:
         shell.stdout.write("Copying %s to %s" %(src, dest))
     try:
-        kernel.filesystem.copy(src, dest, recursive=args.recursive)
+        shell.syscall.copy(src, dest, recursive=args.recursive)
     except IOError:
         shell.stderr.write("file error" %dest)
 

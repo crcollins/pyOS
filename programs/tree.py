@@ -1,10 +1,10 @@
-import kernel.filesystem as fs
-
 def run(shell, args):
     if args:
         path = shell.sabs_path(args[0])
     else:
         path = shell.get_path()
+    global fs
+    fs = shell.syscall
     tree = tree_gen(path)
     shell.stdout.write(tree_print(tree))
 
@@ -21,23 +21,23 @@ def tree_gen(path):
     return pathtree
 
 def tree_print(tree, level=0, extra="", idx=None):
-        string = ''
-        for i, x in enumerate(tree):
-            spacing = "   " if (level > 1) else ''
-            bar = "|" if (level > 0) else ''
-            added = extra + spacing + bar
-            if type(x) is list:
-                string += tree_print(x, level + 1, added, len(tree) - 1 == i)
+    string = ''
+    for i, x in enumerate(tree):
+        spacing = "   " if (level > 1) else ''
+        bar = "|" if (level > 0) else ''
+        added = extra + spacing + bar
+        if type(x) is list:
+            string += tree_print(x, level + 1, added, len(tree) - 1 == i)
+        else:
+            char = "-- " if fs.is_file(x) else "++ "
+            if x != "/":
+                x = fs.base_name(x)
+            end = "%s%s\n" % (char if (level > 0) else '', x)
+            if not idx:
+                string += "%s%s" % (added, end)
             else:
-                char = "-- " if fs.is_file(x) else "++ "
-                if x != "/":
-                    x = fs.base_name(x)
-                end = "%s%s\n" % (char if (level > 0) else '', x)
-                if not idx:
-                    string += "%s%s" % (added, end)
-                else:
-                    string += "%s`%s" % (added[:-1], end)
-        return string
+                string += "%s`%s" % (added[:-1], end)
+    return string
 
 def help():
     a = """

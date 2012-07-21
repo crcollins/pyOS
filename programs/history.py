@@ -1,5 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem
 
 desc = "Returns the command history."
 parser = Parser('history', name="History", description=desc)

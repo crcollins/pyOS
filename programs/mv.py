@@ -1,5 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem
 
 desc = "Moves the given file/directory to the given location."
 parser = Parser('mv', name="Move", description=desc)
@@ -15,7 +14,7 @@ def run(shell, args):
     if not parser.help:
         if len(args.paths) >= 2:
             dest = shell.sabs_path(args.paths[-1])
-            if kernel.filesystem.is_dir(dest) or len(args.paths) == 2:
+            if shell.syscall.is_dir(dest) or len(args.paths) == 2:
                 for src in args.paths[:-1]:
                     move(shell, args, src, dest)
             else:
@@ -28,7 +27,7 @@ def move(shell, args, src, dest):
     if args.verbose:
         shell.stdout.write("Moving %s to %s" % (src, dest))
     try:
-        kernel.filesystem.move(src, dest)
+        shell.syscall.move(src, dest)
     except IOError:
         shell.stderr.write("%s: file error" % (dest, ))
 
