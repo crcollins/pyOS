@@ -99,9 +99,9 @@ def make_dir(path, parents=False):
         kernel.metadata.add_path(path, "root", "rwxrwxrwx")
 
 def open_file(path, mode):
-    temp = not is_file(path)
+    temp = is_file(path)
     x = FileDecorator(open(abs_path(path), mode), path)
-    if temp:
+    if not temp:
         kernel.metadata.add_path(path, "root", "rwxrwxrwx")
     return x
 
