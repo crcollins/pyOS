@@ -25,7 +25,10 @@ def run(shell, args):
             programs = eval_input(shell, cleaned)
             shells = start_shells(shell, programs)
             for x in shells:
-                x.run()
+                x.start()
+            # TODO # add bg/fg/job stuff
+            for x in shells:
+                x.join()
 
 def quote_split(string):
     a = []

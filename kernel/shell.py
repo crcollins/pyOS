@@ -1,13 +1,15 @@
 import re
+import threading
 
 import kernel.filesystem
 import kernel.stream
 import kernel.system
 from kernel.constants import PROGRAMSDIR, VARCHAR, BASEDIR
 
-class Shell(object):
+class Shell(threading.Thread):
     def __init__(self, pid, parent=None, program="interpreter",
                  args="", stdin=None, path=BASEDIR):
+        super(Shell, self).__init__()
         self.programname = program
         self.args = args
 
