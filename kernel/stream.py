@@ -25,9 +25,13 @@ class Pipe(object):
             self.value.extend(value.split("\n"))
 
     def read(self):
-        for line in self.value[self._line:]:
-            yield line
-            self._line += 1
+        line = ''
+        while line != None:
+            for line in self.value[self._line:]:
+                if line == None:
+                    break
+                yield line
+                self._line += 1
 
     def readline(self):
         line = self.value[self._line]
@@ -39,6 +43,7 @@ class Pipe(object):
 
     def close(self):
         self.closed = True
+        self.value.append(None)
         self.broadcast()
 
     def clear(self):
@@ -53,7 +58,7 @@ class Pipe(object):
             pass  # self.reader()
         else:
             if any(self.value):
-                print "<%s> %s" % (self.name, '\n'.join(self.value)),
+                print "<%s> %s" % (self.name, '\n'.join(self.value[:-1])),
 
     def __repr__(self):
         return "<Pipe(name=%s, value=%s, writer=%d, reader=%d)>" % (
