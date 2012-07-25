@@ -1,2 +1,2 @@
-def run(shell, args):
+def run():
     print "SHUTTING DOWN"
