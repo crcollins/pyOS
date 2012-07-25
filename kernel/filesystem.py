@@ -119,10 +119,7 @@ def open_file(path, mode):
 def open_program(path):
     x = abs_path(path)
     try:
-        try:
-            program = imp.load_source('program', '%s.py' % (x, ))
-        except IOError:
-            program = imp.load_source('program', x)
+        program = imp.load_source('program', x)
     except IOError:
         program = False
     return program

@@ -37,12 +37,12 @@ class System(object):
             self.run()
 
     def startup(self):
-        path = self.filesystem.join_path(KERNELDIR, "startup")
+        path = self.filesystem.join_path(KERNELDIR, "startup.py")
         program = self.new_shell(program=path)
         program.run()
 
     def shutdown(self):
-        path = self.filesystem.join_path(KERNELDIR, "shutdown")
+        path = self.filesystem.join_path(KERNELDIR, "shutdown.py")
         program = self.new_shell(program=path)
         program.run()
 

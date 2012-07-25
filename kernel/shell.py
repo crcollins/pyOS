@@ -103,7 +103,13 @@ class Shell(object):
 
     def find_program(self, name):
         for x in self.program_paths(name):
+            if not x.endswith('.py'):
+                x += '.py'
             program = self.syscall.open_program(x)
+            if program:
+                break
+            else:
+                program = self.syscall.open_program(x[:-3])
             if program:
                 break
         return program
