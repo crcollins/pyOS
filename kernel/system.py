@@ -82,6 +82,51 @@ class System(object):
 
 System = System()
 
+def compare_permission(path, user, access):
+    owner = System.metadata.get_owner(path)
+    permissions = System.metadata.get_permission_number(path)
+    if type(access) == int:
+        compare = [access * (user == owner), 0, access]
+    else:
+        d = {'r': 4, 'w': 2, 'x': 1}
+        compare = [d[access] * (owner == user), 0, d[access]]
+    return any(int(x) & y for (x, y) in zip(permissions, compare))
+
+def has_permission(path, user, access):
+    dirpaths = [path]
+    temppath = path
+    while temppath != '/':
+        temppath = System.filesystem.dir_name(temppath)
+        dirpaths.append(temppath)
+    if not all(compare_permission(x, user, 5) for x in dirpaths[1:]):
+        return False
+
+    if System.filesystem.is_dir(dirpaths[0]):
+        if not compare_permission(dirpaths[0], user, access):
+            return False
+    else:
+        if not compare_permission(dirpaths[1], user, access):
+            return False
+        try:
+            compare_permission(dirpaths[0], user, access)
+        except TypeError:
+            if access != 'w':
+                return False
+    return True
+
+def check_permission(amount, access):
+    def real_decorator(function):
+        def wrapper(self, *args, **kwargs):
+            checkpaths = args[:amount]
+            for path in checkpaths:
+                if has_permission(path, 'root', access):
+                    print "has permisison"
+                else:
+                    print "permission denied"
+            return function(self, *args, **kwargs)
+        return wrapper
+    return real_decorator
+
 
 class SysCall(object):
     def __init__(self, shell):
@@ -107,91 +152,149 @@ class SysCall(object):
     def join_path(self, *args):
         return self.fs.join_path(*args)
 
-    def exists(self, path):
-        return self.fs.exists(self, path)
-    def is_file(self, path):
-        return self.fs.is_file(self, path)
-    def is_dir(self, path):
-        return self.fs.is_dir(self, path)
-    def move(self, src, dst):
-        return self.fs.move(self, src, dst)
-    def copy(self, src, dst, recursive=False):
-        return self.fs.copy(self, src, dst, recursive)
-    def remove(self, path, recursive=False):
-        return self.fs.remove(self, path, recursive)
-    def get_size(self, path):
-        return self.fs.get_size(self, path)
-    def list_dir(self, path):
-        return self.fs.list_dir(self, path)
-    def list_glob(self, expression):
-        return self.fs.list_glob(self, expression)
-    def list_all(self, path="/"):
-        return self.fs.list_all(self, path)
-    def make_dir(self, path, parents=False):
-        return self.fs.make_dir(self, path, parents)
-    def open_file(self, path, mode):
-        return self.fs.open_file(self, path, mode)
-    def open_program(self, path):
-        return self.fs.open_program(self, path)
+    #############################################
 
+    @check_permission(1, 'r')
+    def exists(self, path):
+        return self.fs.exists(path)
+
+    @check_permission(1, 'r')
+    def is_file(self, path):
+        return self.fs.is_file(path)
+
+    @check_permission(1, 'r')
+    def is_dir(self, path):
+        return self.fs.is_dir(path)
+
+    @check_permission(2, 'w')
+    def move(self, src, dst):
+        return self.fs.move(src, dst)
+
+    @check_permission(2, 'r')
+    def copy(self, src, dst, recursive=False):
+        return self.fs.copy(src, dst, recursive)
+
+    @check_permission(1, 'w')
+    def remove(self, path, recursive=False):
+        return self.fs.remove(path, recursive)
+
+    @check_permission(1, 'r')
+    def get_size(self, path):
+        return self.fs.get_size(path)
+
+    @check_permission(1, 'r')
+    def list_dir(self, path):
+        return self.fs.list_dir(path)
+
+    @check_permission(1, 'r')
+    def list_glob(self, expression):
+        return self.fs.list_glob(expression)
+
+    @check_permission(1, 'r') # ? #
+    def list_all(self, path="/"):
+        return self.fs.list_all(path)
+
+    @check_permission(1, 'w')
+    def make_dir(self, path, parents=False):
+        return self.fs.make_dir(path, parents)
+
+    # @check_permission(1, 'x')
+    def open_file(self, path, mode):
+        return self.fs.open_file(path, mode)
+
+    @check_permission(1, 'x')
+    def open_program(self, path):
+        return self.fs.open_program(path)
+
+    #############################################
+
+    @check_permission(1, 'r')
     def get_meta_data(self, path):
-        return self.md.get_meta_data(self, path)
+        return self.md.get_meta_data(path)
+
+    @check_permission(1, 'r') # ? #
     def get_all_meta_data(self, path='/'):
-        return self.md.get_all_meta_data(self, path)
+        return self.md.get_all_meta_data(path)
+
+    @check_permission(1, 'r')
     def get_permission_string(self, path):
-        return self.md.get_permission_string(self, path)
+        return self.md.get_permission_string(path)
+
+    @check_permission(1, 'r')
     def get_permission_number(self, path):
-        return self.md.get_permission_number(self, path)
+        return self.md.get_permission_number(path)
+
+    @check_permission(1, 'w')
     def set_permission_string(self, path, value):
-        return self.md.set_permission_string(self, path, value)
+        return self.md.set_permission_string(path, value)
+
+    @check_permission(1, 'w')
     def set_permission_number(self, path, value):
-        return self.md.set_permission_number(self, path, value)
+        return self.md.set_permission_number(path, value)
+
+    @check_permission(1, 'w')
     def set_permission(self, path, value):
-        return self.md.set_permission(self, path, value)
+        return self.md.set_permission(path, value)
+
+    @check_permission(1, 'w')
     def set_time(self, path, value=None):
-        return self.md.set_time(self, path, value)
+        return self.md.set_time(path, value)
+
+    @check_permission(1, 'w')
     def set_time_list(self, path, value):
-        return self.md.set_time_list(self, path, value)
+        return self.md.set_time_list(path, value)
+
+    @check_permission(1, 'w')
     def set_time_dict(self, path, value=None):
-        return self.md.set_time_dict(self, path, value)
+        return self.md.set_time_dict(path, value)
+
+    @check_permission(1, 'w')
     def set_time_string(self, path, value=None):
-        return self.md.set_time_string(self, path, value)
+        return self.md.set_time_string( path, value)
+
+    @check_permission(1, 'r')
     def get_time(self, path):
-        return self.md.get_time(self, path)
+        return self.md.get_time(path)
+
+    @check_permission(1, 'r')
     def get_owner(self, path):
-        return self.md.get_owner(self, path)
+        return self.md.get_owner(path)
+
+    @check_permission(1, 'w')
     def set_owner(self, path, owner):
-        return self.md.set_owner(self, path, owner)
+        return self.md.set_owner(path, owner)
+
+    #############################################
 
     def get_user_data(self, user):
-        return self.ud.get_user_data(self, user)
-    def get_all_user_data(self, ):
-        return self.ud.get_all_user_data(self, )
+        return self.ud.get_user_data(user)
+    def get_all_user_data(self):
+        return self.ud.get_all_user_data()
     def add_user(self, user, group, info, homedir, shell, password):
-        return self.ud.add_user(self, user, group, info, homedir, shell, password)
+        return self.ud.add_user(user, group, info, homedir, shell, password)
     def delete_user(self, user):
-        return self.ud.delete_user(self, user)
+        return self.ud.delete_user(user)
     def change_user(self, user, value):
-        return self.ud.change_user(self, user, value)
+        return self.ud.change_user(user, value)
     def get_group(self, user):
-        return self.ud.get_group(self, user)
+        return self.ud.get_group(user)
     def set_group(self, user, value):
-        return self.ud.set_group(self, user, value)
+        return self.ud.set_group(user, value)
     def get_info(self, user):
-        return self.ud.get_info(self, user)
+        return self.ud.get_info(user)
     def set_info(self, user, value):
-        return self.ud.set_info(self, user, value)
+        return self.ud.set_info(user, value)
     def get_homedir(self, user):
-        return self.ud.get_homedir(self, user)
+        return self.ud.get_homedir(user)
     def set_homedir(self, user, value):
-        return self.ud.set_homedir(self, user, value)
+        return self.ud.set_homedir(user, value)
     def get_shell(self, user):
-        return self.ud.get_shell(self, user)
+        return self.ud.get_shell(user)
     def set_shell(self, user, value):
-        return self.ud.set_shell(self, user, value)
+        return self.ud.set_shell(user, value)
     def get_password(self, user):
-        return self.ud.get_password(self, user)
+        return self.ud.get_password(user)
     def set_password(self, user, value):
-        return self.ud.set_password(self, user, value)
+        return self.ud.set_password(user, value)
     def correct_password(self, user, password):
-        return self.ud.correct_password(self, user, password)
+        return self.ud.correct_password(user, password)

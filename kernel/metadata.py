@@ -5,7 +5,7 @@ from kernel.constants import METADATAFILE
 from kernel.utils import calc_permission_number, calc_permission_string
 from kernel.utils import convert_many
 
-def build_meta_data_database(caller, fsmatches):
+def build_meta_data_database(fsmatches):
     now = datetime.datetime.now()
 
     delsql = 'DELETE FROM metadata WHERE path = ?'
@@ -39,7 +39,7 @@ def build_meta_data_database(caller, fsmatches):
             cur.execute(tablesql)
             cur.executemany(addsql, items)
 
-def get_meta_data(caller, path):
+def get_meta_data(path):
     data = None
 
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
@@ -52,7 +52,7 @@ def get_meta_data(caller, path):
             data = tuple(str(x) if type(x) == unicode else x for x in data)
     return data
 
-def get_all_meta_data(caller, path='/'):
+def get_all_meta_data(path='/'):
     data = None
 
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
@@ -132,17 +132,17 @@ def validate_permission(value):
     for l, f in zip(value, full):
         assert (l == '-') or (l == f)
 
-def get_permission_string(caller, path):
-    return get_meta_data(caller, path)[2]
+def get_permission_string(path):
+    return get_meta_data(path)[2]
 
-def get_permission_number(caller, path):
-    return calc_permission_number(caller, get_meta_data(path)[2])
+def get_permission_number(path):
+    return calc_permission_number(get_meta_data(path)[2])
 
-def set_permission_string(caller, path, value):
+def set_permission_string(path, value):
     number = calc_permission_number(value)
-    set_permission_number(caller, path, number)
+    set_permission_number(path, number)
 
-def set_permission_number(caller, path, value):
+def set_permission_number(path, value):
     now = datetime.datetime.now()
 
     validate_permission(value)
@@ -152,23 +152,23 @@ def set_permission_number(caller, path, value):
         cur = con.cursor()
         cur.execute("UPDATE metadata SET permission = ?, modified = ? WHERE path = ?", (value, now, path))
 
-def set_permission(caller, path, value):
+def set_permission(path, value):
     try:
-        set_permission_number(caller, path, value)
+        set_permission_number(path, value)
     except ValueError:
-        set_permission_string(caller, path, value)
+        set_permission_string(path, value)
 
-def set_time(caller, path, value=None):
+def set_time(path, value=None):
     if type(value) == dict:
-        set_time_dict(caller, path, value)
+        set_time_dict(path, value)
     elif type(value) == str:
-        set_time_string(caller, path, value)
+        set_time_string(path, value)
     elif type(value) in (tuple, list):
-        set_time_list(caller, path, value)
+        set_time_list(path, value)
     else:
         raise TypeError
 
-def set_time_list(caller, path, value):
+def set_time_list(path, value):
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
     columns = ['accessed', 'created', 'modified']
 
@@ -180,7 +180,7 @@ def set_time_list(caller, path, value):
         cur = con.cursor()
         cur.execute(upsql, b + (path, ))
 
-def set_time_dict(caller, path, value=None):
+def set_time_dict(path, value=None):
     done = [None, None, None]
     d = {
         'a': 0, 'access': 0, 'accessed': 0,
@@ -189,10 +189,10 @@ def set_time_dict(caller, path, value=None):
     }
     for key in value:
        done[d[key]] = value[key]
-    set_time_list(caller, path, done)
+    set_time_list(path, done)
 
 
-def set_time_string(caller, path, value=None):
+def set_time_string(path, value=None):
     # some magic that should not exist
     done = [None, None, None]
     d = {
@@ -233,18 +233,18 @@ def set_time_string(caller, path, value=None):
                 done[d[lvl]] += delta
 
     done = [x + datetime.datetime.now() if x is not None else None for x in done]
-    set_time_list(caller, path, done)
+    set_time_list(path, done)
 
-def get_time(caller, path):
-    return get_meta_data(caller, path)[3:6]
+def get_time(path):
+    return get_meta_data(path)[3:6]
 
-def get_owner(caller, path):
-    return get_meta_data(caller, path)[1]
+def get_owner(path):
+    return get_meta_data(path)[1]
 
 def validate_owner(owner):
     pass
 
-def set_owner(caller, path, owner):
+def set_owner(path, owner):
     now = datetime.datetime.now()
 
     value = validate_owner(value)
