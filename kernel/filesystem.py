@@ -129,10 +129,10 @@ class FileDecorator(object):
     def __init__(self, f, name):
         self.__f = f
         self.__name = name
-        kernel.metadata.set_time(self.__self.name, 'an')
+        kernel.metadata.set_time(self.name, 'an')
 
     def close(self):
-        kernel.metadata.set_time(self.__self.name, 'mn')
+        kernel.metadata.set_time(self.name, 'mn')
         self.__f.close()
 
     @property
