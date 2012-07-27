@@ -98,13 +98,15 @@ def list_all(path="/"):
 
 def make_dir(path, parents=False):
     if parents:
-        if not is_dir(path):
-            try:
-                os.mkdir(abs_path(path))
-            except OSError:
-                make_dir(os.path.dirname(path), parents)
-                os.mkdir(abs_path(path))
-            kernel.metadata.add_path(path, "root", "rwxrwxrwx")
+        paths = []
+        while True:
+            paths.append(path)
+            path = os.path.dirname(path)
+            if is_dir(path):
+                break
+        for x in reversed(paths):
+            os.mkdir(abs_path(x))
+        kernel.metadata.add_path(paths, "root", "rwxrwxrwx")
     else:
         os.mkdir(abs_path(path))
         kernel.metadata.add_path(path, "root", "rwxrwxrwx")
