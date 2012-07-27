@@ -168,15 +168,18 @@ class SysCall(object):
 
     @check_permission(2, 'w')
     def move(self, src, dst):
-        return self.fs.move(src, dst)
+        a, b = self.fs.move(src, dst)
+        self.md.move_path(a, b)
 
     @check_permission(2, 'r')
     def copy(self, src, dst, recursive=False):
-        return self.fs.copy(src, dst, recursive)
+        a, b = self.fs.copy(src, dst, recursive)
+        md.copy_path(a, b)
 
     @check_permission(1, 'w')
     def remove(self, path, recursive=False):
-        return self.fs.remove(path, recursive)
+        a = self.fs.remove(path, recursive)
+        self.md.delete_path(a)
 
     @check_permission(1, 'r')
     def get_size(self, path):
@@ -196,11 +199,16 @@ class SysCall(object):
 
     @check_permission(1, 'w')
     def make_dir(self, path, parents=False):
-        return self.fs.make_dir(path, parents)
+        a = self.fs.make_dir(path, parents)
+        self.md.add_path(a, "root", "rwxrwxrwx")
 
     # @check_permission(1, 'x')
     def open_file(self, path, mode):
-        return self.fs.open_file(path, mode)
+        temp = self.fs.is_file(path)
+        x = FileDecorator(self.fs.open_file(path, mode), path)
+        if not temp:
+            self.md.add_path()
+        return x
 
     @check_permission(1, 'x')
     def open_program(self, path):
@@ -298,3 +306,30 @@ class SysCall(object):
         return self.ud.set_password(user, value)
     def correct_password(self, user, password):
         return self.ud.correct_password(user, password)
+
+
+class FileDecorator(object):
+    def __init__(self, f, name):
+        self.__f = f
+        self.__name = name
+        System.metadata.set_time(self.name, 'an')
+
+    def close(self):
+        System.metadata.set_time(self.name, 'mn')
+        self.__f.close()
+
+    @property
+    def name(self):
+        return self.__name
+
+    def __getattr__(self, name):
+        return getattr(self.__f, name)
+
+    def __iter__(self):
+        return self.__f.__iter__()
+    def __repr__(self):
+        return self.__f.__repr__()
+    def __enter__(self):
+        return self.__f.__enter__()
+    def __exit__(self, *excinfo):
+        return self.__f.__exit__(self, *excinfo)

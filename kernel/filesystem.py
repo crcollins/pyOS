@@ -3,9 +3,7 @@ import shutil
 import imp
 import glob
 
-from kernel.constants import BASEPATH, METADATAFILE
-import kernel.metadata
-import kernel.userdata
+from kernel.constants import BASEPATH
 
 def abs_path(path):
     # returns external absolute path
@@ -56,26 +54,26 @@ def move(src, dst):
     a = list_glob(join_path(src, "*")) + [src]
     shutil.move(abs_path(src), abs_path(dst))
     b = list_glob(join_path(dst, "*")) + [dst]
-    kernel.metadata.move_path(a, b)
+    return a, b
 
 def copy(src, dst, recursive=False):
     if recursive:
         shutil.copytree(abs_path(src), abs_path(dst))
         a = list_glob(join_path(src, "*")) + [src]
         b = list_glob(join_path(dst, "*")) + [dst]
-        kernel.metadata.copy_path(a, b)
+        return a, b
     else:
         shutil.copy2(abs_path(src), abs_path(dst))
-        kernel.metadata.copy_path(src, dst)
+        return src, dst
 
 def remove(path, recursive=False):
     if recursive:
         shutil.rmtree(abs_path(path))
         a = list_glob(join_path(path, "*")) + [path]
-        kernel.metadata.delete_path(a)
+        return a
     else:
         os.remove(abs_path(path))
-        kernel.metadata.delete_path(path)
+        return path
 
 def get_size(path):
     return os.path.getsize(abs_path(path))
@@ -106,17 +104,13 @@ def make_dir(path, parents=False):
                 break
         for x in reversed(paths):
             os.mkdir(abs_path(x))
-        kernel.metadata.add_path(paths, "root", "rwxrwxrwx")
+        return paths
     else:
         os.mkdir(abs_path(path))
-        kernel.metadata.add_path(path, "root", "rwxrwxrwx")
+        return path
 
 def open_file(path, mode):
-    temp = not is_file(path)
-    x = FileDecorator(open(abs_path(path), mode), path)
-    if temp:
-        kernel.metadata.add_path(path, "root", "rwxrwxrwx")
-    return x
+    return open(abs_path(path), mode)
 
 def open_program(path):
     x = abs_path(path)
@@ -130,28 +124,3 @@ def open_program(path):
     return program
 
 
-class FileDecorator(object):
-    def __init__(self, f, name):
-        self.__f = f
-        self.__name = name
-        kernel.metadata.set_time(self.name, 'an')
-
-    def close(self):
-        kernel.metadata.set_time(self.name, 'mn')
-        self.__f.close()
-
-    @property
-    def name(self):
-        return self.__name
-
-    def __getattr__(self, name):
-        return getattr(self.__f, name)
-
-    def __iter__(self):
-        return self.__f.__iter__()
-    def __repr__(self):
-        return self.__f.__repr__()
-    def __enter__(self):
-        return self.__f.__enter__()
-    def __exit__(self, *excinfo):
-        return self.__f.__exit__(self, *excinfo)
