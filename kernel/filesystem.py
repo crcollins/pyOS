@@ -118,9 +118,12 @@ def open_file(path, mode):
 
 def open_program(path):
     x = abs_path(path)
-    try:
-        program = imp.load_source('program', x)
-    except IOError:
+    if not is_dir(path):
+        try:
+            program = imp.load_source('program', x)
+        except IOError:
+            program = False
+    else:
         program = False
     return program
 
