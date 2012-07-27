@@ -1,4 +1,7 @@
 import kernel.filesystem
+import kernel.metadata
+import kernel.userdata
+
 import kernel.shell
 from kernel.constants import KERNELDIR, IDLE, REBOOT, RUNNING
 
