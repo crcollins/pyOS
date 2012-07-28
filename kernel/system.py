@@ -121,8 +121,11 @@ def check_permission(amount, access):
     def real_decorator(function):
         def wrapper(self, *args, **kwargs):
             checkpaths = args[:amount]
+            laccess = access # hack to fix UnboundLocalError
+            if type(laccess) == int:
+                laccess = list(set(args[laccess]) & {'r', 'w'})[0]
             for path in checkpaths:
-                if has_permission(path, 'root', access):
+                if has_permission(path, 'root', laccess):
                     print "has permisison"
                 else:
                     print "permission denied"
@@ -205,7 +208,7 @@ class SysCall(object):
         a = self.fs.make_dir(path, parents)
         self.md.add_path(a, "root", "rwxrwxrwx")
 
-    # @check_permission(1, 'x')
+    @check_permission(1, 1)
     def open_file(self, path, mode):
         temp = self.fs.is_file(path)
         x = FileDecorator(self.fs.open_file(path, mode), path)
