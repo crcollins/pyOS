@@ -94,20 +94,8 @@ def list_all(path="/"):
             listing.append(new)
     return listing
 
-def make_dir(path, parents=False):
-    if parents:
-        paths = []
-        while True:
-            paths.append(path)
-            path = os.path.dirname(path)
-            if is_dir(path):
-                break
-        for x in reversed(paths):
-            os.mkdir(abs_path(x))
-        return paths
-    else:
-        os.mkdir(abs_path(path))
-        return path
+def make_dir(path):
+    os.mkdir(abs_path(path))
 
 def open_file(path, mode):
     return open(abs_path(path), mode)

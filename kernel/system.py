@@ -204,9 +204,9 @@ class SysCall(object):
         return self.fs.list_all(path)
 
     @check_permission(1, 'w')
-    def make_dir(self, path, parents=False):
-        a = self.fs.make_dir(path, parents)
-        self.md.add_path(a, "root", "rwxrwxrwx")
+    def make_dir(self, path):
+        self.fs.make_dir(path)
+        self.md.add_path(path, "root", "rwxrwxrwx")
 
     @check_permission(1, 1)
     def open_file(self, path, mode):
