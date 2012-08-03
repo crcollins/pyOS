@@ -126,9 +126,9 @@ def check_permission(amount, access):
                 laccess = list(set(args[laccess]) & {'r', 'w'})[0]
             for path in checkpaths:
                 if has_permission(path, 'root', laccess):
-                    print "has permisison"
+                    print "root %s has permisison on file(s) %s" % (laccess, str(checkpaths))
                 else:
-                    print "permission denied"
+                    print "root %s permission denied for file(s) %s" % (laccess, str(checkpaths))
             return function(self, *args, **kwargs)
         return wrapper
     return real_decorator
