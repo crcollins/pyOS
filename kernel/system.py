@@ -178,9 +178,9 @@ class SysCall(object):
         self.md.move_path(a, b)
 
     @check_permission(2, 'w')
-    def copy(self, src, dst, recursive=False):
-        a, b = self.fs.copy(src, dst, recursive)
-        self.md.copy_path(a, b)
+    def copy(self, src, dst):
+        self.fs.copy(src, dst)
+        self.md.copy_path(src, dst)
 
     @check_permission(1, 'w')
     def remove(self, path, recursive=False):

@@ -56,15 +56,8 @@ def move(src, dst):
     b = list_glob(join_path(dst, "*")) + [dst]
     return a, b
 
-def copy(src, dst, recursive=False):
-    if recursive:
-        shutil.copytree(abs_path(src), abs_path(dst))
-        a = list_glob(join_path(src, "*")) + [src]
-        b = list_glob(join_path(dst, "*")) + [dst]
-        return a, b
-    else:
-        shutil.copy2(abs_path(src), abs_path(dst))
-        return src, dst
+def copy(src, dst):
+    shutil.copy2(abs_path(src), abs_path(dst))
 
 def remove(path, recursive=False):
     if recursive:
