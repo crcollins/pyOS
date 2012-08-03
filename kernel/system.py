@@ -201,7 +201,14 @@ class SysCall(object):
 
     @check_permission(1, 'r') # ? #
     def list_all(self, path="/"):
-        return self.fs.list_all(path)
+        listing = [path]
+        for x in self.list_dir(path):
+            new = self.join_path(path, x)
+            if self.is_dir(new):
+                listing.extend(self.list_all(new))
+            else:
+                listing.append(new)
+        return listing
 
     @check_permission(1, 'w')
     def make_dir(self, path):
