@@ -68,6 +68,12 @@ def remove(path, recursive=False):
         os.remove(abs_path(path))
         return path
 
+def remove_dir(path):
+    if list_dir(path) == []:
+        shutil.rmtree(abs_path(path))
+    else:
+        raise OSError
+
 def get_size(path):
     return os.path.getsize(abs_path(path))
 

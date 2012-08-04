@@ -187,6 +187,11 @@ class SysCall(object):
         a = self.fs.remove(path, recursive)
         self.md.delete_path(a)
 
+    @check_permission(1, 'w')
+    def remove_dir(self, path):
+        self.fs.remove_dir(path)
+        self.md.delete_path(path)
+
     @check_permission(1, 'r')
     def get_size(self, path):
         return self.fs.get_size(path)

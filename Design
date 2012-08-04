@@ -197,6 +197,7 @@ Syscalls
     move(src, dst)
     copy(src, dst, recursive=False)
     remove(path, recursive=False)
+    remove_dir(path)
     get_size(path)
     list_dir(path)
     list_glob(expression)
