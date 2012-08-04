@@ -59,14 +59,8 @@ def move(src, dst):
 def copy(src, dst):
     shutil.copy2(abs_path(src), abs_path(dst))
 
-def remove(path, recursive=False):
-    if recursive:
-        shutil.rmtree(abs_path(path))
-        a = list_glob(join_path(path, "*")) + [path]
-        return a
-    else:
-        os.remove(abs_path(path))
-        return path
+def remove(path):
+    os.remove(abs_path(path))
 
 def remove_dir(path):
     if list_dir(path) == []:

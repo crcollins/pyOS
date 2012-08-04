@@ -183,9 +183,9 @@ class SysCall(object):
         self.md.copy_path(src, dst)
 
     @check_permission(1, 'w')
-    def remove(self, path, recursive=False):
-        a = self.fs.remove(path, recursive)
-        self.md.delete_path(a)
+    def remove(self, path):
+        self.fs.remove(path)
+        self.md.delete_path(path)
 
     @check_permission(1, 'w')
     def remove_dir(self, path):
