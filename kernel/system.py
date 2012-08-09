@@ -117,18 +117,19 @@ def has_permission(path, user, access):
                 return False
     return True
 
-def check_permission(amount, access):
+def check_permission(access):
     def real_decorator(function):
         def wrapper(self, *args, **kwargs):
+            amount = len(access)
             checkpaths = args[:amount]
             laccess = access # hack to fix UnboundLocalError
-            if type(laccess) == int:
-                laccess = list(set(args[laccess]) & {'r', 'w'})[0]
-            for path in checkpaths:
+            for path, laccess in zip(checkpaths, access):
+                if laccess.isdigit():
+                    laccess = list(set(args[int(laccess)]) & {'r', 'w'})[0]
                 if has_permission(path, 'root', laccess):
-                    print "root %s has permisison on file(s) %s" % (laccess, str(checkpaths))
+                    print "root %s has permisison for %s" % (laccess, path)
                 else:
-                    print "root %s permission denied for file(s) %s" % (laccess, str(checkpaths))
+                    print "root %s permission denied for %s" % (laccess, path)
             return function(self, *args, **kwargs)
         return wrapper
     return real_decorator
@@ -160,46 +161,46 @@ class SysCall(object):
 
     #############################################
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def exists(self, path):
         return self.fs.exists(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def is_file(self, path):
         return self.fs.is_file(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def is_dir(self, path):
         return self.fs.is_dir(path)
 
-    @check_permission(2, 'w')
+    @check_permission('rw')
     def copy(self, src, dst):
         self.fs.copy(src, dst)
         self.md.copy_path(src, dst)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def remove(self, path):
         self.fs.remove(path)
         self.md.delete_path(path)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def remove_dir(self, path):
         self.fs.remove_dir(path)
         self.md.delete_path(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def get_size(self, path):
         return self.fs.get_size(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def list_dir(self, path):
         return self.fs.list_dir(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def list_glob(self, expression):
         return self.fs.list_glob(expression)
 
-    @check_permission(1, 'r') # ? #
+    @check_permission('r') # ? #
     def list_all(self, path="/"):
         listing = [path]
         for x in self.list_dir(path):
@@ -210,12 +211,12 @@ class SysCall(object):
                 listing.append(new)
         return listing
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def make_dir(self, path):
         self.fs.make_dir(path)
         self.md.add_path(path, "root", "rwxrwxrwx")
 
-    @check_permission(1, 1)
+    @check_permission('1')
     def open_file(self, path, mode):
         temp = self.fs.is_file(path)
         x = FileDecorator(self.fs.open_file(path, mode), path)
@@ -223,65 +224,65 @@ class SysCall(object):
             self.md.add_path()
         return x
 
-    @check_permission(1, 'x')
+    @check_permission('x')
     def open_program(self, path):
         return self.fs.open_program(path)
 
     #############################################
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def get_meta_data(self, path):
         return self.md.get_meta_data(path)
 
-    @check_permission(1, 'r') # ? #
+    @check_permission('r') # ? #
     def get_all_meta_data(self, path='/'):
         return self.md.get_all_meta_data(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def get_permission_string(self, path):
         return self.md.get_permission_string(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def get_permission_number(self, path):
         return self.md.get_permission_number(path)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_permission_string(self, path, value):
         return self.md.set_permission_string(path, value)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_permission_number(self, path, value):
         return self.md.set_permission_number(path, value)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_permission(self, path, value):
         return self.md.set_permission(path, value)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_time(self, path, value=None):
         return self.md.set_time(path, value)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_time_list(self, path, value):
         return self.md.set_time_list(path, value)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_time_dict(self, path, value=None):
         return self.md.set_time_dict(path, value)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_time_string(self, path, value=None):
         return self.md.set_time_string( path, value)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def get_time(self, path):
         return self.md.get_time(path)
 
-    @check_permission(1, 'r')
+    @check_permission('r')
     def get_owner(self, path):
         return self.md.get_owner(path)
 
-    @check_permission(1, 'w')
+    @check_permission('w')
     def set_owner(self, path, owner):
         return self.md.set_owner(path, owner)
 
