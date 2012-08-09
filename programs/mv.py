@@ -24,12 +24,44 @@ def run(shell, args):
 
 def move(shell, args, src, dest):
     src = shell.sabs_path(src)
-    if args.verbose:
-        shell.stdout.write("Moving %s to %s" % (src, dest))
-    try:
-        shell.syscall.move(src, dest)
-    except IOError:
-        shell.stderr.write("%s: file error" % (dest, ))
+
+    if shell.syscall.is_dir(src):
+        srcpaths = shell.syscall.list_all(src)
+    else:
+        srcpaths = [src]
+
+    if shell.syscall.is_dir(dest):
+        join = [dest, shell.syscall.base_name(src)]
+        destbase = shell.syscall.join_path(*join)
+    else:
+        destbase = dest
+
+    copiedpaths = []
+    for path in srcpaths:
+        relpath = shell.srel_path(path, src)
+        if relpath != '.':
+            destpath = shell.syscall.join_path(destbase, relpath)
+        else:
+            destpath = destbase
+
+        try:
+            if shell.syscall.is_dir(path):
+                copy_dir(shell, path, destpath)
+            else:
+                shell.syscall.copy(path, destpath)
+            copiedpaths.append(path)
+        except OSError:
+            shell.stderr.write("file error " + destpath)
+
+    for path in reversed(copiedpaths):
+        try:
+            if shell.syscall.is_dir(path):
+                shell.syscall.remove_dir(path)
+            else:
+                shell.syscall.remove(path)
+        except OSError as e:
+            shell.stderr.write("%s does not exist" % (p,))
+
 
 def help():
     return parser.programs/tail.py()

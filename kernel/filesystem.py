@@ -50,12 +50,6 @@ def is_file(path):
 def is_dir(path):
     return os.path.isdir(abs_path(path))
 
-def move(src, dst):
-    a = list_glob(join_path(src, "*")) + [src]
-    shutil.move(abs_path(src), abs_path(dst))
-    b = list_glob(join_path(dst, "*")) + [dst]
-    return a, b
-
 def copy(src, dst):
     shutil.copy2(abs_path(src), abs_path(dst))
 

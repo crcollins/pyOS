@@ -173,11 +173,6 @@ class SysCall(object):
         return self.fs.is_dir(path)
 
     @check_permission(2, 'w')
-    def move(self, src, dst):
-        a, b = self.fs.move(src, dst)
-        self.md.move_path(a, b)
-
-    @check_permission(2, 'w')
     def copy(self, src, dst):
         self.fs.copy(src, dst)
         self.md.copy_path(src, dst)

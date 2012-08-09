@@ -74,7 +74,9 @@ def sed(shell, args, path):
 
                 if args.inplace:
                     out.close()
-                    shell.syscall.move(newpath + "~", newpath)
+                    # TODO # replace
+                    shell.syscall.copy(newpath + "~", newpath)
+                    shell.syscall.remove(newpath + "~")
             except:
 
                 shell.stderr.write("No command")
