@@ -242,12 +242,13 @@ def get_owner(path):
     return get_meta_data(path)[1]
 
 def validate_owner(owner):
-    pass
+    # TODO # validate owner
+    return owner
 
 def set_owner(path, owner):
     now = datetime.datetime.now()
 
-    value = validate_owner(value)
+    value = validate_owner(owner)
 
     con = sqlite3.connect(METADATAFILE,  detect_types=sqlite3.PARSE_DECLTYPES)
     with con:

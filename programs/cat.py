@@ -1,11 +1,9 @@
-import kernel.filesystem
-
 def run(shell, args):
     if args or shell.stdin:
         for x in args:
             path = shell.sabs_path(x)
             try:
-                f = kernel.filesystem.open_file(path, 'r')
+                f = shell.syscall.open_file(path, 'r')
                 for line in f:
                     shell.stdout.write(line.rstrip())
                 f.close()

@@ -1,5 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem as fs
 
 desc = "Removes the file/directory."
 parser = Parser('rm', name="Remove", description=desc)
@@ -21,14 +20,26 @@ def run(shell, args):
 
 def remove(shell, args, path):
     path = shell.sabs_path(path)
-    if fs.is_file(path) or (fs.is_directory(path) and args.recursive):
+
+    if shell.syscall.is_dir(path):
+        if args.recursive:
+            paths = shell.syscall.list_all(path)
+        else:
+            shell.stderr.write("%s is a directory" % (path, ))
+            return
+    else:
+        paths = [path]
+
+    for p in reversed(paths):
         if args.verbose:
-            shell.stdout.write("Removing %s" % (path, ))
-        fs.remove(path, recursive=args.recursive)
-    elif not args.recursive and fs.is_directory(path):
-        shell.stderr.write("%s is a directory" % (path, ))
-    elif not fs.is_file(path):
-        shell.stderr.write("%s is not a file" % (path,))
+            shell.stdout.write("Removing %s" % (p, ))
+        try:
+            if shell.syscall.is_dir(p):
+                shell.syscall.remove_dir(p)
+            else:
+                shell.syscall.remove(p)
+        except OSError as e:
+            shell.stderr.write("%s does not exist" % (p,))
 
 def help():
     return parser.help_msg()

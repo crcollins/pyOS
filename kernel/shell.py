@@ -1,7 +1,6 @@
 import re
 import threading
 
-import kernel.filesystem
 import kernel.stream
 import kernel.system
 from kernel.constants import PROGRAMSDIR, VARCHAR, BASEDIR
@@ -17,6 +16,8 @@ class Shell(threading.Thread):
         self.__oldpath = path
         self.parent = parent
         self.pid = pid
+
+        self.syscall = kernel.system.SysCall(self)
 
         if self.parent:
             self.vars = self.parent.vars.copy()
@@ -35,14 +36,12 @@ class Shell(threading.Thread):
         self.stderr = kernel.stream.Pipe(name="err", writer=self)
 
     def run(self):
-        if not kernel.filesystem.is_directory(self.programname):
-            self.program = self.find_program(self.programname)
-            if self.program:
-                self.program.run(self, self.args)
-            else:
-                self.stderr.write("%s: command not found\n" % (self.programname, ))
+        self.program = self.find_program(self.programname)
+        if self.program:
+            self.program.run(self, self.args)
         else:
-            self.stderr.write("%s is a directory\n" % (self.programname, ))
+            # TODO # add back "is a directory"
+            self.stderr.write("%s: command not found\n" % (self.programname, ))
         #cleanup
         self.stdout.close()
         self.stderr.close()
@@ -62,13 +61,13 @@ class Shell(threading.Thread):
         if not path.startswith('/'):
             if path.startswith('./'):
                 path = path[path.index('/') + 1:]
-            path = kernel.filesystem.join_path(self.get_path(), path)
-        return kernel.filesystem.iabs_path(path)
+            path = self.syscall.join_path(self.get_path(), path)
+        return self.syscall.iabs_path(path)
 
     def srel_path(self, path, base=None):
         if base is None:
             base = self.get_path()
-        return kernel.filesystem.rel_path(self.sabs_path(path),
+        return self.syscall.rel_path(self.sabs_path(path),
                                           self.sabs_path(base))
 
     def program_paths(self, name):
@@ -76,7 +75,7 @@ class Shell(threading.Thread):
             a = [self.sabs_path(name)]
         else:
             paths = self.get_var('PATH').split(':')
-            a = [kernel.filesystem.join_path(x, name) for x in paths]
+            a = [self.syscall.join_path(x, name) for x in paths]
         return a
 
     def get_var(self, name):
@@ -104,7 +103,13 @@ class Shell(threading.Thread):
 
     def find_program(self, name):
         for x in self.program_paths(name):
-            program = kernel.filesystem.open_program(x)
+            if not x.endswith('.py'):
+                x += '.py'
+            program = self.syscall.open_program(x)
+            if program:
+                break
+            else:
+                program = self.syscall.open_program(x[:-3])
             if program:
                 break
         return program

@@ -1,5 +1,4 @@
-from kernel.utils import Parser
-import kernel.filesystem
+from kernel.utils import Parser, calc_permission_string
 
 desc = "Returns the contents of a directory."
 parser = Parser('ls', name="List Directory", description=desc)
@@ -20,15 +19,15 @@ def run(shell, args):
             ls(shell, relpath, args)
 
 def ls(shell, relpath, args):
-    fscp = kernel.metadata.calc_permission_string
-    fsgm = kernel.metadata.get_meta_data
-    fsbn = kernel.filesystem.base_name
+    fscp = calc_permission_string
+    fsgm = shell.syscall.get_meta_data
+    fsbn = shell.syscall.base_name
     format = "%s %s %s %s"
     path = shell.sabs_path(relpath)
     try:
-        a = kernel.filesystem.list_dir(path)
+        a = shell.syscall.list_dir(path)
         if args.long:
-            b = [fsgm(shell.sabs_path(kernel.filesystem.join_path(path, x))) for x in a]
+            b = [fsgm(shell.sabs_path(shell.syscall.join_path(path, x))) for x in a]
             a = [format % (fscp(perm), owner, "1", fsbn(name)) for name, owner, perm in b]
 
         if len(args.paths) > 1:

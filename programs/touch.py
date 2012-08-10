@@ -1,8 +1,6 @@
 import datetime
 
 from kernel.utils import Parser
-import kernel.filesystem
-import kernel.metadata
 
 desc = "Creates an empty file at the given path."
 parser = Parser('touch', name="Touch", description=desc)
@@ -28,10 +26,10 @@ def run(shell, args):
                 times = get_times(args)
                 for x in args.paths:
                     path = shell.sabs_path(x)
-                    if not kernel.filesystem.is_directory(path):
-                        kernel.filesystem.open_file(path, 'a').close()
+                    if not shell.syscall.is_dir(path):
+                        shell.syscall.open_file(path, 'a').close()
                     if timestuff:
-                        kernel.metadata.set_time(path, times)
+                        shell.syscall.set_time(path, times)
         else:
             shell.stderr.write("missing file operand")
 

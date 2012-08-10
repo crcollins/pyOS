@@ -53,10 +53,27 @@ System Start
 | ------------------------------- |
 -----------------------------------
 
-                                                            ---> Process <------
-                                                           /                   |
-Filesystem Driver -----> System <---> Kernel <--------------------> Shell <-----
-Display Driver      --/                         \--> syscalls --/
+
+                                        -- Display
+                                       |
+            -----------------          |-- Filesystem
+            |               |         /
+init -----> |    System   ----{DRIVERS} -- Etc
+            |               |         \
+            -----------------          |-- Metadata
+                    |                  |
+                    |                   -- Userdata
+            --------|--------
+            |   [SysCall]   | <-- stdin  --- [Shell]
+            |     Shell     | --- stdout --> [Shell]
+            |               | --- stderr --> [Shell]
+            -----------------
+                    |
+            --------|--------
+            |    [shell]    |
+            |    Program    |
+            |               |
+            -----------------
 
 
 /etc/passwd (: delimited)
@@ -164,115 +181,59 @@ Device Control
 Networking
 
 
-drivers
-    system
-        abs_path
-        rel_path
-        exists
-        is_file
-        is_directory
-        copy
-        remove
-        move
-        join_path
-        get_size
-        list_dir
-    filesystem
-        directories
-        files
-    database
-        create
-        add
-        delete
-    display
-        write
-        ouput
+Syscalls
+    abs_path(path)
+    rel_path(path, base)
+    irel_path(path)
+    iabs_path(path)
+    dir_name(path)
+    base_name(path)
+    split(path)
+    join_path(*args)
 
-filesystem
-    .path
-        abs
-        rel
-        iabs
-        irel
-        join
-        split
-        dir_name
-        base_name
+    exists(path)
+    is_file(path)
+    is_dir(path)
+    move(src, dst)
+    copy(src, dst, recursive=False)
+    remove(path)
+    remove_dir(path)
+    get_size(path)
+    list_dir(path)
+    list_glob(expression)
+    list_all(path="/")
+    make_dir(path, parents=False)
+    open_file(path, mode)
+    open_program(path)
 
-    #require permission
-    open_file
-    open_program
-    move
-    copy
-    remove
-    make_dir
-
-    exists
-    is_file
-    is_directory
-
-    list_dir
-    list_glob
-    list_all
-
-# used to abstract permissions
-syscalls
-
-========================================
-
-Path
-
-
-Metadata
-    get_meta_data(path) -> (path, owner, permission, created, accessed, modifed)
-    get_all_meta_data(path='/') -> list(get_meta_data)
-
-    add_path(path, owner, permission)
-    copy_path(src, dest)
-    move_path(src, dest)
-    delete_path(path)
-
-    calc_permission_string(number) -> "rwxrwxrwx"
-    calc_permission_number(string) -> "777"
-    get_permission_string(path) -> "rwxrwxrwx"
-    get_permission_number(path) -> "777"
-    set_permission(path, value)
+    get_meta_data(path)
+    get_all_meta_data(path='/')
+    get_permission_string(path)
+    get_permission_number(path)
     set_permission_string(path, value)
     set_permission_number(path, value)
-
-    get_time(path) -> (created, accessed, modifed)
+    set_permission(path, value)
     set_time(path, value=None)
-    set_time_string(path, value=None)
-    set_time_list(path, value=None)
+    set_time_list(path, value)
     set_time_dict(path, value=None)
-
-    get_owner(path) -> owner
+    set_time_string(path, value=None)
+    get_time(path)
+    get_owner(path)
     set_owner(path, owner)
 
-
-Userdata
-    get_user_data(user) -> (user, uid, gid, info, homedir, shell, password)
-    get_all_user_data() -> list(get_user_data)
-
-    add_user(user, uid, gid, info, homedir, shell, password=None)
+    get_user_data(user)
+    get_all_user_data(self)
+    add_user(user, group, info, homedir, shell, password)
     delete_user(user)
-
-    get_user(uid) -> user
-    get_uid(user) -> uid
-    set_uid(user, value)
-
-    get_group(user) -> group
-    get_gid(user) -> gid
-    set_gid(user, value)
-
-    get_info(user) -> info
+    change_user(user, value)
+    get_group(user)
+    set_group(user, value)
+    get_info(user)
     set_info(user, value)
-
-    get_homedir(user) -> uid
+    get_homedir(user)
     set_homedir(user, value)
-
-    get_shell(user) -> shell
+    get_shell(user)
     set_shell(user, value)
-
-    get_password(user) -> password
+    get_password(user)
     set_password(user, value)
+    correct_password(user, password)

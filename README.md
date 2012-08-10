@@ -4,21 +4,23 @@ pyOS (prounounced "pious") is a python implemention of a psuedo unix-like operat
 
 Requirements
 -------------
-- Python 2.7+(2.6?)
+- Python 2.7+
 
 Features
 --------
 - unix terminal interface
-- common utilities (cp, mv, rm, ls, cat, head, sed etc)
+- common utilities (cp, mv, rm, ls, cat, head, sed, etc)
 - piping and stdio redirection
 - semi virtual filesystem
 - file/directory metadata
 - dynamic manipulation of files
+- basic system call structure
+- file/directory permissions
+- basic user system
 
 Todo
 ----
 - sdterr redirection
-- users
 - other utilities (xargs, edit(ed?), awk, etc)
 - polish utilities
 - formalize the directory structure
@@ -28,7 +30,8 @@ Todo
 - documentation
 - formalize syscalls
 - networking
-- `command` execution
+- \`command\` execution
+- user commands (add, delete, change permissions, etc)
 
 Setup
 -----

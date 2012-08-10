@@ -1,7 +1,6 @@
 import re
 
 from kernel.utils import Parser
-import kernel.filesystem
 
 desc = "Allows editing streams."
 parser = Parser('sed', name="Stream Editor", description=desc)
@@ -31,16 +30,16 @@ def run(shell, args):
 
 def sed(shell, args, path):
     newpath = shell.sabs_path(path)
-    if kernel.filesystem.is_file(newpath):
+    if shell.syscall.is_file(newpath):
         if args.inplace:
-            out = kernel.filesystem.open_file(newpath + "~", 'w')
+            out = shell.syscall.open_file(newpath + "~", 'w')
         else:
             out = shell.stdout
         # iterator to find length of file
-        with kernel.filesystem.open_file(newpath, 'r') as f:
+        with shell.syscall.open_file(newpath, 'r') as f:
             for lenfile, x in enumerate(f):
                 pass
-        with kernel.filesystem.open_file(newpath, 'r') as f:
+        with shell.syscall.open_file(newpath, 'r') as f:
             try:
                 address, command = parse_expression(args.expression[0])
 
@@ -77,7 +76,9 @@ def sed(shell, args, path):
 
                 if args.inplace:
                     out.close()
-                    kernel.filesystem.move(newpath + "~", newpath)
+                    # TODO # replace
+                    shell.syscall.copy(newpath + "~", newpath)
+                    shell.syscall.remove(newpath + "~")
             except:
                 shell.stderr.write("No command")
     else:

@@ -1,5 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem
 
 desc = "Moves the given file/directory to the given location."
 parser = Parser('mv', name="Move", description=desc)
@@ -15,7 +14,7 @@ def run(shell, args):
     if not parser.help:
         if len(args.paths) >= 2:
             dest = shell.sabs_path(args.paths[-1])
-            if kernel.filesystem.is_directory(dest) or len(args.paths) == 2:
+            if shell.syscall.is_dir(dest) or len(args.paths) == 2:
                 for src in args.paths[:-1]:
                     move(shell, args, src, dest)
             else:
@@ -25,12 +24,44 @@ def run(shell, args):
 
 def move(shell, args, src, dest):
     src = shell.sabs_path(src)
-    if args.verbose:
-        shell.stdout.write("Moving %s to %s" % (src, dest))
-    try:
-        kernel.filesystem.move(src, dest)
-    except IOError:
-        shell.stderr.write("%s: file error" % (dest, ))
+
+    if shell.syscall.is_dir(src):
+        srcpaths = shell.syscall.list_all(src)
+    else:
+        srcpaths = [src]
+
+    if shell.syscall.is_dir(dest):
+        join = [dest, shell.syscall.base_name(src)]
+        destbase = shell.syscall.join_path(*join)
+    else:
+        destbase = dest
+
+    copiedpaths = []
+    for path in srcpaths:
+        relpath = shell.srel_path(path, src)
+        if relpath != '.':
+            destpath = shell.syscall.join_path(destbase, relpath)
+        else:
+            destpath = destbase
+
+        try:
+            if shell.syscall.is_dir(path):
+                copy_dir(shell, path, destpath)
+            else:
+                shell.syscall.copy(path, destpath)
+            copiedpaths.append(path)
+        except OSError:
+            shell.stderr.write("file error " + destpath)
+
+    for path in reversed(copiedpaths):
+        try:
+            if shell.syscall.is_dir(path):
+                shell.syscall.remove_dir(path)
+            else:
+                shell.syscall.remove(path)
+        except OSError as e:
+            shell.stderr.write("%s does not exist" % (p,))
+
 
 def help():
     return parser.programs/tail.py()

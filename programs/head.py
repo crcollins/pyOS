@@ -1,5 +1,4 @@
 from kernel.utils import Parser
-import kernel.filesystem
 
 desc = "Returns the first n lines of a file."
 parser = Parser('head', name="Head", description=desc)
@@ -16,7 +15,7 @@ def run(shell, args):
             if args.paths > 1 or shell.stdin:
                 shell.stdout.write("==> %s <==" % (x, ))
             try:
-                f = kernel.filesystem.open_file(path, 'r')
+                f = shell.syscall.open_file(path, 'r')
                 for x in xrange(args.lineamount):
                     shell.stdout.write(f.readline().rstrip())
                 f.close()
