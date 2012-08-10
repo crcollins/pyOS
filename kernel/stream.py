@@ -22,7 +22,7 @@ class Pipe(object):
 
     def write(self, value):
         if not self.closed:
-            self.value.extend(value.split("\n"))
+            self.value.extend(str(value).split("\n"))
 
     def read(self):
         line = ''
