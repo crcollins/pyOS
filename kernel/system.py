@@ -102,18 +102,23 @@ def has_permission(path, user, access):
         temppath = System.filesystem.dir_name(temppath)
         dirpaths.append(temppath)
     if not all(compare_permission(x, user, 5) for x in dirpaths[1:]):
+        # does not have read permissions all the way to path
         return False
 
     if System.filesystem.is_dir(dirpaths[0]):
         if not compare_permission(dirpaths[0], user, access):
+            # does not have access permissions on folder
             return False
     else:
         if not compare_permission(dirpaths[1], user, access):
+            # does not have access permissions for containing folder
             return False
         try:
             compare_permission(dirpaths[0], user, access)
         except TypeError:
             if access != 'w':
+                # TODO # maybe remove?
+                # you can not read a file that does not exist
                 return False
     return True
 

@@ -242,7 +242,7 @@ def get_owner(path):
     return get_meta_data(path)[1]
 
 def validate_owner(owner):
-    # TODO #
+    # TODO # validate owner
     return owner
 
 def set_owner(path, owner):
