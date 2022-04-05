@@ -3,7 +3,7 @@ import random
 
 def run(shell, args):
     for line in shell.stdin.read():
-        print line
+        print(line)
         time.sleep(1*random.random())
 
 def help():

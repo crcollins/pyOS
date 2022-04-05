@@ -2,7 +2,7 @@ import datetime
 import sqlite3
 
 from kernel.constants import METADATAFILE
-from kernel.utils import calc_permission_number, calc_permission_string
+from kernel.utils import calc_permission_number
 from kernel.utils import convert_many
 
 def build_meta_data_database(fsmatches):
@@ -49,7 +49,7 @@ def get_meta_data(path):
         data = cur.fetchone()
         if data:
             ## force data to be strings and not unicode
-            data = tuple(str(x) if type(x) == unicode else x for x in data)
+            data = tuple(str(x) if type(x) == str else x for x in data)
     return data
 
 def get_all_meta_data(path='/'):
@@ -62,7 +62,7 @@ def get_all_meta_data(path='/'):
         data = cur.fetchall()
         if data:
             ## force data to be strings and not unicode
-            data = [tuple(str(x) if type(x) == unicode else x for x in row) for row in data]
+            data = [tuple(str(x) if type(x) == str else x for x in row) for row in data]
     return data
 
 def add_path(path, owner, permission):

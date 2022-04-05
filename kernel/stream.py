@@ -10,7 +10,7 @@ class Pipe(object):
         self._line = 0
         self.closed = False
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.reader)
 
     def set_reader(self, callback):
@@ -58,7 +58,7 @@ class Pipe(object):
             pass  # self.reader()
         else:
             if any(self.value):
-                print "<%s> %s" % (self.name, '\n'.join(self.value[:-1])),
+                print("<%s> %s" % (self.name, '\n'.join(self.value[:-1])), end=' ')
 
     def __repr__(self):
         return "<Pipe(name=%s, value=%s, writer=%d, reader=%d)>" % (

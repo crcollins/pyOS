@@ -16,7 +16,7 @@ def run(shell, args):
                 shell.stdout.write("==> %s <==" % (x, ))
             try:
                 f = shell.syscall.open_file(path, 'r')
-                for x in xrange(args.lineamount):
+                for x in range(args.lineamount):
                     shell.stdout.write(f.readline().rstrip())
                 f.close()
             except IOError:
@@ -24,7 +24,7 @@ def run(shell, args):
         if shell.stdin:
             if args.paths:
                 shell.stdout.write("==> %% stdin %% <==")
-            for x in xrange(args.lineamount):
+            for x in range(args.lineamount):
                 shell.stdout.write(shell.stdin.readline())
             shell.stdout.write("")
         else:

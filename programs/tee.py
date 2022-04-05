@@ -30,7 +30,7 @@ def run(shell, args):
                     f.close()
         else:
             for line in shell.stdin.read():
-                print line
+                print(line)
                 shell.stdout.write(line)
 
 def help():

@@ -1,8 +1,7 @@
 import os
 import shutil
-import imp
 import glob
-
+import importlib.util
 from kernel.constants import BASEPATH
 
 def abs_path(path):
@@ -91,7 +90,14 @@ def open_program(path):
     x = abs_path(path)
     if not is_dir(path):
         try:
-            program = imp.load_source('program', x)
+
+            spec = importlib.util.spec_from_file_location("program", x)
+            if not spec:
+                return
+
+            program = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(program)
+
         except IOError:
             program = False
     else:

@@ -36,7 +36,7 @@ def get_user_data(user):
         data = cur.fetchone()
         if data:
             ## force data to be strings and not unicode
-            data = tuple(str(x) if type(x) == unicode else x for x in data)
+            data = tuple(str(x) if type(x) == str else x for x in data)
     return data
 
 def get_all_user_data():
@@ -49,7 +49,7 @@ def get_all_user_data():
         data = cur.fetchall()
         if data:
             ## force data to be strings and not unicode
-            data = [tuple(str(x) if type(x) == unicode else x for x in row) for row in data]
+            data = [tuple(str(x) if type(x) == str else x for x in row) for row in data]
     return data
 
 #######################################
