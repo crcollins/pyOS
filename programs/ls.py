@@ -56,16 +56,14 @@ def ls(shell, relpath, args):
                         pos += len(to_add)
                         line += to_add
                     else:
-                        if line is not line[0] * len(line):
-                            b.append(line)
+                        b.append(line)
                         pos = 0
                         line = ""
-
                 shell.stdout.write("%s\n" % '\n'.join(b))
         if len(args.paths) > 1:
             shell.stdout.write("")
     except OSError:
-        shell.stderr.write('ls: cannot acces %s: no such file or directory\n' % (relpath, ))
+        shell.stderr.write('ls: cannot access %s: no such file or directory\n' % (relpath, ))
 
 def help():
     return parser.help_msg()
