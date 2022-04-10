@@ -38,22 +38,32 @@ def ls(shell, relpath, args):
             if a:
                 maxlen = max(max([len(x) for x in a]), 1)
                 # arbitrary line length
-                columns = (80 / maxlen) - 1
+                columns_max = 80
+                columns = (columns_max / maxlen) - 1
                 b = []
+                pos = 0
+                line = "\n"
+                to_add = ""
                 for i, x in enumerate(a):
-                    newline = "\n" if not ((i + 1) % columns) else ""
                     if not ((i + 1) % columns):
                         newline = "\n"
                         spacing = ""
                     else:
                         newline = ""
                         spacing = " " * (maxlen - len(x) + 1)
-                    b.append(x + spacing + newline)
-                shell.stdout.write(''.join(b).rstrip())
+                    to_add = "%s%s%s" % (x, spacing, newline)
+                    if pos < columns_max:
+                        pos += len(to_add)
+                        line += to_add
+                    else:
+                        b.append(line)
+                        pos = 0
+                        line = ""
+                shell.stdout.write("%s\n" % '\n'.join(b))
         if len(args.paths) > 1:
             shell.stdout.write("")
     except OSError:
-        shell.stderr.write('ls: cannot acces %s: no such file or directory\n' % (relpath, ))
+        shell.stderr.write('ls: cannot access %s: no such file or directory\n' % (relpath, ))
 
 def help():
     return parser.help_msg()

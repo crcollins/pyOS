@@ -132,9 +132,9 @@ def check_permission(access):
                 if laccess.isdigit():
                     laccess = list(set(args[int(laccess)]) & {'r', 'w'})[0]
                 if has_permission(path, 'root', laccess):
-                    print "root %s has permisison for %s" % (laccess, path)
+                    print("root %s has permisison for %s" % (laccess, path))
                 else:
-                    print "root %s permission denied for %s" % (laccess, path)
+                    print("root %s permission denied for %s" % (laccess, path))
             return function(self, *args, **kwargs)
         return wrapper
     return real_decorator

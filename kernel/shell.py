@@ -1,4 +1,3 @@
-import re
 import threading
 
 import kernel.stream

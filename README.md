@@ -4,7 +4,7 @@ pyOS (prounounced "pious") is a python implemention of a psuedo unix-like operat
 
 Requirements
 -------------
-- Python 2.7+
+- Python 3.5+
 
 Features
 --------
@@ -37,3 +37,15 @@ Setup
 -----
 - cd into the pyOS directory
 - run pyOS.py
+  - Username: root
+  - Password: pass
+
+```text
+> python ./pyOS.py 
+STARTING
+root x has permisison for /programs/login.py
+user: root
+password: 
+root x has permisison for /programs/interpreter.py
+root@pyOS:/$
+```

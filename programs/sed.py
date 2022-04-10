@@ -171,10 +171,10 @@ n                   print pattern space and insert next line
 { commands }        group of commands
 s                   s/regex/replacement/flags
     replacement
-        \L          turn replacement lowercase until \U or \E
+        \L          turn replacement lowercase until \\U or \E
         \l          turn the next char lowercase
-        \U          turn replacement uppercase until \L or \E
-        \u          turn the next char to uppercase
+        \\U          turn replacement uppercase until \L or \E
+        \\u          turn the next char to uppercase
         \E          Stop case conversion
         \[n]        number of inclusions
         &           matched pattern

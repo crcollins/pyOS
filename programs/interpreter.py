@@ -15,7 +15,7 @@ braceparse = re.compile(r"""((?<!\$)\{[^\{\}]*\})""")
 def run(shell, args):
     user = shell.get_var('USER')
     while System.state >= RUNNING:
-        data = raw_input("%s@%s:%s$ "% (user, OSNAME, shell.get_path()))
+        data = input("%s@%s:%s$ "% (user, OSNAME, shell.get_path()))
         data = data.strip()
         if data:
             cleaned, command = shell_expansion(shell, data)

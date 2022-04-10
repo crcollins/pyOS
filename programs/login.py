@@ -4,8 +4,8 @@ import getpass
 from kernel.system import System
 
 def run(shell, args):
-    user = raw_input("user: ")
-    password = hashlib.sha256(getpass.getpass("password: ")).hexdigest()
+    user = input("user: ")
+    password = hashlib.sha256(getpass.getpass("password: ").encode('utf-8')).hexdigest()
 
     if shell.syscall.correct_password(user, password): # == db(user).password
         stuff = {
